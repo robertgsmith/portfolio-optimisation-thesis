@@ -55,6 +55,7 @@ The simulation generates:
 
 
 ### Object-Oriented Design
-- `dataDownloader`: Downloads and stores raw data (not set up yet)
+- `_data_downloader`: Downloads and stores raw data
+- `_data_processor`: Process and cleans data
 ...
 

@@ -11,7 +11,7 @@ import yfinance as yf
 import pandas as pd
 
 
-def _sp100_downloader():
+def _data_downloader():
     # S&P 100 tickers (OEX components as of recent composition)
     SP100_TICKERS = [
         'AAPL', 'ABBV', 'ABT', 'ACN', 'ADBE', 'AIG', 'AMD', 'AMGN', 'AMT',
