@@ -38,18 +38,6 @@ DATA_FILES = "data/raw/"  # Raw Data file path
 # ...
 ```
 
-### Real-time vs Fast Mode
-In `simulation_engine.py`, line in `main()`:
-
-
-```python
-# Fast mode (recommended)
-simulation.run_simulation(real_time=False)
-
-# Real-time mode with delays
-simulation.run_simulation(real_time=True)
-```
-
 
 ## Algorithm Parameters
 ...
