@@ -6,6 +6,15 @@ import logging
 from pathlib import Path
 import warnings
 
+warnings.filterwarnings('ignore')
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
 
 class DataDownloader:
     """Download and consolidate S&P 100 stock data from Yahoo Finance."""
