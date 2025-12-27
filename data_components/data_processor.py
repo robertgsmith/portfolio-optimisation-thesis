@@ -66,3 +66,39 @@ class DataProcessor:
         logger.info(f"Computed {return_type} returns: {return_data.shape}")
         return return_data
     
+    def compute_rolling_statistics(
+        self,
+        returns: pd.DataFrame,
+        windows: List[int] = [21, 63, 126, 252]
+    ) -> Dict[str, pd.DataFrame]:
+        """
+        Compute rolling mean and volatility.
+        
+        Parameters
+        ----------
+        returns : pd.DataFrame
+            Return data
+        windows : List[int]
+            Rolling window sizes in trading days
+        
+        Returns
+        -------
+        stats : Dict[str, pd.DataFrame]
+            Dictionary of rolling statistics
+        """
+        stock_stats = {}
+        TRADING_DAYS_PER_YEAR = 252
+        
+        for window in windows:
+            # Rolling mean (annualised)
+            rolling_mean = returns.rolling(window=window).mean() * TRADING_DAYS_PER_YEAR
+            stock_stats[f'rolling_mean_{window}d'] = rolling_mean
+            
+            # Rolling volatility (annualised)
+            rolling_vol = returns.rolling(window=window).std() * np.sqrt(TRADING_DAYS_PER_YEAR)
+            stock_stats[f'rolling_vol_{window}d'] = rolling_vol
+            
+            logger.info(f"Computed {window}-day rolling statistics")
+        
+        return stock_stats
+    
