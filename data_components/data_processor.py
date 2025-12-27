@@ -102,3 +102,32 @@ class DataProcessor:
         
         return stock_stats
     
+    def compute_momentum_signals(
+        self,
+        prices: pd.DataFrame,
+        lookback_periods: List[int] = [21, 63, 126, 252]
+    ) -> Dict[str, pd.DataFrame]:
+        """
+        Compute momentum signals (total returns over lookback period).
+        
+        Parameters
+        ----------
+        prices : pd.DataFrame
+            Price data
+        lookback_periods : List[int]
+            Lookback periods in trading days
+        
+        Returns
+        -------
+        momentum : Dict[str, pd.DataFrame]
+            Dictionary of momentum signals
+        """
+        momentum = {}
+        
+        for period in lookback_periods:
+            # Total return over period
+            signal_at_moment = prices / prices.shift(period) - 1
+            momentum[f'momentum_{period}d'] = signal_at_moment
+            logger.info(f"Computed {period}-day momentum")
+        
+        return momentum
