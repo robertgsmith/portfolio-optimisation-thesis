@@ -131,3 +131,44 @@ class DataProcessor:
             logger.info(f"Computed {period}-day momentum")
         
         return momentum
+    
+    def compute_covariance_matrices(
+        self,
+        returns: pd.DataFrame,
+        estimation_window: int = 252
+    ) -> Dict[str, pd.DataFrame]:
+        """
+        Compute rolling covariance matrices.
+        
+        Parameters
+        ----------
+        returns : pd.DataFrame
+            Return data
+        estimation_window : int
+            Window size for covariance estimation
+        
+        Returns
+        -------
+        cov_matrices : Dict[str, pd.DataFrame]
+            Dictionary with sample covariance at different points
+        """
+        logger.info(f"Computing rolling covariance matrices (window={estimation_window})...")
+        
+        # For now, compute full-sample covariance as baseline
+        sample_covariance = returns.cov()
+        
+        logger.info(f"Computed sample covariance matrix: {sample_covariance.shape}")
+        
+        return {'sample_covariance': sample_covariance}
+    
+    def save_processed_data(
+        self,
+        data: pd.DataFrame,
+        filename: str
+    ) -> None:
+        """Save processed data to CSV."""
+        filepath = self.processed_dir / filename
+        data.to_csv(filepath)
+        logger.info(f"Saved: {filepath}")
+
+    
