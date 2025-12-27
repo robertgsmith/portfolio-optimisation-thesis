@@ -1,3 +1,0 @@
-# File to create the portfolio weights
-
-# ...
