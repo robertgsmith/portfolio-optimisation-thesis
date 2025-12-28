@@ -126,6 +126,12 @@ class FeatureEngineer:
 
         number_of_features = len(features.columns)
         logger.info(f"Created {number_of_features} market features")
-        
+
         return features
     
+    def save_features(self, features: pd.DataFrame, filename: str) -> None:
+        """Save features to CSV."""
+        filepath = self.features_dir / filename
+        features.to_csv(filepath)
+        logger.info(f"Saved: {filepath}")
+

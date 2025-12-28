@@ -88,6 +88,25 @@ def run_complete_pipeline():
     for name, data in cov_matrices.items():
         processor.save_processed_data(data, f"{name}.csv")
 
+    # -------------------------------------------------------------------------
+    # STEP 3: Feature engineering
+    # -------------------------------------------------------------------------
+    logger.info("\n### STEP 3: FEATURE ENGINEERING ###")
+    
+    engineer = FeatureEngineer()
+    
+    # Create expected return estimates
+    return_estimates = engineer.create_expected_return_estimates(
+        log_returns,
+        filtered_prices
+    )
+    for name, data in return_estimates.items():
+        engineer.save_features(data, f"expected_returns_{name}.csv")
+    
+    # Create market features
+    market_features = engineer.create_market_features(log_returns, filtered_prices)
+    engineer.save_features(market_features, "market_features.csv")
+    
 
 # ============================================================================
 # MAIN EXECUTION
