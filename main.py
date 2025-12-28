@@ -108,6 +108,45 @@ def run_complete_pipeline():
     market_features = engineer.create_market_features(log_returns, filtered_prices)
     engineer.save_features(market_features, "market_features.csv")
     
+    # -------------------------------------------------------------------------
+    # STEP 4: Summary statistics
+    # -------------------------------------------------------------------------
+    logger.info("\n### STEP 4: COMPUTING SUMMARY STATISTICS ###")
+    
+    summariser = SummaryStatistics()
+    
+    # Return statistics
+    return_stats = summariser.compute_return_statistics(log_returns)
+    summariser.save_statistics(return_stats, "return_statistics.csv")
+    
+    # Correlation analysis
+    corr_matrix, cov_matrix = summariser.compute_correlation_analysis(log_returns)
+    summariser.save_statistics(corr_matrix, "correlation_matrix.csv")
+    summariser.save_statistics(cov_matrix, "covariance_matrix.csv")
+    
+    # -------------------------------------------------------------------------
+    # DATA PREPARATION PIPELINE COMPLETE
+    # -------------------------------------------------------------------------
+    logger.info("\n" + "="*70)
+    logger.info("DATA PIPELINE COMPLETED SUCCESSFULLY")
+    logger.info("="*70)
+    
+    # Print summary
+    print("\n" + "="*70)
+    print("PIPELINE SUMMARY")
+    print("="*70)
+    print(f"Final dataset shape: {filtered_prices.shape}")
+    print(f"Number of assets: {len(filtered_prices.columns)}")
+    print(f"Date range: {filtered_prices.index[0].date()} to {filtered_prices.index[-1].date()}")
+    print(f"Trading days: {len(filtered_prices)}")
+    print(f"\nTop 10 assets by Sharpe ratio:")
+    print(return_stats.nlargest(10, 'sharpe_ratio')[['ann_mean', 'ann_vol', 'sharpe_ratio']])
+    print("\nData saved to:")
+    print("  - data/raw/")
+    print("  - data/processed/")
+    print("  - data/features/")
+    print("  - data/analysis/")
+    print("="*70)
 
 # ============================================================================
 # MAIN EXECUTION

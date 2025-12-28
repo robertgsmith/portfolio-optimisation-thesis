@@ -104,3 +104,12 @@ class SummaryStatistics:
         logger.info(f"Computed correlation matrix: {corr_matrix.shape}")
         return corr_matrix, cov_matrix
     
+    def save_statistics(
+        self,
+        data: pd.DataFrame,
+        filename: str
+    ) -> None:
+        """Save statistics to CSV."""
+        filepath = self.analysis_dir / filename
+        data.to_csv(filepath)
+        logger.info(f"Saved: {filepath}")
