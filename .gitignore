@@ -3,4 +3,4 @@
 __pychache__/
 *.pyc
 __scratchfile.py
-*.csv
+data/
