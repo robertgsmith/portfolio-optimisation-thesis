@@ -78,3 +78,29 @@ class SummaryStatistics:
         logger.info("Computed return statistics")
         return return_stats
     
+    def compute_correlation_analysis(
+        self,
+        returns: pd.DataFrame
+    ) -> Tuple[pd.DataFrame, pd.DataFrame]:
+        """
+        Compute correlation and covariance matrices.
+        
+        Parameters
+        ----------
+        returns : pd.DataFrame
+            Return data
+        
+        Returns
+        -------
+        corr_matrix : pd.DataFrame
+            Correlation matrix
+        cov_matrix : pd.DataFrame
+            Covariance matrix (annualised)
+        """
+        TRADING_DAYS_PER_YEAR = 252
+        corr_matrix = returns.corr()
+        cov_matrix = returns.cov() * TRADING_DAYS_PER_YEAR  # Annualised
+        
+        logger.info(f"Computed correlation matrix: {corr_matrix.shape}")
+        return corr_matrix, cov_matrix
+    
