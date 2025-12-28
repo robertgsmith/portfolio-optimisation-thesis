@@ -19,7 +19,62 @@ class SummaryStatistics:
     """Compute and save summary statistics."""
     
     def __init__(self, data_dir: str = "data"):
-        """Initialize summary statistics generator."""
+        """Initialise summary statistics generator."""
         self.data_dir = Path(data_dir)
         self.analysis_dir = self.data_dir / "analysis"
         self.analysis_dir.mkdir(exist_ok=True)
+
+    def compute_return_statistics(
+        self,
+        returns: pd.DataFrame
+    ) -> pd.DataFrame:
+        """
+        Compute comprehensive return statistics.
+        
+        Parameters
+
+        ----------
+        returns : pd.DataFrame
+            Return data
+        
+        Returns
+        -------
+        return_stats : pd.DataFrame
+            Summary statistics
+        """
+        TRADING_DAYS_PER_YEAR = 252
+        return_stats = pd.DataFrame()
+        
+        # Annualised mean return
+        return_stats['ann_mean'] = returns.mean() * TRADING_DAYS_PER_YEAR
+        
+        # Annualised volatility
+        return_stats['ann_vol'] = returns.std() * np.sqrt(TRADING_DAYS_PER_YEAR)
+        
+        # Sharpe ratio (assuming 0% risk-free rate)
+        return_stats['sharpe_ratio'] = return_stats['ann_mean'] / return_stats['ann_vol']
+        
+        # Downside deviation (annualised)
+        downside_returns = returns[returns < 0]
+        return_stats['downside_vol'] = downside_returns.std() * np.sqrt(TRADING_DAYS_PER_YEAR)
+        
+        # Sortino ratio
+        return_stats['sortino_ratio'] = return_stats['ann_mean'] / return_stats['downside_vol']
+        
+        # Skewness and kurtosis
+        return_stats['skewness'] = returns.skew()
+        return_stats['kurtosis'] = returns.kurtosis()
+        
+        # Maximum drawdown
+        cumulative = (1 + returns).cumprod()
+        running_max = cumulative.expanding().max()
+        drawdown = (cumulative - running_max) / running_max
+        return_stats['max_drawdown'] = drawdown.min()
+        
+        # Min and max returns
+        return_stats['min_return'] = returns.min()
+        return_stats['max_return'] = returns.max()
+        
+        logger.info("Computed return statistics")
+        return return_stats
+    
