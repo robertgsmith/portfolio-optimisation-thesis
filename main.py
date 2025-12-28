@@ -19,6 +19,7 @@ import warnings
 from data_components.data_downloader import DataDownloader
 from data_components.data_processor import DataProcessor
 from data_components.feature_engineer import FeatureEngineer
+from data_components.summary_statistics import SummaryStatistics
 
 warnings.filterwarnings('ignore')
 
