@@ -4,21 +4,24 @@ Data Downloader Module
 Downloads and consolidates S&P 100 stock data from Yahoo Finance.
 """
 
+# Standard library imports
+from pathlib import Path
+import logging
+from typing import List, Dict, Optional, Tuple
+
+# Third-party imports
 import yfinance as yf
 import pandas as pd
-import numpy as np
-from datetime import datetime
-from typing import List, Dict, Optional, Tuple
-import logging
-from pathlib import Path
-import warnings
 
-warnings.filterwarnings('ignore')
+# Add parent directory to path and import config.py
+import sys
+sys.path.append(str(Path(__file__).parent.parent))
+import config
 
-# Configure logging
+# Configure logging from config
 logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
+    level=getattr(logging, config.LOG_LEVEL),
+    format=config.LOG_FORMAT,
 )
 logger = logging.getLogger(__name__)
 
@@ -26,25 +29,13 @@ logger = logging.getLogger(__name__)
 class DataDownloader:
     """Download and consolidate S&P 100 stock data from Yahoo Finance."""
     
-    # S&P 100 tickers (OEX components as of recent composition)
-    SP100_TICKERS = [
-        'AAPL', 'ABBV', 'ABT', 'ACN', 'ADBE', 'AIG', 'AMD', 'AMGN', 'AMT',
-        'AMZN', 'AVGO', 'AXP', 'BA', 'BAC', 'BK', 'BKNG', 'BLK', 'BMY',
-        'BRK-B', 'C', 'CAT', 'CHTR', 'CL', 'CMCSA', 'COF', 'COP', 'COST',
-        'CRM', 'CSCO', 'CVS', 'CVX', 'DHR', 'DIS', 'DOW', 'DUK', 'EMR',
-        'EXC', 'F', 'FDX', 'GD', 'GE', 'GILD', 'GM', 'GOOG', 'GOOGL', 'GS',
-        'HD', 'HON', 'IBM', 'INTC', 'JNJ', 'JPM', 'KO', 'LIN', 'LLY', 'LMT',
-        'LOW', 'MA', 'MCD', 'MDLZ', 'MDT', 'MET', 'META', 'MMM', 'MO', 'MRK',
-        'MS', 'MSFT', 'NEE', 'NFLX', 'NKE', 'NVDA', 'ORCL', 'PEP', 'PFE',
-        'PG', 'PM', 'PYPL', 'QCOM', 'RTX', 'SBUX', 'SCHW', 'SO', 'SPG',
-        'T', 'TGT', 'TMO', 'TMUS', 'TSLA', 'TXN', 'UNH', 'UNP', 'UPS',
-        'USB', 'V', 'VZ', 'WFC', 'WMT', 'XOM'
-    ]
+    # S&P 100 tickers from config
+    SP100_TICKERS = config.SP100_TICKERS
     
     def __init__(
         self,
-        start_date: str = "2010-01-01",
-        end_date: str = "2024-12-31"
+        start_date: str = config.START_DATE,
+        end_date: str = config.END_DATE
     ):
         """
         Initialise the data downloader.
@@ -58,7 +49,7 @@ class DataDownloader:
         """
         self.start_date = start_date
         self.end_date = end_date
-        self.data_dir = Path("data")
+        self.data_dir = config.DATA_DIR
         self.data_dir.mkdir(exist_ok=True)
         
         logger.info(f"Initialised downloader for period {start_date} to {end_date}")
@@ -234,7 +225,7 @@ class DataDownloader:
             logger.info(f"\nDropped {dropped_rows} rows with missing data")
         
         # Save to CSV
-        raw_dir = self.data_dir / "raw"
+        raw_dir = config.RAW_DATA_DIR
         raw_dir.mkdir(exist_ok=True)
         
         prices_path = raw_dir / "sp100_prices.csv"

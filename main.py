@@ -1,39 +1,32 @@
 """
-DATA PIPELINE FOR S&P 100 PORTFOLIO OPTIMIZATION
-================================================================
+Main Pipeline for Portfolio Optimization Thesis
 
-This file contains the the run commands the entire pipeline.
-
-Authors: Robert George Smith & Joaquin Rodriguez
-Project: Robust Portfolio Optimisation Under Parameter Uncertainty
+Executes the complete data preparation and analysis pipeline.
 """
 
-import yfinance as yf
-import pandas as pd
-import numpy as np
-from typing import List, Dict, Optional, Tuple
+import config
 import logging
-from pathlib import Path
-import warnings
 
+# Configure logging from config
+logging.basicConfig(
+    level=getattr(logging, config.LOG_LEVEL),
+    format=config.LOG_FORMAT
+)
+logger = logging.getLogger(__name__)
+
+# Import classes
 from data_components.data_downloader import DataDownloader
 from data_components.data_processor import DataProcessor
 from data_components.feature_engineer import FeatureEngineer
 from data_components.summary_statistics import SummaryStatistics
 
-warnings.filterwarnings('ignore')
-
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
-
 
 def run_complete_pipeline():
     """Execute the complete data preparation pipeline."""
     
+    # Print configuration summary
+    config.print_config_summary()
+
     logger.info("="*70)
     logger.info("STARTING COMPLETE DATA PIPELINE")
     logger.info("="*70)
@@ -43,13 +36,16 @@ def run_complete_pipeline():
     # -------------------------------------------------------------------------
     logger.info("\n### STEP 1: DOWNLOADING DATA ###")
     
-    downloader = DataDownloader(start_date="2010-01-01", end_date="2024-12-31")
+    downloader = DataDownloader(
+        start_date=config.START_DATE,
+        end_date=config.END_DATE
+    )   
     prices_df, volume_df, date_coverage = downloader.download_all_tickers()
     
     # Determine optimal date range
     optimal_start, available_tickers = downloader.determine_common_date_range(
         date_coverage,
-        min_coverage_threshold=0.90
+        min_coverage_threshold=config.MIN_COVERAGE_THRESHOLD
     )
     
     # Filter and save
@@ -69,7 +65,8 @@ def run_complete_pipeline():
     summariser = SummaryStatistics()
 
     # Compute returns
-    log_returns = processor.compute_returns(filtered_prices, return_type="log")
+    # log_returns = processor.compute_returns(filtered_prices, return_type="log")
+    log_returns = processor.compute_returns(filtered_prices, return_type=config.RETURN_TYPE)
     simple_returns = processor.compute_returns(filtered_prices, return_type="simple")
 
     processor.save_processed_data(log_returns, "log_returns.csv")
@@ -134,13 +131,18 @@ def run_complete_pipeline():
     logger.info("="*70)
     
     # Print summary
+    asset_count = len(filtered_prices.columns)
+    day_count = len(filtered_prices)
+    first_date = filtered_prices.index[0].date()
+    last_date = filtered_prices.index[-1].date()
+
     print("\n" + "="*70)
     print("PIPELINE SUMMARY")
     print("="*70)
     print(f"Final dataset shape: {filtered_prices.shape}")
-    print(f"Number of assets: {len(filtered_prices.columns)}")
-    print(f"Date range: {filtered_prices.index[0].date()} to {filtered_prices.index[-1].date()}")
-    print(f"Trading days: {len(filtered_prices)}")
+    print(f"Number of assets: {asset_count}")
+    print(f"Date range: {first_date} to {last_date}")
+    print(f"Trading days: {day_count}")
     print(f"\nTop 10 assets by Sharpe ratio:")
     print(return_stats.nlargest(10, 'sharpe_ratio')[['ann_mean', 'ann_vol', 'sharpe_ratio']])
     print("\nData saved to:")

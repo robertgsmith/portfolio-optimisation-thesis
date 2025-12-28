@@ -1,17 +1,27 @@
-import yfinance as yf
+"""
+Data Processor Module
+
+Processes raw price data for portfolio optimization.
+"""
+
+# Standard library imports
+from pathlib import Path
+import logging
+from typing import List, Dict
+
+# Third-party imports
 import pandas as pd
 import numpy as np
-from typing import List, Dict, Tuple
-import logging
-from pathlib import Path
-import warnings
 
-warnings.filterwarnings('ignore')
+# Add parent directory to path and import config.py
+import sys
+sys.path.append(str(Path(__file__).parent.parent))
+import config
 
-# Configure logging
+# Configure logging from config
 logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
+    level=getattr(logging, config.LOG_LEVEL),
+    format=config.LOG_FORMAT,
 )
 logger = logging.getLogger(__name__)
 
@@ -19,15 +29,14 @@ logger = logging.getLogger(__name__)
 class DataProcessor:
     """Process raw price data for portfolio optimization."""
     
-    def __init__(self, data_dir: str = "data"):
+    def __init__(self, data_dir: Path = config.DATA_DIR):
         """Initialize processor with data directory."""
-        self.data_dir = Path(data_dir)
-        self.processed_dir = self.data_dir / "processed"
-        self.processed_dir.mkdir(exist_ok=True)
+        self.data_dir = data_dir
+        self.processed_dir = config.PROCESSED_DATA_DIR
     
     def load_raw_prices(self) -> pd.DataFrame:
         """Load raw price data from CSV."""
-        prices_path = self.data_dir / "raw" / "sp100_prices.csv"
+        prices_path = config.get_data_path("sp100_prices.csv", "raw")
         raw_prices = pd.read_csv(prices_path, index_col=0, parse_dates=True)
         logger.info(f"Loaded raw prices: {raw_prices.shape}")
         return raw_prices
@@ -69,7 +78,7 @@ class DataProcessor:
     def compute_rolling_statistics(
         self,
         returns: pd.DataFrame,
-        windows: List[int] = [21, 63, 126, 252]
+        windows: List[int] = config.ROLLING_WINDOWS
     ) -> Dict[str, pd.DataFrame]:
         """
         Compute rolling mean and volatility.
@@ -87,15 +96,20 @@ class DataProcessor:
             Dictionary of rolling statistics
         """
         stock_stats = {}
-        TRADING_DAYS_PER_YEAR = 252
         
         for window in windows:
             # Rolling mean (annualised)
-            rolling_mean = returns.rolling(window=window).mean() * TRADING_DAYS_PER_YEAR
+            rolling_mean = (
+                returns.rolling(window=window).mean()
+                * config.TRADING_DAYS_PER_YEAR
+            )
             stock_stats[f'rolling_mean_{window}d'] = rolling_mean
             
             # Rolling volatility (annualised)
-            rolling_vol = returns.rolling(window=window).std() * np.sqrt(TRADING_DAYS_PER_YEAR)
+            rolling_vol = (
+                returns.rolling(window=window).std()
+                * np.sqrt(config.TRADING_DAYS_PER_YEAR)
+            )
             stock_stats[f'rolling_vol_{window}d'] = rolling_vol
             
             logger.info(f"Computed {window}-day rolling statistics")
@@ -105,7 +119,7 @@ class DataProcessor:
     def compute_momentum_signals(
         self,
         prices: pd.DataFrame,
-        lookback_periods: List[int] = [21, 63, 126, 252]
+        lookback_periods: List[int] = config.MOMENTUM_PERIODS
     ) -> Dict[str, pd.DataFrame]:
         """
         Compute momentum signals (total returns over lookback period).
@@ -135,7 +149,7 @@ class DataProcessor:
     def compute_covariance_matrices(
         self,
         returns: pd.DataFrame,
-        estimation_window: int = 252
+        estimation_window: int = config.ESTIMATION_WINDOW
     ) -> Dict[str, pd.DataFrame]:
         """
         Compute rolling covariance matrices.
