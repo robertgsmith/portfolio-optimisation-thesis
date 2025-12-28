@@ -64,16 +64,20 @@ def run_complete_pipeline():
     # STEP 2: Process data
     # -------------------------------------------------------------------------
     logger.info("\n### STEP 2: PROCESSING DATA ###")
-    
+
     processor = DataProcessor()
-    
+    summariser = SummaryStatistics()
+
     # Compute returns
     log_returns = processor.compute_returns(filtered_prices, return_type="log")
     simple_returns = processor.compute_returns(filtered_prices, return_type="simple")
-    
+
     processor.save_processed_data(log_returns, "log_returns.csv")
     processor.save_processed_data(simple_returns, "simple_returns.csv")
-    
+
+    # Display dataset characteristics
+    summariser.return_further_data_info(log_returns)
+
     # Compute rolling statistics
     rolling_stats = processor.compute_rolling_statistics(log_returns)
     for name, data in rolling_stats.items():
@@ -113,9 +117,7 @@ def run_complete_pipeline():
     # -------------------------------------------------------------------------
     logger.info("\n### STEP 4: COMPUTING SUMMARY STATISTICS ###")
     
-    summariser = SummaryStatistics()
-    
-    # Return statistics
+    # Return statistics (summariser created earlier)
     return_stats = summariser.compute_return_statistics(log_returns)
     summariser.save_statistics(return_stats, "return_statistics.csv")
     

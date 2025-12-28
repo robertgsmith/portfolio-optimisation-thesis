@@ -113,3 +113,21 @@ class SummaryStatistics:
         filepath = self.analysis_dir / filename
         data.to_csv(filepath)
         logger.info(f"Saved: {filepath}")
+
+    def return_further_data_info(self, returns: pd.DataFrame) -> None:
+        """
+        Print additional dataset characteristics.
+        
+        Parameters
+        ----------
+        returns : pd.DataFrame
+            Return data
+        """
+        print(f"\nDataset Characteristics:")
+        print(f"  Sample period: {returns.index[0].date()} to {returns.index[-1].date()}")
+        print(f"  Calendar years: {(returns.index[-1] - returns.index[0]).days / 365.25:.1f}")
+        print(f"  Trading days: {len(returns)}")
+        print(f"  Average trading days per year: {len(returns) / 15:.1f}")
+        print(f"  Assets: {len(returns.columns)}")
+        print(f"  Coverage: {len(returns.columns) / 99 * 100:.1f}%")
+        print(f"  Total observations: {returns.shape[0] * returns.shape[1]:,}")
