@@ -50,7 +50,7 @@ class FeatureEngineer:
         """
         TRADING_DAYS_PER_YEAR = 252
         expected_return_estimates = {}
-        
+
         selected_historical_mean_method = 'historical_mean' in methods
         selected_momentum_method = 'momentum' in methods
         selected_combined_method = 'combined' in methods
@@ -84,4 +84,48 @@ class FeatureEngineer:
             logger.info("Created combined estimates")
         
         return expected_return_estimates
+    
+    def create_market_features(
+        self,
+        returns: pd.DataFrame,
+        prices: pd.DataFrame
+    ) -> pd.DataFrame:
+        """
+        Create market-level features.
+        
+        Parameters
+        ----------
+        returns : pd.DataFrame
+            Return data
+        prices : pd.DataFrame
+            Price data
+        
+        Returns
+        -------
+        market_features : pd.DataFrame
+            Market-level features
+        """
+        features = pd.DataFrame(index=returns.index)
+
+        # Dimension of portfolio
+        assets_in_portfolio = len(returns.columns)
+        
+        # Equal-weighted market return
+        features['market_return'] = returns.mean(axis=1)
+        
+        # Market volatility (21-day)
+        features['market_vol'] = returns.std(axis=1).rolling(21).mean()
+        
+        # Cross-sectional dispersion
+        features['cross_sectional_vol'] = returns.std(axis=1)
+        
+        # Market breadth: proportion of stocks with positive returns each day
+        positive_returns = (returns > 0)
+        count_positive_per_day = positive_returns.sum(axis=1)
+        features['breadth'] = count_positive_per_day / assets_in_portfolio
+
+        number_of_features = len(features.columns)
+        logger.info(f"Created {number_of_features} market features")
+        
+        return features
     
