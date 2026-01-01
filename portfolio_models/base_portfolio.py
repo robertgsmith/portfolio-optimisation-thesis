@@ -201,3 +201,45 @@ class BasePortfolio(ABC):
         }
         
         return portfolio_statistics
+
+    def validate_weights(self, weights: np.ndarray) -> bool:
+        """
+        Validate that weights satisfy constraints.
+        
+        Parameters
+        ----------
+        weights : np.ndarray
+            Portfolio weights to validate
+        
+        Returns
+        -------
+        bool
+            True if weights are valid
+        """
+        sum_tolerance = 1e-4
+        bound_tolerance = 1e-6
+
+        total_weight = np.sum(weights)
+        is_sum_close_to_one = np.isclose(total_weight, 1.0, atol=sum_tolerance)
+
+        min_weight_allowed = self.min_weight - bound_tolerance
+        max_weight_allowed = self.max_weight + bound_tolerance
+
+        has_weights_below_minimum = np.any(weights < min_weight_allowed)
+        has_weights_above_maximum = np.any(weights > max_weight_allowed)
+
+        # Check sum to 1 (with tolerance)
+        if not is_sum_close_to_one:
+            logger.warning(f"Weights sum to {total_weight:.6f}, expected close to 1.0")
+            return False
+
+        # Check bounds
+        if has_weights_below_minimum:
+            logger.warning(f"Some weights below minimum: {np.min(weights):.6f}")
+            return False
+        
+        if has_weights_above_maximum:
+            logger.warning(f"Some weights above maximum: {np.max(weights):.6f}")
+            return False
+        
+        return True
