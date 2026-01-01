@@ -124,5 +124,33 @@ class BasePortfolio(ABC):
         variance = np.dot(weights, np.dot(cov_matrix, weights))
         sqrt_variance = np.sqrt(variance)
         return sqrt_variance
+
+    def compute_sharpe_ratio(
+        self,
+        expected_return: float,
+        volatility: float
+    ) -> float:
+        """
+        Compute Sharpe ratio.
+        
+        Parameters
+        ----------
+        expected_return : float
+            Expected portfolio return
+        volatility : float
+            Portfolio volatility
+        
+        Returns
+        -------
+        float
+            Sharpe ratio
+        """
+        sharpe = 0.0
+        has_volatility = volatility != 0
+        
+        if has_volatility:
+            risk_premium = expected_return - self.risk_free_rate
+            sharpe = risk_premium / volatility
+        return sharpe
     
     
