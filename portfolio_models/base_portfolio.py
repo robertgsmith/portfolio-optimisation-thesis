@@ -5,6 +5,8 @@ Abstract base class for all portfolio optimisation models.
 """
 
 from abc import ABC, abstractmethod
+import numpy as np
+import pandas as pd
 import logging
 
 # Import config
@@ -52,3 +54,75 @@ class BasePortfolio(ABC):
         self.expected_return_ = None
         self.volatility_ = None
         self.sharpe_ratio_ = None
+
+    @abstractmethod
+    def optimise(
+        self,
+        returns: pd.DataFrame,
+        **kwargs
+    ) -> np.ndarray:
+        """
+        Compute optimal portfolio weights.
+        
+        Parameters
+        ----------
+        returns : pd.DataFrame
+            Historical returns data
+        **kwargs : dict
+            Additional model-specific parameters
+        
+        Returns
+        -------
+        weights : np.ndarray
+            Optimal portfolio weights (sum to 1)
+        """
+        pass
+
+    def compute_expected_return(
+        self,
+        weights: np.ndarray,
+        expected_returns: np.ndarray
+    ) -> float:
+        """
+        Compute expected portfolio return.
+        
+        Parameters
+        ----------
+        weights : np.ndarray
+            Portfolio weights
+        expected_returns : np.ndarray
+            Expected returns for each asset
+        
+        Returns
+        -------
+        float
+            Expected portfolio return (annualized)
+        """
+        returns_dot_product = np.dot(weights, expected_returns)
+        return returns_dot_product
+    
+    def compute_volatility(
+        self,
+        weights: np.ndarray,
+        cov_matrix: np.ndarray
+    ) -> float:
+        """
+        Compute portfolio volatility (standard deviation).
+        
+        Parameters
+        ----------
+        weights : np.ndarray
+            Portfolio weights
+        cov_matrix : np.ndarray
+            Covariance matrix
+        
+        Returns
+        -------
+        float
+            Portfolio volatility (annualized)
+        """
+        variance = np.dot(weights, np.dot(cov_matrix, weights))
+        sqrt_variance = np.sqrt(variance)
+        return sqrt_variance
+    
+    
