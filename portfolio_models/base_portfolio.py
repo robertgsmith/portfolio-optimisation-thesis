@@ -147,10 +147,57 @@ class BasePortfolio(ABC):
         """
         sharpe = 0.0
         has_volatility = volatility != 0
-        
+
         if has_volatility:
             risk_premium = expected_return - self.risk_free_rate
             sharpe = risk_premium / volatility
         return sharpe
     
-    
+    def get_portfolio_statistics(
+        self,
+        weights: np.ndarray,
+        expected_returns: np.ndarray,
+        cov_matrix: np.ndarray
+    ) -> Dict[str, float]:
+        """
+        Compute comprehensive portfolio statistics.
+        
+        Parameters
+        ----------
+        weights : np.ndarray
+            Portfolio weights
+        expected_returns : np.ndarray
+            Expected returns
+        cov_matrix : np.ndarray
+            Covariance matrix
+        
+        Returns
+        -------
+        dict
+            Portfolio statistics
+        """
+        exp_return = self.compute_expected_return(weights, expected_returns)
+        volatility = self.compute_volatility(weights, cov_matrix)
+        sharpe = self.compute_sharpe_ratio(exp_return, volatility)
+        
+        # Weight concentration (Herfindahl index)
+        concentration = np.sum(weights ** 2)
+        
+        # Effective number of assets
+        effective_assets = 0
+        concentration_greater_than_zero = concentration > 0
+        if concentration_greater_than_zero:
+            effective_assets = 1 / concentration
+
+        portfolio_statistics = {
+            'expected_return': exp_return,
+            'volatility': volatility,
+            'sharpe_ratio': sharpe,
+            'concentration': concentration,
+            'effective_n_assets': effective_assets,
+            'max_weight': np.max(weights),
+            'min_weight': np.min(weights),
+            'sum_weights': np.sum(weights)
+        }
+        
+        return portfolio_statistics
