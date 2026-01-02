@@ -13,7 +13,7 @@ from sklearn.covariance import LedoitWolf
 from typing import Optional
 import logging
 
-from mean_variance import MeanVariancePortfolio
+from .mean_variance import MeanVariancePortfolio
 
 # Import config
 import sys

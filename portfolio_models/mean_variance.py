@@ -13,7 +13,7 @@ import cvxpy as cp
 from typing import Optional
 import logging
 
-from base_portfolio import BasePortfolio
+from .base_portfolio import BasePortfolio
 
 # Import config
 import sys
