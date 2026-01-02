@@ -450,16 +450,16 @@ CVXPY_SOLVER_FALLBACK = "OSQP"   # Backup solver
 ## 📧 Contact
 
 **Robert George Smith**  
-Email: robert.smith@student.fs.de  
+Email: robert.smith@fs-students.de  
 GitHub: [@robertgsmith](https://github.com/robertgsmith)
 
 **Joaquin Rodriguez**  
-Email: joaquin.rodriguez@student.fs.de  
-GitHub: [@joaquinrodriguez](https://github.com/joaquinrodriguez)
+Email: joaquin.rodriguez@fs-students.de
+GitHub: [@pbzhxwfsd6-bit](https://github.com/pbzhxwfsd6-bit)
 
 **Supervisors:**  
-Prof. Dr. Grigory Vilkov - grigory.vilkov@fs.de  
-Prof. Dr. Paula Cocoma - paula.cocoma@fs.de
+Prof. Dr. Grigory Vilkov - g.vilkov@fs.de  
+Prof. Dr. Paula Cocoma - p.cocoma@fs.de
 
 ---
 
