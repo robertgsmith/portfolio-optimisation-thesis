@@ -1,5 +1,3 @@
-for init portfolio_models/__init__.py file:
-
 """
 Portfolio Optimisation Models
 
@@ -9,8 +7,16 @@ methods for robust portfolio construction under parameter uncertainty.
 
 from .base_portfolio import BasePortfolio
 from .mean_variance import MeanVariancePortfolio
+from .shrinkage_portfolio import ShrinkagePortfolio
+from .bayesian_portfolio import BayesianPortfolio
+from .robust_portfolio import RobustPortfolio
+from .equal_weight import EqualWeightPortfolio
 
 __all__ = [
     'BasePortfolio',
-    'MeanVariancePortfolio'
+    'MeanVariancePortfolio',
+    'ShrinkagePortfolio',
+    'BayesianPortfolio',
+    'RobustPortfolio',
+    'EqualWeightPortfolio'
 ]
