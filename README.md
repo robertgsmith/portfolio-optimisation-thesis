@@ -66,9 +66,9 @@ portfolio-optimiser-thesis/
 │   ├── backtester.py              # Rolling window backtesting engine
 │   └── performance_metrics.py     # Sharpe, Sortino, drawdown, turnover
 │
-├── sentiment/                     # Fed sentiment analysis (optional)
-│   ├── fed_scraper.py             # FOMC announcement scraping
-│   └── sentiment_analyzer.py      # Lexicon-based sentiment scoring
+├── sentiment/                     # Fed sentiment analysis (Not yet created)
+│   ├── fed_scraper.py             # FOMC announcement scraping (Not yet created)
+│   └── sentiment_analyzer.py      # Lexicon-based sentiment scoring (Not yet created)
 │
 ├── results/                       # Output directory
 │   ├── figures/                   # Charts and plots
@@ -77,9 +77,9 @@ portfolio-optimiser-thesis/
 │
 ├── main.py                        # Data pipeline orchestration
 ├── run_backtest.py                # Execute backtesting
-├── visualise_results.py           # Generate figures for thesis
-├── statistical_analysis.py        # Statistical significance tests
-├── robustness_checks.py           # Robustness analysis
+├── visualise_results.py           # Generate figures for thesis (Not yet created)
+├── statistical_analysis.py        # Statistical significance tests (Not yet created)
+├── robustness_checks.py           # Robustness analysis (Not yet created)
 ├── config.py                      # Configuration parameters
 ├── requirements.txt               # Python dependencies
 └── README.md                      # This file
