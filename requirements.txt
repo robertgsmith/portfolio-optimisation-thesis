@@ -1,35 +1,55 @@
-# Portfolio Optimization Thesis Requirements
+# ============================================================================
+# Portfolio Optimisation Thesis Python Libruary Requirements
 # ============================================================================
 
-# Core
+# Core Scientific Computing
+# -------------------------
 numpy>=1.24.0,<2.0.0
 pandas>=2.0.0,<3.0.0
 scipy>=1.10.0,<2.0.0
 
-# Financial Data
+# Financial Data Acquisition
+# ---------------------------
 yfinance>=0.2.32
 
-# Optimization
-cvxpy>=1.4.0
-cvxopt>=1.3.0
+# Portfolio Optimisation
+# ----------------------
+cvxpy>=1.4.0              # Convex optimisation - PRIMARY REQUIREMENT
+cvxopt>=1.3.0             # Additional solver for cvxpy
+scs>=3.2.0                # Splitting Conic Solver (alternative to ECOS)
+osqp>=0.6.0               # Operator Splitting QP solver (alternative)
+clarabel>=0.5.0           # Modern conic solver (optional but recommended)
 
-# Analysis
-scikit-learn>=1.3.0
-statsmodels>=0.14.0
+# Statistical Analysis & ML
+# --------------------------
+scikit-learn>=1.3.0       # For Ledoit-Wolf shrinkage estimator - REQUIRED
+statsmodels>=0.14.0       # Advanced statistical models
 
-# Visualization
-matplotlib>=3.7.0
-seaborn>=0.12.0
+# Data Visualisation
+# ------------------
+matplotlib>=3.7.0         # Basic plotting
+seaborn>=0.12.0           # Statistical visualisations
+plotly>=5.14.0            # Interactive plots (optional)
 
-# Sentiment Analysis
-requests>=2.31.0
-beautifulsoup4>=4.12.0
-lxml>=4.9.0
+# Fed Sentiment Analysis
+# -----------------------------------
+requests>=2.31.0          # HTTP requests for web scraping
+beautifulsoup4>=4.12.0    # HTML parsing
+lxml>=4.9.0               # XML/HTML parser
 
 # Utilities
-python-dateutil>=2.8.0
-tqdm>=4.65.0
+# ---------
+python-dateutil>=2.8.0    # Date manipulation
+openpyxl>=3.1.0           # Excel file support
+tqdm>=4.65.0              # Progress bars
 
-# Development
-jupyter>=1.0.0
+# Development & Analysis (Optional)
+# ----------------------------------
+jupyter>=1.0.0            # Jupyter notebook support
+notebook>=6.5.0
 ipykernel>=6.22.0
+
+# Testing (Optional but recommended)
+# -----------------------------------
+pytest>=7.4.0             # Unit testing framework
+pytest-cov>=4.1.0         # Coverage reporting
