@@ -162,3 +162,28 @@ def calculate_calmar_ratio(
     
     calmar = annualised_return / abs(max_drawdown)
     return calmar
+
+
+def calculate_portfolio_turnover(weights_history: pd.DataFrame) -> float:
+    """
+    Calculate average portfolio turnover.
+    
+    Parameters
+    ----------
+    weights_history : pd.DataFrame
+        DataFrame of weights over time (dates x assets)
+    
+    Returns
+    -------
+    float
+        Average turnover per rebalancing period
+    """
+    has_enough_weights_history = len(weights_history) > 1
+    if not has_enough_weights_history:
+        return 0.0
+    
+    weight_changes = weights_history.diff().abs().sum(axis=1)  # Calculate weight changes
+    average_turnover = weight_changes.iloc[1:].mean()  # Average turnover (excluding first period)
+    
+    return average_turnover
+
