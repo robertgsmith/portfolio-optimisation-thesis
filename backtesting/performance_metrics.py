@@ -187,3 +187,21 @@ def calculate_portfolio_turnover(weights_history: pd.DataFrame) -> float:
     
     return average_turnover
 
+
+def calculate_weight_concentration(weights: np.ndarray) -> float:
+    """
+    Calculate Herfindahl index (weight concentration).
+    
+    Parameters
+    ----------
+    weights : np.ndarray
+        Portfolio weights
+    
+    Returns
+    -------
+    float
+        Herfindahl index (0 = perfectly diversified, 1 = concentrated)
+    """
+    squared_weights = weights ** 2
+    concentration_index = np.sum(squared_weights)
+    return concentration_index
