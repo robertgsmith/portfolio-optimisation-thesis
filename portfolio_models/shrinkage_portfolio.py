@@ -1,0 +1,64 @@
+"""
+Shrinkage Covariance Portfolio
+
+Mean-variance optimisation with Ledoit-Wolf shrinkage covariance estimator.
+
+Authors: Robert George Smith & Joaquin Rodriguez
+Reference: Ledoit & Wolf (2003). Improved Estimation of the Covariance Matrix.
+"""
+
+import logging
+
+from .mean_variance import MeanVariancePortfolio
+
+# Import config
+import sys
+from pathlib import Path
+sys.path.append(str(Path(__file__).parent.parent))
+import config
+
+logger = logging.getLogger(__name__)
+
+
+class ShrinkagePortfolio(MeanVariancePortfolio):
+    """
+    Portfolio optimisation with Ledoit-Wolf shrinkage covariance.
+    
+    Uses shrinkage estimator to stabilise the covariance matrix:
+        Σ_shrunk = δ * F + (1-δ) * Σ_sample
+    
+    Where:
+        F = structured estimator (constant correlation)
+        δ = shrinkage intensity (automatically determined)
+        Σ_sample = sample covariance
+    """
+    
+    def __init__(
+        self,
+        risk_aversion: float = 1.0,
+        shrinkage_target: str = 'auto',
+        max_weight: float = config.MAX_WEIGHT,
+        min_weight: float = config.MIN_WEIGHT,
+        risk_free_rate: float = config.RISK_FREE_RATE
+    ):
+        """
+        Initialise shrinkage portfolio.
+        
+        Parameters
+        ----------
+        risk_aversion : float
+            Risk aversion parameter
+        shrinkage_target : str
+            Target for shrinkage: 'auto' uses Ledoit-Wolf optimal
+        max_weight : float
+            Maximum weight per asset
+        min_weight : float
+            Minimum weight per asset
+        risk_free_rate : float
+            Risk-free rate
+        """
+        super().__init__(risk_aversion, max_weight, min_weight, risk_free_rate)
+        self.shrinkage_target = shrinkage_target
+        self.model_name = "Shrinkage (Ledoit-Wolf)"
+        self.shrinkage_intensity_ = None
+    
