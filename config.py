@@ -104,6 +104,61 @@ UNCERTAINTY_SET_SIZE = 0.5  # Epsilon for robust optimisation (Bertsimas & Sim)
 COVARIANCE_UNCERTAINTY = 0.1  # 10% uncertainty in covariance estimates
 
 # ============================================================================
+# PORTFOLIO MODEL SPECIFIC PARAMETERS (Add this entire new section)
+# ============================================================================
+
+# Mean-Variance Optimization
+RISK_AVERSION_DEFAULT = 1.0  # Default risk aversion parameter (λ)
+RISK_AVERSION_RANGE = [0.5, 1.0, 2.0, 5.0]  # For sensitivity analysis
+
+# Shrinkage Portfolio (Ledoit-Wolf)
+SHRINKAGE_TARGET = 'auto'  # Options: 'auto', 'constant_correlation', 'constant_variance'
+
+# Bayesian Portfolio (Jorion)
+BAYESIAN_SHRINKAGE_INTENSITY = None  # None = auto-estimate, or float [0, 1]
+BAYESIAN_PRIOR_WEIGHT = 0.1  # Weight given to market prior
+TAU = 0.05  # Uncertainty in prior
+
+# Robust Optimization (Bertsimas & Sim)
+ROBUST_EPSILON = 0.5  # Size of uncertainty set (0 = no uncertainty, 1 = high uncertainty)
+ROBUST_GAMMA = 0.5  # Budget of uncertainty
+ROBUST_TARGET_RETURN = None  # None = use risk-return tradeoff, or float for target return
+
+# ============================================================================
+# OPTIMIZATION SOLVER SETTINGS (Add this entire new section)
+# ============================================================================
+
+# CVXPY solver preferences
+CVXPY_SOLVER = "ECOS"  # Primary solver (Options: ECOS, SCS, OSQP, CVXOPT)
+CVXPY_SOLVER_FALLBACK = "SCS"  # Fallback if primary fails
+CVXPY_VERBOSE = False  # Set to True for debugging optimization issues
+CVXPY_MAX_ITER = 10000  # Maximum iterations for solver
+CVXPY_ABSTOL = 1e-7  # Absolute tolerance
+CVXPY_RELTOL = 1e-6  # Relative tolerance
+CVXPY_FEASTOL = 1e-7  # Feasibility tolerance
+
+# Solver-specific settings
+SOLVER_SETTINGS = {
+    'ECOS': {
+        'max_iters': CVXPY_MAX_ITER,
+        'abstol': CVXPY_ABSTOL,
+        'reltol': CVXPY_RELTOL,
+        'feastol': CVXPY_FEASTOL
+    },
+    'SCS': {
+        'max_iters': CVXPY_MAX_ITER,
+        'eps': CVXPY_ABSTOL,
+        'verbose': CVXPY_VERBOSE
+    },
+    'OSQP': {
+        'max_iter': CVXPY_MAX_ITER,
+        'eps_abs': CVXPY_ABSTOL,
+        'eps_rel': CVXPY_RELTOL,
+        'verbose': CVXPY_VERBOSE
+    }
+}
+
+# ============================================================================
 # TRANSACTION COSTS
 # ============================================================================
 
