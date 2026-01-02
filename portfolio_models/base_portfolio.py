@@ -2,6 +2,7 @@
 Base Portfolio Class
 
 Abstract base class for all portfolio optimisation models.
+Authors: Robert George Smith & Joaquin Rodriguez
 """
 
 from abc import ABC, abstractmethod
