@@ -190,23 +190,28 @@ EXPECTED_RETURN_METHODS = ['historical_mean', 'momentum', 'combined']
 COVARIANCE_METHODS = ['sample', 'ledoit_wolf', 'robust']
 
 # ============================================================================
-# BACKTESTING PARAMETERS
+# BACKTESTING CONFIGURATION
 # ============================================================================
 
-# Walk-Forward Analysis
-INITIAL_TRAINING_PERIOD = 252  # Initial 1-year training period
-TEST_PERIOD = 21  # Test on next month
+# Initial Portfolio Value
+INITIAL_PORTFOLIO_VALUE = 1000000.0  # $1 million
+
+# Backtest Period (optional - can override in backtest)
+BACKTEST_START_DATE = None  # None = use all available data
+BACKTEST_END_DATE = None     # None = use all available data
 
 # Performance Metrics to Calculate
 PERFORMANCE_METRICS = [
-    'sharpe_ratio',
-    'sortino_ratio',
-    'calmar_ratio',
-    'max_drawdown',
     'annual_return',
     'annual_volatility',
-    'turnover',
-    'weight_concentration'
+    'sharpe_ratio',
+    'sortino_ratio',
+    'max_drawdown',
+    'calmar_ratio',
+    'total_return',
+    'avg_turnover',
+    'avg_concentration',
+    'win_rate'
 ]
 
 # ============================================================================
