@@ -227,3 +227,45 @@ class Backtester:
         
         return self.results
     
+    def _format_results(self):
+        """Format backtest results into DataFrames."""
+        
+        # Get test period dates
+        test_dates = []
+        for model_name in self.models.keys():
+            test_dates = self.returns.index[-len(self.portfolio_returns[model_name]):]
+            break
+        
+        # Portfolio returns DataFrame
+        returns_df = pd.DataFrame(
+            {name: rets for name, rets in self.portfolio_returns.items()},
+            index=test_dates
+        )
+        
+        # Portfolio values DataFrame
+        values_df = pd.DataFrame(
+            {name: vals[1:] for name, vals in self.portfolio_values.items()},  # Exclude initial value
+            index=test_dates
+        )
+        
+        # Weights history DataFrames
+        weights_dfs = {}
+        for model_name, weights_list in self.weights_history.items():
+            weights_data = []
+            dates = []
+            for entry in weights_list:
+                dates.append(entry['date'])
+                weights_data.append(entry['weights'])
+            
+            weights_dfs[model_name] = pd.DataFrame(
+                weights_data,
+                index=dates,
+                columns=self.returns.columns
+            )
+        
+        self.results = {
+            'returns': returns_df,
+            'values': values_df,
+            'weights': weights_dfs
+        }
+    
