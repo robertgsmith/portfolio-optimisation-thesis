@@ -280,7 +280,7 @@ PORTFOLIO_MODELS = {
         }
     },
     'robust': {
-        'name': 'Robust Optimization (Bertsimas & Sim)',
+        'name': 'Robust Optimisation (Bertsimas & Sim)',
         'enabled': True,
         'parameters': {
             'epsilon': UNCERTAINTY_SET_SIZE,
