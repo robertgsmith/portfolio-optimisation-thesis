@@ -10,9 +10,10 @@ Reference: Ledoit & Wolf (2003). Improved Estimation of the Covariance Matrix.
 import numpy as np
 import pandas as pd
 from sklearn.covariance import LedoitWolf
+from typing import Optional
 import logging
 
-from .mean_variance import MeanVariancePortfolio
+from mean_variance import MeanVariancePortfolio
 
 # Import config
 import sys
@@ -97,3 +98,40 @@ class ShrinkagePortfolio(MeanVariancePortfolio):
         logger.info(f"Ledoit-Wolf shrinkage intensity: {shrinkage:.4f}")
         
         return cov_shrunk, shrinkage
+    
+    def optimise(
+        self,
+        returns: pd.DataFrame,
+        expected_returns: Optional[np.ndarray] = None,
+        cov_matrix: Optional[np.ndarray] = None
+    ) -> np.ndarray:
+        """
+        Optimise portfolio using shrinkage covariance.
+        
+        Parameters
+        ----------
+        returns : pd.DataFrame
+            Historical returns
+        expected_returns : np.ndarray, optional
+            Expected returns (if None, uses historical mean)
+        cov_matrix : np.ndarray, optional
+            Ignored - shrinkage covariance is estimated from returns
+        
+        Returns
+        -------
+        weights : np.ndarray
+            Optimal portfolio weights
+        """
+        # Estimate shrinkage covariance
+        cov_shrunk, shrinkage = self.estimate_shrinkage_covariance(returns)
+        self.shrinkage_intensity_ = shrinkage
+        
+        # Use parent class optimisation with shrunk covariance
+        weights = super().optimise(
+            returns=returns,
+            expected_returns=expected_returns,
+            cov_matrix=cov_shrunk
+        )
+        
+        return weights
+    
