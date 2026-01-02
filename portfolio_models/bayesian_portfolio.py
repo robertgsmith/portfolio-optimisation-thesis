@@ -144,4 +144,75 @@ class BayesianPortfolio(MeanVariancePortfolio):
         
         return bayesian_returns, shrinkage
         
+    def optimise(
+        self,
+        returns: pd.DataFrame,
+        expected_returns: Optional[np.ndarray] = None,
+        cov_matrix: Optional[np.ndarray] = None
+    ) -> np.ndarray:
+        """
+        Optimise portfolio using Bayesian expected returns.
+        
+        Parameters
+        ----------
+        returns : pd.DataFrame
+            Historical returns
+        expected_returns : np.ndarray, optional
+            Ignored - Bayesian returns are estimated from data
+        cov_matrix : np.ndarray, optional
+            Covariance matrix (if None, uses sample)
+        
+        Returns
+        -------
+        weights : np.ndarray
+            Optimal portfolio weights
+        """
+        # Estimate Bayesian expected returns
+        bayesian_returns, shrinkage = self.estimate_bayesian_returns(returns, cov_matrix)
+        self.estimated_shrinkage_ = shrinkage
+        
+        # Use parent class optimisation with Bayesian returns
+        weights = super().optimise(
+            returns=returns,
+            expected_returns=bayesian_returns,
+            cov_matrix=cov_matrix
+        )
+        
+        return weights
+    
+    def optimise(
+        self,
+        returns: pd.DataFrame,
+        expected_returns: Optional[np.ndarray] = None,
+        cov_matrix: Optional[np.ndarray] = None
+    ) -> np.ndarray:
+        """
+        Optimise portfolio using Bayesian expected returns.
+        
+        Parameters
+        ----------
+        returns : pd.DataFrame
+            Historical returns
+        expected_returns : np.ndarray, optional
+            Ignored - Bayesian returns are estimated from data
+        cov_matrix : np.ndarray, optional
+            Covariance matrix (if None, uses sample)
+        
+        Returns
+        -------
+        weights : np.ndarray
+            Optimal portfolio weights
+        """
+        # Estimate Bayesian expected returns
+        bayesian_returns, shrinkage = self.estimate_bayesian_returns(returns, cov_matrix)
+        self.estimated_shrinkage_ = shrinkage
+        
+        # Use parent class optimisation with Bayesian returns
+        weights = super().optimise(
+            returns=returns,
+            expected_returns=bayesian_returns,
+            cov_matrix=cov_matrix
+        )
+        
+        return weights
     
