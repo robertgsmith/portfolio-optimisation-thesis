@@ -243,3 +243,46 @@ class BasePortfolio(ABC):
             return False
         
         return True
+    
+    def apply_weight_constraints(
+        self,
+        weights: np.ndarray,
+        method: str = 'rescale'
+    ) -> np.ndarray:
+        """
+        Apply weight constraints and normalisation.
+        
+        Parameters
+        ----------
+        weights : np.ndarray
+            Unconstrained weights
+        method : str
+            Method to apply constraints: 'rescale' or 'project'
+        
+        Returns
+        -------
+        np.ndarray
+            Constrained and normalised weights
+        """
+        if method == 'rescale':
+            # Clip to bounds
+            weights = np.clip(weights, self.min_weight, self.max_weight)
+            
+            # Normalise to sum to 1
+            weights = weights / np.sum(weights)
+            
+            return weights
+        
+        elif method == 'project':
+            # More sophisticated projection (would need optimisation)
+            # For now, use simple rescale
+            weights = self.apply_weight_constraints(weights, method='rescale')
+            return weights
+        
+        else:
+            raise ValueError(f"Unknown method: {method}")
+        
+    def __repr__(self) -> str:
+        """String representation of portfolio."""
+        portfolio_representation = f"{self.__class__.__name__}(max_weight={self.max_weight}, min_weight={self.min_weight})"
+        return portfolio_representation
