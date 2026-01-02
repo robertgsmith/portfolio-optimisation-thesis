@@ -301,3 +301,36 @@ class Backtester:
         logger.info("Performance metrics calculated")
         return metrics_df
     
+    def get_cumulative_returns(self) -> pd.DataFrame:
+        """
+        Get cumulative returns for all models.
+        
+        Returns
+        -------
+        pd.DataFrame
+            Cumulative returns over time
+        """
+        if not self.results:
+            raise ValueError("No backtest results available. Run run_backtest() first.")
+        
+        cum_returns = (1 + self.results['returns']).cumprod() - 1
+        return cum_returns
+    
+    def get_drawdowns(self) -> pd.DataFrame:
+        """
+        Get drawdowns for all models.
+        
+        Returns
+        -------
+        pd.DataFrame
+            Drawdowns over time
+        """
+        if not self.results:
+            raise ValueError("No backtest results available. Run run_backtest() first.")
+        
+        cumulative = (1 + self.results['returns']).cumprod()
+        running_max = cumulative.expanding().max()
+        drawdowns = (cumulative - running_max) / running_max
+        
+        return drawdowns
+    
