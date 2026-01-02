@@ -334,3 +334,60 @@ class Backtester:
         
         return drawdowns
     
+    def save_results(self, output_dir: Optional[Path] = None):
+        """
+        Save backtest results to CSV files.
+        
+        Parameters
+        ----------
+        output_dir : Path, optional
+            Output directory (default: config.RESULTS_DIR)
+        """
+        if not self.results:
+            raise ValueError("No backtest results available. Run run_backtest() first.")
+        
+        if output_dir is None:
+            output_dir = config.RESULTS_DIR
+        
+        output_dir = Path(output_dir)
+        output_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Save returns
+        returns_path = output_dir / "backtest_returns.csv"
+        self.results['returns'].to_csv(returns_path)
+        logger.info(f"Saved returns to {returns_path}")
+        
+        # Save portfolio values
+        values_path = output_dir / "backtest_values.csv"
+        self.results['values'].to_csv(values_path)
+        logger.info(f"Saved values to {values_path}")
+        
+        # Save weights for each model
+        weights_dir = output_dir / "weights"
+        weights_dir.mkdir(exist_ok=True)
+        
+        for model_name, weights_df in self.results['weights'].items():
+            safe_name = model_name.replace(' ', '_').replace('(', '').replace(')', '').lower()
+            weights_path = weights_dir / f"weights_{safe_name}.csv"
+            weights_df.to_csv(weights_path)
+            logger.info(f"Saved {model_name} weights to {weights_path}")
+        
+        # Save metrics
+        metrics = self.calculate_metrics()
+        metrics_path = output_dir / "backtest_metrics.csv"
+        metrics.to_csv(metrics_path)
+        logger.info(f"Saved metrics to {metrics_path}")
+        
+        # Save cumulative returns
+        cum_returns = self.get_cumulative_returns()
+        cum_path = output_dir / "backtest_cumulative_returns.csv"
+        cum_returns.to_csv(cum_path)
+        logger.info(f"Saved cumulative returns to {cum_path}")
+        
+        # Save drawdowns
+        drawdowns = self.get_drawdowns()
+        drawdowns_path = output_dir / "backtest_drawdowns.csv"
+        drawdowns.to_csv(drawdowns_path)
+        logger.info(f"Saved drawdowns to {drawdowns_path}")
+        
+        print(f"\n✓ All results saved to {output_dir}")
