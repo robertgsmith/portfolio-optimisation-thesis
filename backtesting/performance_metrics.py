@@ -222,7 +222,7 @@ def calculate_effective_n_assets(weights: np.ndarray) -> float:
         Effective number of assets (1/Herfindahl)
     """
     herfindahl = calculate_weight_concentration(weights)
-    
+
     has_no_weights = herfindahl == 0
     if has_no_weights:
         return 0.0
@@ -230,3 +230,72 @@ def calculate_effective_n_assets(weights: np.ndarray) -> float:
     effective_n_assets = 1 / herfindahl
     return effective_n_assets
 
+
+def calculate_all_metrics(
+    returns: pd.Series,
+    weights_history: Optional[pd.DataFrame] = None,
+    risk_free_rate: float = config.RISK_FREE_RATE,
+    periods_per_year: int = config.TRADING_DAYS_PER_YEAR
+) -> Dict[str, float]:
+    """
+    Calculate all performance metrics.
+    
+    Parameters
+    ----------
+    returns : pd.Series
+        Portfolio returns
+    weights_history : pd.DataFrame, optional
+        Weight history for turnover calculation
+    risk_free_rate : float
+        Risk-free rate
+    periods_per_year : int
+        Periods per year
+    
+    Returns
+    -------
+    dict
+        Dictionary of all metrics
+    """
+    n_periods = len(returns)
+    has_returns_data = n_periods > 0
+    if has_returns_data:
+        win_rate = (returns > 0).sum() / len(returns)
+    else:
+        win_rate = 0
+
+    metrics = {
+        'annual_return': returns.mean() * periods_per_year,
+        'annual_volatility': returns.std() * np.sqrt(periods_per_year),
+        'sharpe_ratio': calculate_sharpe_ratio(returns, risk_free_rate, periods_per_year),
+        'sortino_ratio': calculate_sortino_ratio(returns, risk_free_rate, periods_per_year),
+        'max_drawdown': calculate_max_drawdown(returns),
+        'calmar_ratio': calculate_calmar_ratio(returns, periods_per_year),
+        'total_return': (1 + returns).prod() - 1,
+        'n_periods': n_periods,
+        'positive_periods': (returns > 0).sum(),
+        'negative_periods': (returns < 0).sum(),
+        'win_rate': win_rate
+    }
+    
+    # Add turnover if weights provided
+    has_valid_weights_history = (
+        weights_history is not None
+        and len(weights_history) > 0
+    )
+    if has_valid_weights_history:
+        metrics['avg_turnover'] = calculate_portfolio_turnover(weights_history)
+        
+        # Average concentration
+        concentrations = weights_history.apply(
+            lambda row: calculate_weight_concentration(row.values),
+            axis=1
+        )
+        metrics['avg_concentration'] = concentrations.mean()
+
+        has_average_concentration_data = metrics['avg_concentration'] > 0
+        if has_average_concentration_data:
+            metrics['avg_effective_n'] = 1 / metrics['avg_concentration']
+        else:
+            metrics['avg_effective_n'] = 0
+    
+    return metrics
