@@ -129,3 +129,36 @@ def calculate_max_drawdown(returns: pd.Series) -> float:
 
     return maximum_drawdown
 
+
+def calculate_calmar_ratio(
+    returns: pd.Series,
+    periods_per_year: int = config.TRADING_DAYS_PER_YEAR
+) -> float:
+    """
+    Calculate Calmar ratio (annualised return / max drawdown).
+    
+    Parameters
+    ----------
+    returns : pd.Series
+        Portfolio returns
+    periods_per_year : int
+        Number of periods per year
+    
+    Returns
+    -------
+    float
+        Calmar ratio
+    """
+    has_no_returns_data = len(returns) == 0
+    if has_no_returns_data:
+        return 0.0
+    
+    annualised_return = returns.mean() * periods_per_year
+    max_drawdown = calculate_max_drawdown(returns)
+    
+    has_no_max_drawdown = max_drawdown == 0
+    if has_no_max_drawdown:
+        return 0.0
+    
+    calmar = annualised_return / abs(max_drawdown)
+    return calmar
