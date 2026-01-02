@@ -57,3 +57,49 @@ def calculate_sharpe_ratio(
     sharpe = mean_excess_return / volatility * annualisation
     
     return sharpe
+
+
+def calculate_sortino_ratio(
+    returns: pd.Series,
+    risk_free_rate: float = config.RISK_FREE_RATE,
+    periods_per_year: int = config.TRADING_DAYS_PER_YEAR
+) -> float:
+    """
+    Calculate annualised Sortino ratio (uses downside deviation).
+    
+    Parameters
+    ----------
+    returns : pd.Series
+        Portfolio returns (daily)
+    risk_free_rate : float
+        Risk-free rate (annualised)
+    periods_per_year : int
+        Number of periods per year
+    
+    Returns
+    -------
+    float
+        Annualised Sortino ratio
+    """
+    has_no_returns_data = len(returns) == 0
+    if has_no_returns_data:
+        return 0.0
+    
+    risk_premium = returns - risk_free_rate
+    excess_returns = risk_premium / periods_per_year
+    downside_returns = excess_returns[excess_returns < 0]
+    
+    has_no_downside_returns_data = len(downside_returns) == 0
+    has_no_downside_volatility_data = downside_returns.std() == 0
+    if has_no_downside_returns_data or has_no_downside_volatility_data:
+        return 0.0
+    
+    downside_std = downside_returns.std()
+    mean_excess_return = excess_returns.mean()
+    annualisation = np.sqrt(periods_per_year)
+    
+    sortino = mean_excess_return / downside_std * annualisation
+    
+    return sortino
+
+
