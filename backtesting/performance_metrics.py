@@ -97,9 +97,35 @@ def calculate_sortino_ratio(
     downside_std = downside_returns.std()
     mean_excess_return = excess_returns.mean()
     annualisation = np.sqrt(periods_per_year)
-    
+
     sortino = mean_excess_return / downside_std * annualisation
     
     return sortino
 
+
+def calculate_max_drawdown(returns: pd.Series) -> float:
+    """
+    Calculate maximum drawdown.
+    
+    Parameters
+    ----------
+    returns : pd.Series
+        Portfolio returns
+    
+    Returns
+    -------
+    float
+        Maximum drawdown (negative value)
+    """
+    has_no_returns_data = len(returns) == 0
+    if has_no_returns_data:
+        return 0.0
+    
+    cumulative = (1 + returns).cumprod()
+    running_max = cumulative.expanding().max()
+    drawdown = (cumulative - running_max) / running_max
+    
+    maximum_drawdown = drawdown.min()  # returns most negative value
+
+    return maximum_drawdown
 
