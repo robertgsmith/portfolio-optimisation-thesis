@@ -158,3 +158,92 @@ class MeanVariancePortfolio(BasePortfolio):
             # Return equal weights as fallback
             weights = np.ones(number_of_assets) / number_of_assets
             return weights
+        
+    def efficient_frontier(
+        self,
+        returns: pd.DataFrame,
+        n_points: int = 50,
+        expected_returns: Optional[np.ndarray] = None,
+        cov_matrix: Optional[np.ndarray] = None
+    ) -> tuple:
+        """
+        Compute the efficient frontier.
+        
+        Parameters
+        ----------
+        returns : pd.DataFrame
+            Historical returns
+        n_points : int
+            Number of points on the frontier
+        expected_returns : np.ndarray, optional
+            Expected returns
+        cov_matrix : np.ndarray, optional
+            Covariance matrix
+        
+        Returns
+        -------
+        frontier_returns : np.ndarray
+            Expected returns along frontier
+        frontier_volatilities : np.ndarray
+            Volatilities along frontier
+        frontier_weights : np.ndarray
+            Weights for each frontier portfolio
+        """
+        number_of_assets = returns.shape[1]
+        
+        if expected_returns is None:
+            expected_returns = returns.mean().values * config.TRADING_DAYS_PER_YEAR
+        
+        if cov_matrix is None:
+            cov_matrix = returns.cov().values * config.TRADING_DAYS_PER_YEAR
+        
+        # Find minimum and maximum return portfolios
+        weights = cp.Variable(number_of_assets)
+        portfolio_return = expected_returns @ weights
+        portfolio_variance = cp.quad_form(weights, cov_matrix)
+        
+        constraints = [
+            cp.sum(weights) == 1,
+            weights >= self.min_weight,
+            weights <= self.max_weight
+        ]
+        
+        # Minimum variance portfolio
+        problem = cp.Problem(cp.Minimize(portfolio_variance), constraints)
+        problem.solve(solver=cp.ECOS)
+        min_return = expected_returns @ weights.value
+        
+        # Maximum return portfolio
+        problem = cp.Problem(cp.Maximize(portfolio_return), constraints)
+        problem.solve(solver=cp.ECOS)
+        max_return = expected_returns @ weights.value
+        
+        # Generate points along frontier
+        target_returns = np.linspace(min_return, max_return, n_points)
+        frontier_volatilities = []
+        frontier_weights = []
+        
+        for target in target_returns:
+            # Minimize variance subject to target return
+            constraints_with_target = constraints + [portfolio_return >= target]
+            problem = cp.Problem(cp.Minimize(portfolio_variance), constraints_with_target)
+            problem.solve(solver=cp.ECOS)
+            
+            if problem.status in ['optimal', 'optimal_inaccurate']:
+                vol = np.sqrt(problem.value)
+                frontier_volatilities.append(vol)
+                frontier_weights.append(weights.value)
+            else:
+                target_returns = target_returns[:len(frontier_volatilities)]
+                break
+        
+        frontier_return_array = np.array(target_returns[:len(frontier_volatilities)])
+        frontier_volatility_array = np.array(frontier_volatilities)
+        frontier_weight_array = np.array(frontier_weights)
+
+        return_arrays = (
+            frontier_return_array,
+            frontier_volatility_array,
+            frontier_weight_array
+        )
+        return return_arrays
