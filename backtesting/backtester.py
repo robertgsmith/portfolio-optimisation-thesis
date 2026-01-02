@@ -269,3 +269,35 @@ class Backtester:
             'weights': weights_dfs
         }
     
+    def calculate_metrics(self) -> pd.DataFrame:
+        """
+        Calculate performance metrics for all models.
+        
+        Returns
+        -------
+        pd.DataFrame
+            Performance metrics for each model
+        """
+        if not self.results:
+            raise ValueError("No backtest results available. Run run_backtest() first.")
+        
+        metrics_dict = {}
+        
+        for model_name in self.models.keys():
+            returns = self.results['returns'][model_name]
+            weights = self.results['weights'][model_name]
+            
+            metrics = calculate_all_metrics(
+                returns=returns,
+                weights_history=weights,
+                risk_free_rate=config.RISK_FREE_RATE,
+                periods_per_year=config.TRADING_DAYS_PER_YEAR
+            )
+            
+            metrics_dict[model_name] = metrics
+        
+        metrics_df = pd.DataFrame(metrics_dict).T
+        
+        logger.info("Performance metrics calculated")
+        return metrics_df
+    
