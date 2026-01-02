@@ -129,8 +129,8 @@ ROBUST_TARGET_RETURN = None  # None = use risk-return tradeoff, or float for tar
 # ============================================================================
 
 # CVXPY solver preferences
-CVXPY_SOLVER = "ECOS"  # Primary solver (Options: ECOS, SCS, OSQP, CVXOPT)
-CVXPY_SOLVER_FALLBACK = "SCS"  # Fallback if primary fails
+CVXPY_SOLVER = "SCS"  # Primary solver (Options: ECOS, SCS, OSQP, CVXOPT)
+CVXPY_SOLVER_FALLBACK = "OSQP"  # Fallback if primary fails
 CVXPY_VERBOSE = False  # Set to True for debugging optimization issues
 CVXPY_MAX_ITER = 10000  # Maximum iterations for solver
 CVXPY_ABSTOL = 1e-7  # Absolute tolerance

@@ -127,7 +127,7 @@ class MeanVariancePortfolio(BasePortfolio):
         problem = cp.Problem(objective, constraints)
         
         try:
-            problem.solve(solver=cp.ECOS)
+            problem.solve(solver=cp.SCS, verbose=False)
             
             if problem.status not in ['optimal', 'optimal_inaccurate']:
                 logger.warning(f"Optimisation status: {problem.status}")
@@ -210,12 +210,12 @@ class MeanVariancePortfolio(BasePortfolio):
         
         # Minimum variance portfolio
         problem = cp.Problem(cp.Minimize(portfolio_variance), constraints)
-        problem.solve(solver=cp.ECOS)
+        problem.solve(solver=cp.SCS, verbose=False)
         min_return = expected_returns @ weights.value
         
         # Maximum return portfolio
         problem = cp.Problem(cp.Maximize(portfolio_return), constraints)
-        problem.solve(solver=cp.ECOS)
+        problem.solve(solver=cp.SCS, verbose=False)
         max_return = expected_returns @ weights.value
         
         # Generate points along frontier
@@ -227,7 +227,7 @@ class MeanVariancePortfolio(BasePortfolio):
             # Minimize variance subject to target return
             constraints_with_target = constraints + [portfolio_return >= target]
             problem = cp.Problem(cp.Minimize(portfolio_variance), constraints_with_target)
-            problem.solve(solver=cp.ECOS)
+            problem.solve(solver=cp.SCS, verbose=False)
             
             if problem.status in ['optimal', 'optimal_inaccurate']:
                 vol = np.sqrt(problem.value)

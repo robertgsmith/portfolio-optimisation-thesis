@@ -143,7 +143,7 @@ class RobustPortfolio(BasePortfolio):
         problem = cp.Problem(objective, constraints)
         
         try:
-            problem.solve(solver=cp.ECOS)
+            problem.solve(solver=cp.SCS, verbose=False)
             
             if problem.status not in ['optimal', 'optimal_inaccurate']:
                 logger.warning(f"Robust optimisation status: {problem.status}")
