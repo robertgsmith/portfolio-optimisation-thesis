@@ -7,6 +7,9 @@ Authors: Robert George Smith & Joaquin Rodriguez
 Reference: Ledoit & Wolf (2003). Improved Estimation of the Covariance Matrix.
 """
 
+import numpy as np
+import pandas as pd
+from sklearn.covariance import LedoitWolf
 import logging
 
 from .mean_variance import MeanVariancePortfolio
@@ -62,3 +65,35 @@ class ShrinkagePortfolio(MeanVariancePortfolio):
         self.model_name = "Shrinkage (Ledoit-Wolf)"
         self.shrinkage_intensity_ = None
     
+    def estimate_shrinkage_covariance(
+        self,
+        returns: pd.DataFrame
+    ) -> tuple:
+        """
+        Estimate covariance matrix using Ledoit-Wolf shrinkage.
+        
+        Parameters
+        ----------
+        returns : pd.DataFrame
+            Historical returns
+        
+        Returns
+        -------
+        cov_shrunk : np.ndarray
+            Shrinkage covariance matrix (annualised)
+        shrinkage : float
+            Shrinkage intensity used
+        """
+        # Fit Ledoit-Wolf estimator
+        ledoit_wolf = LedoitWolf(store_precision=False, assume_centered=False)
+        ledoit_wolf.fit(returns.values)
+        
+        # Get shrinkage covariance (annualised)
+        cov_shrunk = ledoit_wolf.covariance_ * config.TRADING_DAYS_PER_YEAR
+        
+        # Get shrinkage intensity
+        shrinkage = ledoit_wolf.shrinkage_
+        
+        logger.info(f"Ledoit-Wolf shrinkage intensity: {shrinkage:.4f}")
+        
+        return cov_shrunk, shrinkage
