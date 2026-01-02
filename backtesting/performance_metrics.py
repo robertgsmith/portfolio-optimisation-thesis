@@ -205,3 +205,28 @@ def calculate_weight_concentration(weights: np.ndarray) -> float:
     squared_weights = weights ** 2
     concentration_index = np.sum(squared_weights)
     return concentration_index
+
+
+def calculate_effective_n_assets(weights: np.ndarray) -> float:
+    """
+    Calculate effective number of assets.
+    
+    Parameters
+    ----------
+    weights : np.ndarray
+        Portfolio weights
+    
+    Returns
+    -------
+    float
+        Effective number of assets (1/Herfindahl)
+    """
+    herfindahl = calculate_weight_concentration(weights)
+    
+    has_no_weights = herfindahl == 0
+    if has_no_weights:
+        return 0.0
+    
+    effective_n_assets = 1 / herfindahl
+    return effective_n_assets
+
