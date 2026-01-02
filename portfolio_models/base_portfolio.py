@@ -7,6 +7,7 @@ Abstract base class for all portfolio optimisation models.
 from abc import ABC, abstractmethod
 import numpy as np
 import pandas as pd
+from typing import Dict
 import logging
 
 # Import config
