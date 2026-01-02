@@ -68,3 +68,15 @@ class Backtester:
         self.rebalancing_freq = rebalancing_freq
         self.transaction_cost = transaction_cost
         self.initial_cash = initial_cash
+
+        # Results storage
+        self.results = {}
+        self.weights_history = {}
+        self.portfolio_returns = {}
+        self.portfolio_values = {}
+        
+        logger.info(f"Initialised backtester with {len(models)} models")
+        logger.info(f"Estimation window: {estimation_window} periods")
+        logger.info(f"Rebalancing frequency: {rebalancing_freq} periods")
+        logger.info(f"Transaction cost: {transaction_cost*10000:.1f} bps")
+    
