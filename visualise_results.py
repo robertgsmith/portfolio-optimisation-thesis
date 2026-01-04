@@ -23,6 +23,7 @@ sns.set_palette("husl")
 # Create figures directory
 config.FIGURES_DIR.mkdir(parents=True, exist_ok=True)
 
+
 def plot_cumulative_returns():
     """Plot cumulative returns for all models."""
     
@@ -48,6 +49,7 @@ def plot_cumulative_returns():
     print("✓ Saved: cumulative_returns.png")
     plt.close()
 
+
 def plot_drawdowns():
     """Plot drawdowns for all models."""
     
@@ -71,5 +73,34 @@ def plot_drawdowns():
     plt.tight_layout()
     plt.savefig(config.FIGURES_DIR / 'drawdowns.png', dpi=300, bbox_inches='tight')
     print("✓ Saved: drawdowns.png")
+    plt.close()
+
+
+def plot_rolling_sharpe():
+    """Plot rolling Sharpe ratios."""
+    
+    returns = pd.read_csv(config.RESULTS_DIR / "backtest_returns.csv",
+                         index_col=0, parse_dates=True)
+    
+    # Calculate rolling Sharpe (252-day window)
+    rolling_sharpe = returns.rolling(window=252).apply(
+        lambda x: x.mean() / x.std() * np.sqrt(252) if x.std() > 0 else 0
+    )
+    
+    fig, ax = plt.subplots(figsize=(12, 6))
+    
+    for col in rolling_sharpe.columns:
+        ax.plot(rolling_sharpe.index, rolling_sharpe[col], label=col, linewidth=2)
+    
+    ax.axhline(y=0, color='black', linestyle='--', alpha=0.5)
+    ax.set_title('Rolling Sharpe Ratio (252-day)', fontsize=14, fontweight='bold')
+    ax.set_xlabel('Date', fontsize=12)
+    ax.set_ylabel('Sharpe Ratio', fontsize=12)
+    ax.legend(loc='best', frameon=True, shadow=True)
+    ax.grid(True, alpha=0.3)
+    
+    plt.tight_layout()
+    plt.savefig(config.FIGURES_DIR / 'rolling_sharpe.png', dpi=300, bbox_inches='tight')
+    print("✓ Saved: rolling_sharpe.png")
     plt.close()
 
