@@ -127,3 +127,21 @@ def plot_performance_metrics():
     print("✓ Saved: performance_metrics.png")
     plt.close()
 
+
+def plot_risk_return_scatter():
+    """Create risk-return scatter plot."""
+    
+    metrics = pd.read_csv(config.RESULTS_DIR / "backtest_metrics.csv", index_col=0)
+    
+    fig, ax = plt.subplots(figsize=(10, 8))
+    
+    scatter = ax.scatter(metrics['annual_volatility'] * 100, 
+                        metrics['annual_return'] * 100,
+                        s=200, alpha=0.6, c=metrics['sharpe_ratio'],
+                        cmap='RdYlGn', edgecolors='black', linewidth=1.5)
+    
+    # Add labels
+    for idx, row in metrics.iterrows():
+        ax.annotate(idx, 
+                   (row['annual_volatility'] * 100, row['annual_return'] * 100),
+                   xytext=(5, 5), textcoords='offset points', fontsize=9)
