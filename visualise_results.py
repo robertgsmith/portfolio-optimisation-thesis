@@ -209,3 +209,46 @@ def plot_turnover_comparison():
     plt.savefig(config.FIGURES_DIR / 'turnover_comparison.png', dpi=300, bbox_inches='tight')
     print("✓ Saved: turnover_comparison.png")
     plt.close()
+
+
+def create_summary_table():
+    """Create LaTeX table for thesis."""
+    
+    metrics = pd.read_csv(config.RESULTS_DIR / "backtest_metrics.csv", index_col=0)
+    
+    # Select key metrics
+    key_metrics = [
+        'annual_return', 'annual_volatility', 'sharpe_ratio',
+        'sortino_ratio', 'max_drawdown', 'calmar_ratio', 'avg_turnover'
+    ]
+    
+    summary = metrics[key_metrics].copy()
+    
+    # Format for LaTeX
+    summary_formatted = summary.copy()
+    summary_formatted['annual_return'] = (summary['annual_return'] * 100).round(2)
+    summary_formatted['annual_volatility'] = (summary['annual_volatility'] * 100).round(2)
+    summary_formatted['sharpe_ratio'] = summary['sharpe_ratio'].round(3)
+    summary_formatted['sortino_ratio'] = summary['sortino_ratio'].round(3)
+    summary_formatted['max_drawdown'] = (summary['max_drawdown'] * 100).round(2)
+    summary_formatted['calmar_ratio'] = summary['calmar_ratio'].round(3)
+    summary_formatted['avg_turnover'] = (summary['avg_turnover'] * 100).round(2)
+    
+    # Save as LaTeX
+    latex_table = summary_formatted.to_latex(
+        caption='Backtest Performance Metrics',
+        label='tab:backtest_results',
+        position='htbp',
+        column_format='l' + 'r' * len(key_metrics),
+        float_format="%.2f"
+    )
+    
+    latex_path = config.TABLES_DIR / 'performance_table.tex'
+    with open(latex_path, 'w') as f:
+        f.write(latex_table)
+    
+    print(f"✓ Saved: performance_table.tex")
+    
+    # Also save as CSV
+    summary_formatted.to_csv(config.TABLES_DIR / 'performance_table.csv')
+    print(f"✓ Saved: performance_table.csv")
