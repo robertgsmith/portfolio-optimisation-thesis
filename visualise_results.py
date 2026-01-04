@@ -188,3 +188,24 @@ def plot_weight_evolution():
     plt.savefig(config.FIGURES_DIR / 'weight_evolution.png', dpi=300, bbox_inches='tight')
     print("✓ Saved: weight_evolution.png")
     plt.close()
+
+
+def plot_turnover_comparison():
+    """Compare average turnover across models."""
+    
+    metrics = pd.read_csv(config.RESULTS_DIR / "backtest_metrics.csv", index_col=0)
+    
+    fig, ax = plt.subplots(figsize=(10, 6))
+    
+    metrics['avg_turnover'].plot(kind='bar', ax=ax, color='coral')
+    ax.set_title('Average Portfolio Turnover', fontsize=14, fontweight='bold')
+    ax.set_xlabel('Model', fontsize=12)
+    ax.set_ylabel('Turnover per Rebalancing', fontsize=12)
+    ax.grid(True, alpha=0.3, axis='y')
+    ax.tick_params(axis='x', rotation=45)
+    ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda y, _: '{:.1%}'.format(y)))
+    
+    plt.tight_layout()
+    plt.savefig(config.FIGURES_DIR / 'turnover_comparison.png', dpi=300, bbox_inches='tight')
+    print("✓ Saved: turnover_comparison.png")
+    plt.close()
