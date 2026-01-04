@@ -104,3 +104,26 @@ def plot_rolling_sharpe():
     print("✓ Saved: rolling_sharpe.png")
     plt.close()
 
+
+def plot_performance_metrics():
+    """Create bar chart of key performance metrics."""
+    
+    metrics = pd.read_csv(config.RESULTS_DIR / "backtest_metrics.csv", index_col=0)
+    
+    key_metrics = ['sharpe_ratio', 'sortino_ratio', 'calmar_ratio']
+    
+    fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+    
+    for i, metric in enumerate(key_metrics):
+        metrics[metric].plot(kind='bar', ax=axes[i], color='steelblue')
+        axes[i].set_title(metric.replace('_', ' ').title(), fontsize=12, fontweight='bold')
+        axes[i].set_xlabel('')
+        axes[i].set_ylabel('Value', fontsize=10)
+        axes[i].grid(True, alpha=0.3, axis='y')
+        axes[i].tick_params(axis='x', rotation=45)
+    
+    plt.tight_layout()
+    plt.savefig(config.FIGURES_DIR / 'performance_metrics.png', dpi=300, bbox_inches='tight')
+    print("✓ Saved: performance_metrics.png")
+    plt.close()
+
