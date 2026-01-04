@@ -77,7 +77,7 @@ portfolio-optimiser-thesis/
 │
 ├── main.py                        # Data pipeline orchestration
 ├── run_backtest.py                # Execute backtesting
-├── visualise_results.py           # Generate figures for thesis (Not yet created)
+├── visualise_results.py           # Generate figures for thesis
 ├── statistical_analysis.py        # Statistical significance tests (Not yet created)
 ├── robustness_checks.py           # Robustness analysis (Not yet created)
 ├── config.py                      # Configuration parameters

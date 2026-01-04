@@ -252,3 +252,36 @@ def create_summary_table():
     # Also save as CSV
     summary_formatted.to_csv(config.TABLES_DIR / 'performance_table.csv')
     print(f"✓ Saved: performance_table.csv")
+
+
+def main():
+    """Generate all visualisations."""
+    
+    print("\n" + "="*70)
+    print("GENERATING THESIS VISUALISATIONS")
+    print("="*70 + "\n")
+    
+    print("Creating plots...")
+    
+    plot_cumulative_returns()
+    plot_drawdowns()
+    plot_rolling_sharpe()
+    plot_performance_metrics()
+    plot_risk_return_scatter()
+    plot_weight_evolution()
+    plot_turnover_comparison()
+    
+    print("\nCreating tables...")
+    create_summary_table()
+    
+    print("\n" + "="*70)
+    print("ALL VISUALISATIONS COMPLETED!")
+    print("="*70)
+    print(f"\nFigures saved to: {config.FIGURES_DIR}")
+    print(f"Tables saved to: {config.TABLES_DIR}")
+    print("\nReady for thesis inclusion!")
+    print("="*70 + "\n")
+
+
+if __name__ == "__main__":
+    main()
