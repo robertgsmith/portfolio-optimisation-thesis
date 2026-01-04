@@ -47,3 +47,29 @@ def plot_cumulative_returns():
     plt.savefig(config.FIGURES_DIR / 'cumulative_returns.png', dpi=300, bbox_inches='tight')
     print("✓ Saved: cumulative_returns.png")
     plt.close()
+
+def plot_drawdowns():
+    """Plot drawdowns for all models."""
+    
+    drawdowns = pd.read_csv(config.RESULTS_DIR / "backtest_drawdowns.csv",
+                           index_col=0, parse_dates=True)
+    
+    fig, ax = plt.subplots(figsize=(12, 6))
+    
+    for col in drawdowns.columns:
+        ax.plot(drawdowns.index, drawdowns[col] * 100, label=col, linewidth=2)
+    
+    ax.fill_between(drawdowns.index, 0, drawdowns.min(axis=1) * 100, 
+                     alpha=0.3, color='red')
+    
+    ax.set_title('Drawdown Comparison', fontsize=14, fontweight='bold')
+    ax.set_xlabel('Date', fontsize=12)
+    ax.set_ylabel('Drawdown (%)', fontsize=12)
+    ax.legend(loc='best', frameon=True, shadow=True)
+    ax.grid(True, alpha=0.3)
+    
+    plt.tight_layout()
+    plt.savefig(config.FIGURES_DIR / 'drawdowns.png', dpi=300, bbox_inches='tight')
+    print("✓ Saved: drawdowns.png")
+    plt.close()
+
