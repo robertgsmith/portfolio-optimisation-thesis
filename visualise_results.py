@@ -146,7 +146,6 @@ def plot_risk_return_scatter():
                    (row['annual_volatility'] * 100, row['annual_return'] * 100),
                    xytext=(5, 5), textcoords='offset points', fontsize=9)
 
-
     # Add colorbar
     cbar = plt.colorbar(scatter, ax=ax)
     cbar.set_label('Sharpe Ratio', fontsize=10)
@@ -159,4 +158,33 @@ def plot_risk_return_scatter():
     plt.tight_layout()
     plt.savefig(config.FIGURES_DIR / 'risk_return_scatter.png', dpi=300, bbox_inches='tight')
     print("✓ Saved: risk_return_scatter.png")
+    plt.close()
+
+
+def plot_weight_evolution():
+    """Plot weight evolution over time for one model."""
+    
+    # Use Mean-Variance as example
+    weights = pd.read_csv(config.RESULTS_DIR / "weights" / "weights_mean-variance.csv",
+                         index_col=0, parse_dates=True)
+    
+    # Get top 10 assets by average weight
+    avg_weights = weights.mean().sort_values(ascending=False).head(10)
+    top_assets = avg_weights.index
+    
+    fig, ax = plt.subplots(figsize=(12, 6))
+    
+    weights[top_assets].plot(ax=ax, linewidth=1.5)
+    
+    ax.set_title('Portfolio Weight Evolution - Mean-Variance (Top 10 Assets)', 
+                fontsize=14, fontweight='bold')
+    ax.set_xlabel('Date', fontsize=12)
+    ax.set_ylabel('Weight', fontsize=12)
+    ax.legend(loc='center left', bbox_to_anchor=(1, 0.5), frameon=True)
+    ax.grid(True, alpha=0.3)
+    ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda y, _: '{:.0%}'.format(y)))
+    
+    plt.tight_layout()
+    plt.savefig(config.FIGURES_DIR / 'weight_evolution.png', dpi=300, bbox_inches='tight')
+    print("✓ Saved: weight_evolution.png")
     plt.close()
