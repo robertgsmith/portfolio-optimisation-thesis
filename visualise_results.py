@@ -145,3 +145,18 @@ def plot_risk_return_scatter():
         ax.annotate(idx, 
                    (row['annual_volatility'] * 100, row['annual_return'] * 100),
                    xytext=(5, 5), textcoords='offset points', fontsize=9)
+
+
+    # Add colorbar
+    cbar = plt.colorbar(scatter, ax=ax)
+    cbar.set_label('Sharpe Ratio', fontsize=10)
+    
+    ax.set_title('Risk-Return Profile', fontsize=14, fontweight='bold')
+    ax.set_xlabel('Annual Volatility (%)', fontsize=12)
+    ax.set_ylabel('Annual Return (%)', fontsize=12)
+    ax.grid(True, alpha=0.3)
+    
+    plt.tight_layout()
+    plt.savefig(config.FIGURES_DIR / 'risk_return_scatter.png', dpi=300, bbox_inches='tight')
+    print("✓ Saved: risk_return_scatter.png")
+    plt.close()
