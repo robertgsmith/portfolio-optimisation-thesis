@@ -111,3 +111,60 @@ def check_estimation_windows():
     results_df.to_csv(config.RESULTS_DIR / 'robustness_estimation_windows.csv', index=False)
     print(f"\n✓ Saved: robustness_estimation_windows.csv")
 
+
+def check_subperiods():
+    """Test performance in different market regimes."""
+    
+    print("\n" + "="*70)
+    print("ROBUSTNESS CHECK: Sub-periods")
+    print("="*70)
+    
+    returns = pd.read_csv(config.get_data_path("log_returns.csv", "processed"),
+                         index_col=0, parse_dates=True)
+    
+    models = {
+        'Mean-Variance': MeanVariancePortfolio(),
+        'Shrinkage': ShrinkagePortfolio(),
+        'Bayesian': BayesianPortfolio(),
+        'Robust': RobustPortfolio(),
+        'Equal Weight': EqualWeightPortfolio()
+    }
+    
+    # Define sub-periods
+    periods = {
+        'Pre-COVID (2010-2019)': ('2010-01-01', '2019-12-31'),
+        'COVID Era (2020-2021)': ('2020-01-01', '2021-12-31'),
+        'Post-COVID (2022-2024)': ('2022-01-01', '2024-12-31')
+    }
+    
+    results = []
+    
+    for period_name, (start, end) in periods.items():
+        print(f"\nTesting period: {period_name}")
+        
+        period_returns = returns.loc[start:end]
+        
+        if len(period_returns) < config.ESTIMATION_WINDOW + 252:
+            print(f"  Skipping (insufficient data)")
+            continue
+        
+        backtester = Backtester(
+            returns=period_returns,
+            models=models
+        )
+        
+        backtester.run_backtest(verbose=False)
+        metrics = backtester.calculate_metrics()
+        
+        for model_name in models.keys():
+            results.append({
+                'Model': model_name,
+                'Period': period_name,
+                'Sharpe Ratio': metrics.loc[model_name, 'sharpe_ratio'],
+                'Annual Return': metrics.loc[model_name, 'annual_return'],
+                'Max Drawdown': metrics.loc[model_name, 'max_drawdown']
+            })
+    
+    results_df = pd.DataFrame(results)
+    results_df.to_csv(config.RESULTS_DIR / 'robustness_subperiods.csv', index=False)
+    print(f"\n✓ Saved: robustness_subperiods.csv")
