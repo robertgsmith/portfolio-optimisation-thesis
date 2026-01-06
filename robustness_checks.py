@@ -63,3 +63,51 @@ def check_transaction_costs():
     results_df = pd.DataFrame(results)
     results_df.to_csv(config.RESULTS_DIR / 'robustness_transaction_costs.csv', index=False)
     print(f"\n✓ Saved: robustness_transaction_costs.csv")
+
+
+def check_estimation_windows():
+    """Test different estimation window sizes."""
+    
+    print("\n" + "="*70)
+    print("ROBUSTNESS CHECK: Estimation Windows")
+    print("="*70)
+    
+    returns = pd.read_csv(config.get_data_path("log_returns.csv", "processed"),
+                         index_col=0, parse_dates=True)
+    
+    models = {
+        'Mean-Variance': MeanVariancePortfolio(),
+        'Shrinkage': ShrinkagePortfolio(),
+        'Bayesian': BayesianPortfolio(),
+        'Robust': RobustPortfolio()
+    }
+    
+    windows = [126, 252, 504]  # 6 months, 1 year, 2 years
+    
+    results = []
+    
+    for window in windows:
+        print(f"\nTesting estimation window: {window} days")
+        
+        backtester = Backtester(
+            returns=returns,
+            models=models,
+            estimation_window=window
+        )
+        
+        backtester.run_backtest(verbose=False)
+        metrics = backtester.calculate_metrics()
+        
+        for model_name in models.keys():
+            results.append({
+                'Model': model_name,
+                'Estimation Window': window,
+                'Sharpe Ratio': metrics.loc[model_name, 'sharpe_ratio'],
+                'Annual Return': metrics.loc[model_name, 'annual_return'],
+                'Annual Volatility': metrics.loc[model_name, 'annual_volatility']
+            })
+    
+    results_df = pd.DataFrame(results)
+    results_df.to_csv(config.RESULTS_DIR / 'robustness_estimation_windows.csv', index=False)
+    print(f"\n✓ Saved: robustness_estimation_windows.csv")
+
