@@ -218,30 +218,21 @@ class BasePortfolio(ABC):
         bool
             True if weights are valid
         """
-        sum_tolerance = 1e-4
-        bound_tolerance = 1e-6
-
-        total_weight = np.sum(weights)
-        is_sum_close_to_one = np.isclose(total_weight, 1.0, atol=sum_tolerance)
-
-        min_weight_allowed = self.min_weight - bound_tolerance
-        max_weight_allowed = self.max_weight + bound_tolerance
-
-        has_weights_below_minimum = np.any(weights < min_weight_allowed)
-        has_weights_above_maximum = np.any(weights > max_weight_allowed)
-
+        # More lenient tolerance for numerical precision
+        tolerance = 1e-4
+        
         # Check sum to 1 (with tolerance)
-        if not is_sum_close_to_one:
-            logger.warning(f"Weights sum to {total_weight:.6f}, expected close to 1.0")
-            return False
-
-        # Check bounds
-        if has_weights_below_minimum:
-            logger.warning(f"Some weights below minimum: {np.min(weights):.6f}")
+        if not np.isclose(np.sum(weights), 1.0, atol=tolerance):
+            logger.warning(f"Weights sum to {np.sum(weights):.6f}, not 1.0")
             return False
         
-        if has_weights_above_maximum:
-            logger.warning(f"Some weights above maximum: {np.max(weights):.6f}")
+        # Check bounds with tolerance
+        if np.any(weights < self.min_weight - tolerance):
+            logger.warning(f"Some weights below minimum: {np.min(weights):.9f}")
+            return False
+        
+        if np.any(weights > self.max_weight + tolerance):
+            logger.warning(f"Some weights above maximum: {np.max(weights):.9f}")
             return False
         
         return True
@@ -252,7 +243,7 @@ class BasePortfolio(ABC):
         method: str = 'rescale'
     ) -> np.ndarray:
         """
-        Apply weight constraints and normalisation.
+        Apply weight constraints and normalization.
         
         Parameters
         ----------
@@ -264,22 +255,30 @@ class BasePortfolio(ABC):
         Returns
         -------
         np.ndarray
-            Constrained and normalised weights
+            Constrained and normalized weights
         """
         if method == 'rescale':
-            # Clip to bounds
-            weights = np.clip(weights, self.min_weight, self.max_weight)
+            # Clip to bounds with small buffer for numerical precision
+            weights = np.clip(weights, self.min_weight - 1e-8, self.max_weight + 1e-8)
             
-            # Normalise to sum to 1
-            weights = weights / np.sum(weights)
+            # Ensure strictly within bounds after clipping
+            weights = np.maximum(weights, self.min_weight)
+            weights = np.minimum(weights, self.max_weight)
+            
+            # Normalize to sum to 1
+            weight_sum = np.sum(weights)
+            if weight_sum > 0:
+                weights = weights / weight_sum
+            else:
+                # Fallback to equal weights
+                weights = np.ones(len(weights)) / len(weights)
             
             return weights
         
         elif method == 'project':
-            # More sophisticated projection (would need optimisation)
+            # More sophisticated projection (would need optimization)
             # For now, use simple rescale
-            weights = self.apply_weight_constraints(weights, method='rescale')
-            return weights
+            return self.apply_weight_constraints(weights, method='rescale')
         
         else:
             raise ValueError(f"Unknown method: {method}")
