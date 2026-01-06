@@ -168,3 +168,23 @@ def check_subperiods():
     results_df = pd.DataFrame(results)
     results_df.to_csv(config.RESULTS_DIR / 'robustness_subperiods.csv', index=False)
     print(f"\n✓ Saved: robustness_subperiods.csv")
+
+
+def main():
+    """Run all robustness checks."""
+    
+    print("\n" + "="*70)
+    print("RUNNING ROBUSTNESS CHECKS")
+    print("="*70)
+    
+    check_transaction_costs()
+    check_estimation_windows()
+    check_subperiods()
+    
+    print("\n" + "="*70)
+    print("ALL ROBUSTNESS CHECKS COMPLETED!")
+    print("="*70 + "\n")
+
+
+if __name__ == "__main__":
+    main()
