@@ -119,130 +119,168 @@ def check_subperiods():
     print("ROBUSTNESS CHECK: Sub-periods")
     print("="*70)
     
-    returns = pd.read_csv(config.RESULTS_DIR / "backtest_returns.csv",
-                         index_col=0, parse_dates=True)
+    # Load INDIVIDUAL ASSET returns
+    returns_path = config.get_data_path("log_returns.csv", "processed")
     
-    # Get actual date range from data
-    actual_start = returns.index.min()
-    actual_end = returns.index.max()
-    
-    print(f"Data available from {actual_start.date()} to {actual_end.date()}")
-    
-    models = {
-        'Mean-Variance': MeanVariancePortfolio(),
-        'Shrinkage': ShrinkagePortfolio(),
-        'Bayesian': BayesianPortfolio(),
-        'Robust': RobustPortfolio(),
-        'Equal Weight': EqualWeightPortfolio()
-    }
-    
-    # Define sub-periods - use same timezone as data
-    # Extract timezone from data if present
-    tz = actual_start.tz if hasattr(actual_start, 'tz') else None
-    
-    def make_timestamp(date_str):
-        """Create timestamp with same timezone as data."""
-        ts = pd.Timestamp(date_str)
-        if tz is not None:
-            ts = ts.tz_localize(tz)
-        return ts
-    
-    # Define sub-periods based on actual data availability
-    periods = {}
-    
-    # Pre-COVID period
-    pre_covid_end = make_timestamp('2019-12-31')
-    if actual_start <= pre_covid_end and actual_end >= actual_start:
-        pre_covid_start = max(actual_start, make_timestamp('2012-01-01'))
-        if (pre_covid_end - pre_covid_start).days > config.ESTIMATION_WINDOW:
-            periods['Pre-COVID (2012-2019)'] = (pre_covid_start, pre_covid_end)
-    
-    # COVID period
-    covid_start = make_timestamp('2020-01-01')
-    covid_end = make_timestamp('2021-12-31')
-    if actual_start <= covid_end and actual_end >= covid_start:
-        period_start = max(actual_start, covid_start)
-        period_end = min(actual_end, covid_end)
-        if (period_end - period_start).days > config.ESTIMATION_WINDOW:
-            periods['COVID Era (2020-2021)'] = (period_start, period_end)
-    
-    # Post-COVID period
-    post_covid_start = make_timestamp('2022-01-01')
-    if actual_end >= post_covid_start:
-        period_start = max(actual_start, post_covid_start)
-        if (actual_end - period_start).days > config.ESTIMATION_WINDOW:
-            periods['Post-COVID (2022-2024)'] = (period_start, actual_end)
-    
-    if not periods:
-        print("⚠️  No valid sub-periods found in data")
+    if not returns_path.exists():
+        print("⚠️  Asset returns not found. Run data pipeline first.")
         return
     
-    print(f"\nTesting {len(periods)} sub-periods...")
+    # Read CSV
+    # try re-reading with explicit parse_dates for the first column
+    returns = pd.read_csv(
+        returns_path,
+        index_col=0,
+        parse_dates=[0]
+    )
+
+    idx = returns.index
+
+    # If parse_dates produced something other than DatetimeIndex, try coercion
+    if not isinstance(idx, pd.DatetimeIndex):
+        # Coerce strings -> datetimes (use utc to correctly parse offsets like -05:00)
+        coerced = pd.to_datetime(idx, errors="coerce", utc=True)
+
+        # If coercion worked, coerced is a DatetimeIndex (with tz=UTC)
+        if coerced.isnull().any():
+            # show problematic rows and raise to let you inspect the CSV
+            bad = returns.index[coerced.isnull()]
+            print("Unparseable index entries (first 10):", list(bad[:10]))
+            raise ValueError("Some index rows could not be parsed as datetimes. Check CSV index column.")
+        # convert to tz-naive local time (optional)
+        coerced = coerced.tz_convert(None)
+        returns.index = coerced
+    else:
+        # If already DatetimeIndex with tz info, remove tz (convert safely)
+        if returns.index.tz is not None:
+            returns.index = returns.index.tz_convert(None)
+
+
+    print(f"Loaded individual asset returns")
+    print(f"  Assets: {len(returns.columns)}")
+    print(f"  Date range: {returns.index[0].date()} to {returns.index[-1].date()}")
+    
+    # Select top 30 most liquid assets
+    print("\nSelecting top 30 most liquid assets for sub-period analysis...")
+    liquidity = returns.abs().mean().sort_values(ascending=False)
+    top_assets = liquidity.head(30).index
+    returns_subset = returns[top_assets]
+    
+    print(f"Selected assets: {', '.join(list(top_assets[:5]))} ...")
+    
+    # Models with relaxed constraints
+    models = {
+        'Mean-Variance': MeanVariancePortfolio(max_weight=0.25, risk_aversion=2.0),
+        'Shrinkage': ShrinkagePortfolio(max_weight=0.25, risk_aversion=2.0),
+        'Bayesian': BayesianPortfolio(max_weight=0.25, risk_aversion=2.0),
+        'Robust': RobustPortfolio(max_weight=0.25, epsilon=0.2, risk_aversion=2.0),
+        'Equal Weight': EqualWeightPortfolio(max_weight=0.25)
+    }
+    
+    # Get actual date range
+    actual_start = returns_subset.index.min()
+    actual_end = returns_subset.index.max()
+    
+    # Define periods as timestamps
+    periods = {}
+    
+    # Pre-COVID
+    pre_start = max(actual_start, pd.Timestamp('2015-01-01'))
+    pre_end = pd.Timestamp('2019-12-31')
+    if pre_start < pre_end and actual_start <= pre_end:
+        periods['Pre-COVID (2015-2019)'] = (pre_start, pre_end)
+    
+    # COVID
+    covid_start = pd.Timestamp('2020-01-01')
+    covid_end = pd.Timestamp('2021-12-31')
+    if actual_start <= covid_end and actual_end >= covid_start:
+        periods['COVID Era (2020-2021)'] = (
+            max(actual_start, covid_start),
+            min(actual_end, covid_end)
+        )
+    
+    # Post-COVID
+    post_start = pd.Timestamp('2022-01-01')
+    if actual_end >= post_start:
+        periods['Post-COVID (2022-2024)'] = (
+            max(actual_start, post_start),
+            actual_end
+        )
+    
+    if not periods:
+        print("⚠️  No valid periods found in data")
+        return
+    
+    print(f"\nTesting {len(periods)} periods...")
     
     results = []
     
     for period_name, (start_ts, end_ts) in periods.items():
-        print(f"\nTesting period: {period_name}")
-        print(f"  Date range: {start_ts.date()} to {end_ts.date()}")
+        print(f"\n{period_name}")
+        print(f"  Dates: {start_ts.date()} to {end_ts.date()}")
         
-        # Filter returns for this period
-        period_returns = returns.loc[start_ts:end_ts]
-        
+        period_returns = returns_subset.loc[start_ts:end_ts]
         print(f"  Trading days: {len(period_returns)}")
         
-        # Check if we have enough data
-        min_required = config.ESTIMATION_WINDOW + 252
-        if len(period_returns) < min_required:
-            print(f"  ⚠️  Skipping (need {min_required} days, have {len(period_returns)})")
+        if len(period_returns) < 300:
+            print(f"  ⚠️  Skipping (insufficient data)")
             continue
         
         try:
             backtester = Backtester(
                 returns=period_returns,
-                models=models
+                models=models,
+                estimation_window=126,
+                rebalancing_freq=63,
+                transaction_cost=0.001
             )
             
             backtester.run_backtest(verbose=False)
             metrics = backtester.calculate_metrics()
             
+            # Check variation
+            sharpes = metrics['sharpe_ratio'].values
+            sharpe_range = sharpes.max() - sharpes.min()
+            print(f"  Sharpe range: {sharpe_range:.4f}", end="")
+            
+            if sharpe_range < 0.01:
+                print(" ⚠️  (minimal variation)")
+            else:
+                print(" ✓")
+            
             for model_name in models.keys():
                 results.append({
                     'Model': model_name,
                     'Period': period_name,
-                    'Start Date': start_ts.strftime('%Y-%m-%d'),
-                    'End Date': end_ts.strftime('%Y-%m-%d'),
-                    'Trading Days': len(period_returns),
-                    'Sharpe Ratio': metrics.loc[model_name, 'sharpe_ratio'],
-                    'Annual Return': metrics.loc[model_name, 'annual_return'],
-                    'Annual Volatility': metrics.loc[model_name, 'annual_volatility'],
-                    'Max Drawdown': metrics.loc[model_name, 'max_drawdown']
+                    'Start': start_ts.strftime('%Y-%m-%d'),
+                    'End': end_ts.strftime('%Y-%m-%d'),
+                    'Days': len(period_returns),
+                    'Sharpe': metrics.loc[model_name, 'sharpe_ratio'],
+                    'Return': metrics.loc[model_name, 'annual_return'],
+                    'Volatility': metrics.loc[model_name, 'annual_volatility'],
+                    'Max DD': metrics.loc[model_name, 'max_drawdown'],
+                    'Turnover': metrics.loc[model_name, 'avg_turnover']
                 })
-            
-            print(f"  ✓ Completed successfully")
             
         except Exception as e:
             print(f"  ✗ Error: {str(e)}")
-            import traceback
-            traceback.print_exc()
-            continue
     
     if results:
         results_df = pd.DataFrame(results)
         results_df.to_csv(config.RESULTS_DIR / 'robustness_subperiods.csv', index=False)
         print(f"\n✓ Saved: robustness_subperiods.csv")
         
-        # Display summary
+        # Summary
         print("\n" + "-"*70)
-        print("SUMMARY BY PERIOD")
+        print("SUMMARY")
         print("-"*70)
-        for period_name in [p for p in periods.keys()]:
-            period_data = results_df[results_df['Period'] == period_name]
-            if not period_data.empty:
-                print(f"\n{period_name}:")
-                summary = period_data[['Model', 'Sharpe Ratio', 'Annual Return', 'Max Drawdown']]
-                print(summary.to_string(index=False))
+        for period in periods.keys():
+            pdata = results_df[results_df['Period'] == period]
+            if not pdata.empty:
+                print(f"\n{period}:")
+                print(pdata[['Model', 'Sharpe', 'Return', 'Volatility', 'Turnover']].to_string(index=False))
     else:
-        print("\n⚠️  No results generated")
+        print("\n⚠️  No results - skipping sub-period analysis")
 
 
 def main():

@@ -42,19 +42,17 @@ def calculate_sharpe_ratio(
     float
         Annualised Sharpe ratio
     """
-    has_no_returns_data = len(returns) == 0
-    has_no_volatility_data = returns.std() == 0
-    if has_no_returns_data or has_no_volatility_data:
+    if len(returns) == 0 or returns.std() == 0:
         return 0.0
     
-    risk_premium = returns - risk_free_rate
-    excess_returns = risk_premium / periods_per_year
+    # Convert annual risk-free rate to daily
+    daily_rf = risk_free_rate / periods_per_year
     
-    mean_excess_return = excess_returns.mean()
-    volatility = returns.std()
-    annualisation = np.sqrt(periods_per_year)
-
-    sharpe = mean_excess_return / volatility * annualisation
+    # Calculate excess returns (daily)
+    excess_returns = returns - daily_rf
+    
+    # Annualize: multiply by sqrt(252) for Sharpe ratio
+    sharpe = (excess_returns.mean() / returns.std()) * np.sqrt(periods_per_year)
     
     return sharpe
 
