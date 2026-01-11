@@ -202,3 +202,45 @@ def test_volatility():
     results_df = pd.DataFrame(results)
     results_df.to_csv(config.RESULTS_DIR / 'test_volatility.csv', index=False)
     print(f"\n✓ Saved: test_volatility.csv")
+
+
+def test_turnover():
+    """Test if turnover differs significantly between models."""
+    
+    print("\n" + "="*70)
+    print("TEST 4: Difference in Portfolio Turnover")
+    print("="*70)
+    
+    # Load weights for each model
+    weights_dir = config.RESULTS_DIR / "weights"
+    
+    turnovers = {}
+    
+    for model_file in weights_dir.glob("weights_*.csv"):
+        model_name = model_file.stem.replace('weights_', '').replace('_', ' ').title()
+        weights = pd.read_csv(model_file, index_col=0, parse_dates=True)
+        
+        # Calculate turnover at each rebalancing
+        turnover_series = weights.diff().abs().sum(axis=1).dropna()
+        turnovers[model_name] = turnover_series
+    
+    # Compare turnover distributions
+    results = []
+    
+    for model_name, turnover in turnovers.items():
+        results.append({
+            'Model': model_name,
+            'Mean Turnover': turnover.mean(),
+            'Median Turnover': turnover.median(),
+            'Std Turnover': turnover.std(),
+            'Max Turnover': turnover.max()
+        })
+        
+        print(f"\n{model_name}:")
+        print(f"  Mean turnover: {turnover.mean():.4f}")
+        print(f"  Median turnover: {turnover.median():.4f}")
+        print(f"  Std: {turnover.std():.4f}")
+    
+    results_df = pd.DataFrame(results)
+    results_df.to_csv(config.RESULTS_DIR / 'test_turnover.csv', index=False)
+    print(f"\n✓ Saved: test_turnover.csv")
