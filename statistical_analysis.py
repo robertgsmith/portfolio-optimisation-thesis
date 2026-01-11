@@ -73,3 +73,45 @@ def bootstrap_sharpe_difference(returns1, returns2, n_bootstrap=10000):
     ci_upper = np.percentile(sharpe_diffs, 97.5)
     
     return p_value, actual_diff, (ci_lower, ci_upper)
+
+
+def test_mean_returns():
+    """Test if mean returns differ significantly between models."""
+    
+    print("\n" + "="*70)
+    print("TEST 1: Difference in Mean Returns")
+    print("="*70)
+    
+    returns = pd.read_csv(config.RESULTS_DIR / "backtest_returns.csv",
+                         index_col=0, parse_dates=True)
+    
+    results = []
+    
+    # Compare robust methods vs Mean-Variance
+    baseline = 'Mean-Variance'
+    comparisons = ['Shrinkage', 'Bayesian', 'Robust', 'Equal Weight']
+    
+    for model in comparisons:
+        # Paired t-test (same dates)
+        t_stat, p_value = ttest_rel(returns[baseline], returns[model])
+        
+        mean_diff = returns[baseline].mean() - returns[model].mean()
+        
+        results.append({
+            'Comparison': f'{baseline} vs {model}',
+            'Mean Difference (daily)': mean_diff,
+            'Mean Difference (annual)': mean_diff * 252,
+            't-statistic': t_stat,
+            'p-value': p_value,
+            'Significant (5%)': 'Yes' if p_value < 0.05 else 'No'
+        })
+        
+        print(f"\n{baseline} vs {model}:")
+        print(f"  Mean difference: {mean_diff*252:.4f} (annualised)")
+        print(f"  t-statistic: {t_stat:.4f}")
+        print(f"  p-value: {p_value:.4f}")
+        print(f"  Significant at 5%: {'Yes' if p_value < 0.05 else 'No'}")
+    
+    results_df = pd.DataFrame(results)
+    results_df.to_csv(config.RESULTS_DIR / 'test_mean_returns.csv', index=False)
+    print(f"\n✓ Saved: test_mean_returns.csv")
