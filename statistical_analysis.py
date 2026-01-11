@@ -244,3 +244,48 @@ def test_turnover():
     results_df = pd.DataFrame(results)
     results_df.to_csv(config.RESULTS_DIR / 'test_turnover.csv', index=False)
     print(f"\n✓ Saved: test_turnover.csv")
+
+
+def test_drawdowns():
+    """Test if maximum drawdowns differ significantly."""
+    
+    print("\n" + "="*70)
+    print("TEST 5: Maximum Drawdown Comparison")
+    print("="*70)
+    
+    drawdowns = pd.read_csv(config.RESULTS_DIR / "backtest_drawdowns.csv",
+                           index_col=0, parse_dates=True)
+    
+    results = []
+    
+    for model in drawdowns.columns:
+        max_dd = drawdowns[model].min()
+        
+        # Recovery time (days from max DD to recovery)
+        dd_series = drawdowns[model]
+        max_dd_date = dd_series.idxmin()
+        recovery_dates = dd_series[max_dd_date:][dd_series >= 0]
+        
+        if len(recovery_dates) > 0:
+            recovery_time = (recovery_dates.index[0] - max_dd_date).days
+        else:
+            recovery_time = np.nan  # Not yet recovered
+        
+        results.append({
+            'Model': model,
+            'Max Drawdown': max_dd,
+            'Max DD Date': max_dd_date.strftime('%Y-%m-%d'),
+            'Recovery Time (days)': recovery_time
+        })
+        
+        print(f"\n{model}:")
+        print(f"  Max drawdown: {max_dd:.4f} ({max_dd*100:.2f}%)")
+        print(f"  Date: {max_dd_date.strftime('%Y-%m-%d')}")
+        if not np.isnan(recovery_time):
+            print(f"  Recovery time: {recovery_time:.0f} days")
+        else:
+            print(f"  Recovery: Not yet recovered")
+    
+    results_df = pd.DataFrame(results)
+    results_df.to_csv(config.RESULTS_DIR / 'test_drawdowns.csv', index=False)
+    print(f"\n✓ Saved: test_drawdowns.csv")
