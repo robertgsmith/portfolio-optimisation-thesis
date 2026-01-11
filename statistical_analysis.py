@@ -289,3 +289,32 @@ def test_drawdowns():
     results_df = pd.DataFrame(results)
     results_df.to_csv(config.RESULTS_DIR / 'test_drawdowns.csv', index=False)
     print(f"\n✓ Saved: test_drawdowns.csv")
+
+
+def create_summary_table():
+    """Create comprehensive summary table of all tests."""
+    
+    print("\n" + "="*70)
+    print("CREATING SUMMARY TABLE")
+    print("="*70)
+    
+    # Load all test results
+    mean_test = pd.read_csv(config.RESULTS_DIR / 'test_mean_returns.csv')
+    sharpe_test = pd.read_csv(config.RESULTS_DIR / 'test_sharpe_ratios.csv')
+    vol_test = pd.read_csv(config.RESULTS_DIR / 'test_volatility.csv')
+    
+    # Create summary
+    summary = pd.DataFrame({
+        'Test': ['Mean Return', 'Sharpe Ratio', 'Volatility'],
+        'Robust vs MV Significant': [
+            mean_test[mean_test['Comparison'].str.contains('Robust')]['Significant (5%)'].values[0],
+            sharpe_test[sharpe_test['Comparison'].str.contains('Robust')]['Significant (5%)'].values[0],
+            vol_test[vol_test['Comparison'].str.contains('Robust')]['Significant (5%)'].values[0]
+        ]
+    })
+    
+    print("\n", summary)
+    
+    summary.to_csv(config.RESULTS_DIR / 'statistical_tests_summary.csv', index=False)
+    print(f"\n✓ Saved: statistical_tests_summary.csv")
+
