@@ -115,3 +115,45 @@ def test_mean_returns():
     results_df = pd.DataFrame(results)
     results_df.to_csv(config.RESULTS_DIR / 'test_mean_returns.csv', index=False)
     print(f"\n✓ Saved: test_mean_returns.csv")
+
+
+def test_sharpe_ratios():
+    """Test if Sharpe ratios differ significantly between models."""
+    
+    print("\n" + "="*70)
+    print("TEST 2: Difference in Sharpe Ratios (Bootstrap)")
+    print("="*70)
+    
+    returns = pd.read_csv(config.RESULTS_DIR / "backtest_returns.csv",
+                         index_col=0, parse_dates=True)
+    
+    results = []
+    
+    baseline = 'Mean-Variance'
+    comparisons = ['Shrinkage', 'Bayesian', 'Robust', 'Equal Weight']
+    
+    for model in comparisons:
+        p_value, actual_diff, (ci_lower, ci_upper) = bootstrap_sharpe_difference(
+            returns[baseline],
+            returns[model],
+            n_bootstrap=10000
+        )
+        
+        results.append({
+            'Comparison': f'{baseline} vs {model}',
+            'Sharpe Difference': actual_diff,
+            'CI Lower (95%)': ci_lower,
+            'CI Upper (95%)': ci_upper,
+            'p-value': p_value,
+            'Significant (5%)': 'Yes' if p_value < 0.05 else 'No'
+        })
+        
+        print(f"\n{baseline} vs {model}:")
+        print(f"  Sharpe difference: {actual_diff:.4f}")
+        print(f"  95% CI: [{ci_lower:.4f}, {ci_upper:.4f}]")
+        print(f"  p-value: {p_value:.4f}")
+        print(f"  Significant at 5%: {'Yes' if p_value < 0.05 else 'No'}")
+    
+    results_df = pd.DataFrame(results)
+    results_df.to_csv(config.RESULTS_DIR / 'test_sharpe_ratios.csv', index=False)
+    print(f"\n✓ Saved: test_sharpe_ratios.csv")
