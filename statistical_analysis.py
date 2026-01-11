@@ -157,3 +157,48 @@ def test_sharpe_ratios():
     results_df = pd.DataFrame(results)
     results_df.to_csv(config.RESULTS_DIR / 'test_sharpe_ratios.csv', index=False)
     print(f"\n✓ Saved: test_sharpe_ratios.csv")
+
+
+def test_volatility():
+    """Test if volatility differs significantly between models."""
+    
+    print("\n" + "="*70)
+    print("TEST 3: Difference in Volatility")
+    print("="*70)
+    
+    returns = pd.read_csv(config.RESULTS_DIR / "backtest_returns.csv",
+                         index_col=0, parse_dates=True)
+    
+    results = []
+    
+    baseline = 'Mean-Variance'
+    comparisons = ['Shrinkage', 'Bayesian', 'Robust', 'Equal Weight']
+    
+    for model in comparisons:
+        # Levene's test for equality of variances
+        stat, p_value = stats.levene(returns[baseline], returns[model])
+        
+        vol_baseline = returns[baseline].std() * np.sqrt(252)
+        vol_model = returns[model].std() * np.sqrt(252)
+        vol_diff = vol_baseline - vol_model
+        
+        results.append({
+            'Comparison': f'{baseline} vs {model}',
+            f'{baseline} Vol': vol_baseline,
+            f'{model} Vol': vol_model,
+            'Volatility Difference': vol_diff,
+            'Levene Statistic': stat,
+            'p-value': p_value,
+            'Significant (5%)': 'Yes' if p_value < 0.05 else 'No'
+        })
+        
+        print(f"\n{baseline} vs {model}:")
+        print(f"  {baseline} volatility: {vol_baseline:.4f}")
+        print(f"  {model} volatility: {vol_model:.4f}")
+        print(f"  Difference: {vol_diff:.4f}")
+        print(f"  p-value: {p_value:.4f}")
+        print(f"  Significant at 5%: {'Yes' if p_value < 0.05 else 'No'}")
+    
+    results_df = pd.DataFrame(results)
+    results_df.to_csv(config.RESULTS_DIR / 'test_volatility.csv', index=False)
+    print(f"\n✓ Saved: test_volatility.csv")
