@@ -318,3 +318,31 @@ def create_summary_table():
     summary.to_csv(config.RESULTS_DIR / 'statistical_tests_summary.csv', index=False)
     print(f"\n✓ Saved: statistical_tests_summary.csv")
 
+
+def main():
+    """Run all statistical tests."""
+    
+    print("\n" + "="*70)
+    print("STATISTICAL ANALYSIS OF PORTFOLIO PERFORMANCE")
+    print("="*70)
+    
+    test_mean_returns()
+    test_sharpe_ratios()
+    test_volatility()
+    test_turnover()
+    test_drawdowns()
+    create_summary_table()
+    
+    print("\n" + "="*70)
+    print("ALL STATISTICAL TESTS COMPLETED!")
+    print("="*70)
+    print(f"\nResults saved to: {config.RESULTS_DIR}")
+    print("\nKey findings will help answer your research questions:")
+    print("  1. Are robust methods significantly better than MV?")
+    print("  2. Do they provide more stable portfolios?")
+    print("  3. Are differences statistically significant?")
+    print("="*70 + "\n")
+
+
+if __name__ == "__main__":
+    main()
