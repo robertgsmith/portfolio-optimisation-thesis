@@ -337,11 +337,6 @@ def main():
     print("ALL STATISTICAL TESTS COMPLETED!")
     print("="*70)
     print(f"\nResults saved to: {config.RESULTS_DIR}")
-    print("\nKey findings will help answer your research questions:")
-    print("  1. Are robust methods significantly better than MV?")
-    print("  2. Do they provide more stable portfolios?")
-    print("  3. Are differences statistically significant?")
-    print("="*70 + "\n")
 
 
 if __name__ == "__main__":
