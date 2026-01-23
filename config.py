@@ -104,6 +104,19 @@ UNCERTAINTY_SET_SIZE = 0.5  # Epsilon for robust optimisation (Bertsimas & Sim)
 COVARIANCE_UNCERTAINTY = 0.1  # 10% uncertainty in covariance estimates
 
 # ============================================================================
+# DIVERSIFICATION CONSTRAINTS (Industry Best Practice)
+# ============================================================================
+
+# Minimum Effective Number of Assets
+MIN_EFFECTIVE_ASSETS = 20          # Minimum effective number of assets
+ENABLE_DIVERSIFICATION = True      # Set to False to disable for comparison
+
+# Expected Return Treatment
+WINSORISE_EXPECTED_RETURNS = True  # Cap extreme values
+WINSORISE_LOWER_PERCENTILE = 0.05  # 5th percentile
+WINSORISE_UPPER_PERCENTILE = 0.95  # 95th percentile
+
+# ============================================================================
 # PORTFOLIO MODEL SPECIFIC PARAMETERS (Add this entire new section)
 # ============================================================================
 

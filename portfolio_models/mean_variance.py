@@ -29,7 +29,7 @@ class MeanVariancePortfolio(BasePortfolio):
     Mean-variance portfolio optimisation (Markowitz 1952).
     
     Solves the optimisation problem:
-        maximize: w^T μ - (λ/2) w^T Σ w
+        maximise: w^T μ - (λ/2) w^T Σ w
         subject to: w^T 1 = 1
                     min_weight ≤ w_i ≤ max_weight
     
@@ -94,10 +94,18 @@ class MeanVariancePortfolio(BasePortfolio):
         """
         number_of_assets = returns.shape[1]
         
-        # Compute expected returns if not provided
         if expected_returns is None:
             expected_returns = returns.mean().values * config.TRADING_DAYS_PER_YEAR
-        
+            
+        # Winsorize extreme expected returns (addresses extreme values issue)
+        if getattr(config, 'WINSORIZE_EXPECTED_RETURNS', False):
+            lower_pct = getattr(config, 'WINSORIZE_LOWER_PERCENTILE', 0.05)
+            upper_pct = getattr(config, 'WINSORIZE_UPPER_PERCENTILE', 0.95)
+            lower_bound = np.percentile(expected_returns, lower_pct * 100)
+            upper_bound = np.percentile(expected_returns, upper_pct * 100)
+            expected_returns = np.clip(expected_returns, lower_bound, upper_bound)
+            logger.info(f"Winsorized expected returns: [{lower_bound:.2%}, {upper_bound:.2%}]")
+
         # Compute covariance matrix if not provided
         if cov_matrix is None:
             cov_matrix = returns.cov().values * config.TRADING_DAYS_PER_YEAR
@@ -122,6 +130,13 @@ class MeanVariancePortfolio(BasePortfolio):
             optimisation_variable >= self.min_weight,  # Minimum weight
             optimisation_variable <= self.max_weight   # Maximum weight
         ]
+
+        # Add diversification constraint (prevents concentration)
+        if getattr(config, 'ENABLE_DIVERSIFICATION', False):
+            min_eff = getattr(config, 'MIN_EFFECTIVE_ASSETS', 20)
+            max_herfindahl = 1.0 / min_eff
+            constraints.append(cp.sum_squares(optimisation_variable) <= max_herfindahl)
+            logger.info(f"Applied diversification: min {min_eff} effective assets (Herfindahl <= {max_herfindahl:.4f})")
         
         # Solve optimisation problem
         problem = cp.Problem(objective, constraints)
@@ -224,7 +239,7 @@ class MeanVariancePortfolio(BasePortfolio):
         frontier_weights = []
         
         for target in target_returns:
-            # Minimize variance subject to target return
+            # Minimise variance subject to target return
             constraints_with_target = constraints + [portfolio_return >= target]
             problem = cp.Problem(cp.Minimize(portfolio_variance), constraints_with_target)
             problem.solve(solver=cp.SCS, verbose=False)
