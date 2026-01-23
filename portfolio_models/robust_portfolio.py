@@ -117,23 +117,23 @@ class RobustPortfolio(BasePortfolio):
         # Use standard errors of covariance estimates
         n_obs = len(returns)
         cov_std = np.sqrt(2 / n_obs) * np.abs(cov_matrix)  # Approximation
-        
+
         # Define optimisation variables
-        w = cp.Variable(n_assets)
+        optimisation_variable = cp.Variable(n_assets)
         
         # Portfolio return
-        portfolio_return = expected_returns @ w
+        portfolio_return = expected_returns @ optimisation_variable
         
         # Worst-case variance (conservative)
         # Increase diagonal elements by epsilon * std
         cov_robust = cov_matrix + self.epsilon * np.diag(np.diag(cov_std))
-        portfolio_variance = cp.quad_form(w, cov_robust)
-        
+        portfolio_variance = cp.quad_form(optimisation_variable, cov_robust)
+
         # Constraints
         constraints = [
-            cp.sum(w) == 1,
-            w >= self.min_weight,
-            w <= self.max_weight
+            cp.sum(optimisation_variable) == 1,  # Weights sum to 1
+            optimisation_variable >= self.min_weight,  # Minimum weight
+            optimisation_variable <= self.max_weight   # Maximum weight
         ]
 
         # Add diversification constraint (prevents concentration)
@@ -164,7 +164,7 @@ class RobustPortfolio(BasePortfolio):
                 logger.warning(f"Robust optimisation status: {problem.status}")
                 return np.ones(n_assets) / n_assets
             
-            weights = w.value
+            weights = optimisation_variable.value
             
             # Validate and store results
             if self.validate_weights(weights):
