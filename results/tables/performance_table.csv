@@ -1,6 +1,0 @@
-,annual_return,annual_volatility,sharpe_ratio,sortino_ratio,max_drawdown,calmar_ratio,avg_turnover
-Mean-Variance,16.14,21.55,0.003,0.949,-32.0,0.504,52.56
-Shrinkage,16.06,21.58,0.003,0.943,-32.0,0.502,52.68
-Bayesian,16.14,21.55,0.003,0.949,-32.0,0.504,52.55
-Robust,16.16,21.55,0.003,0.951,-32.0,0.505,52.56
-Equal Weight,12.7,17.03,0.003,0.88,-37.58,0.338,0.0
