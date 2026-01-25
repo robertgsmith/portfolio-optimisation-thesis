@@ -13,7 +13,10 @@ from scipy.stats import ttest_ind, ttest_rel
 import sys
 from pathlib import Path
 
-sys.path.append(str(Path(__file__).parent))
+# Get the project root directory (parent of this script's directory)
+project_root = Path(__file__).parent.parent
+sys.path.insert(0, str(project_root))
+
 import config
 
 
@@ -114,7 +117,7 @@ def test_mean_returns():
     
     results_df = pd.DataFrame(results)
     results_df.to_csv(config.RESULTS_DIR / 'test_mean_returns.csv', index=False)
-    print(f"\n✓ Saved: test_mean_returns.csv")
+    print(f"\n>> Saved: test_mean_returns.csv")
 
 
 def test_sharpe_ratios():
@@ -156,7 +159,7 @@ def test_sharpe_ratios():
     
     results_df = pd.DataFrame(results)
     results_df.to_csv(config.RESULTS_DIR / 'test_sharpe_ratios.csv', index=False)
-    print(f"\n✓ Saved: test_sharpe_ratios.csv")
+    print(f"\n>> Saved: test_sharpe_ratios.csv")
 
 
 def test_volatility():
@@ -201,7 +204,7 @@ def test_volatility():
     
     results_df = pd.DataFrame(results)
     results_df.to_csv(config.RESULTS_DIR / 'test_volatility.csv', index=False)
-    print(f"\n✓ Saved: test_volatility.csv")
+    print(f"\n>> Saved: test_volatility.csv")
 
 
 def test_turnover():
@@ -243,7 +246,7 @@ def test_turnover():
     
     results_df = pd.DataFrame(results)
     results_df.to_csv(config.RESULTS_DIR / 'test_turnover.csv', index=False)
-    print(f"\n✓ Saved: test_turnover.csv")
+    print(f"\n>> Saved: test_turnover.csv")
 
 
 def test_drawdowns():
@@ -288,7 +291,7 @@ def test_drawdowns():
     
     results_df = pd.DataFrame(results)
     results_df.to_csv(config.RESULTS_DIR / 'test_drawdowns.csv', index=False)
-    print(f"\n✓ Saved: test_drawdowns.csv")
+    print(f"\n>> Saved: test_drawdowns.csv")
 
 
 def create_summary_table():
@@ -316,7 +319,7 @@ def create_summary_table():
     print("\n", summary)
     
     summary.to_csv(config.RESULTS_DIR / 'statistical_tests_summary.csv', index=False)
-    print(f"\n✓ Saved: statistical_tests_summary.csv")
+    print(f"\n>> Saved: statistical_tests_summary.csv")
 
 
 def main():

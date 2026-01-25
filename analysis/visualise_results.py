@@ -13,7 +13,10 @@ import seaborn as sns
 from pathlib import Path
 import sys
 
-sys.path.append(str(Path(__file__).parent))
+# Get the project root directory (parent of this script's directory)
+project_root = Path(__file__).parent.parent
+sys.path.insert(0, str(project_root))
+
 import config
 
 # Set style
@@ -46,7 +49,7 @@ def plot_cumulative_returns():
     
     plt.tight_layout()
     plt.savefig(config.FIGURES_DIR / 'cumulative_returns.png', dpi=300, bbox_inches='tight')
-    print("✓ Saved: cumulative_returns.png")
+    print(">> Saved: cumulative_returns.png")
     plt.close()
 
 
@@ -72,7 +75,7 @@ def plot_drawdowns():
     
     plt.tight_layout()
     plt.savefig(config.FIGURES_DIR / 'drawdowns.png', dpi=300, bbox_inches='tight')
-    print("✓ Saved: drawdowns.png")
+    print(">> Saved: drawdowns.png")
     plt.close()
 
 
@@ -101,7 +104,7 @@ def plot_rolling_sharpe():
     
     plt.tight_layout()
     plt.savefig(config.FIGURES_DIR / 'rolling_sharpe.png', dpi=300, bbox_inches='tight')
-    print("✓ Saved: rolling_sharpe.png")
+    print(">> Saved: rolling_sharpe.png")
     plt.close()
 
 
@@ -124,7 +127,7 @@ def plot_performance_metrics():
     
     plt.tight_layout()
     plt.savefig(config.FIGURES_DIR / 'performance_metrics.png', dpi=300, bbox_inches='tight')
-    print("✓ Saved: performance_metrics.png")
+    print(">> Saved: performance_metrics.png")
     plt.close()
 
 
@@ -157,7 +160,7 @@ def plot_risk_return_scatter():
     
     plt.tight_layout()
     plt.savefig(config.FIGURES_DIR / 'risk_return_scatter.png', dpi=300, bbox_inches='tight')
-    print("✓ Saved: risk_return_scatter.png")
+    print(">> Saved: risk_return_scatter.png")
     plt.close()
 
 
@@ -186,7 +189,7 @@ def plot_weight_evolution():
     
     plt.tight_layout()
     plt.savefig(config.FIGURES_DIR / 'weight_evolution.png', dpi=300, bbox_inches='tight')
-    print("✓ Saved: weight_evolution.png")
+    print(">> Saved: weight_evolution.png")
     plt.close()
 
 
@@ -207,7 +210,7 @@ def plot_turnover_comparison():
     
     plt.tight_layout()
     plt.savefig(config.FIGURES_DIR / 'turnover_comparison.png', dpi=300, bbox_inches='tight')
-    print("✓ Saved: turnover_comparison.png")
+    print(">> Saved: turnover_comparison.png")
     plt.close()
 
 
@@ -247,18 +250,18 @@ def create_summary_table():
     with open(latex_path, 'w') as f:
         f.write(latex_table)
     
-    print(f"✓ Saved: performance_table.tex")
+    print(f">> Saved: performance_table.tex")
     
     # Also save as CSV
     summary_formatted.to_csv(config.TABLES_DIR / 'performance_table.csv')
-    print(f"✓ Saved: performance_table.csv")
+    print(f">> Saved: performance_table.csv")
 
 
 def main():
     """Generate all visualisations."""
     
     print("\n" + "="*70)
-    print("GENERATING THESIS VISUALISATIONS")
+    print("GENERATING VISUALISATIONS")
     print("="*70 + "\n")
     
     print("Creating plots...")
@@ -279,7 +282,6 @@ def main():
     print("="*70)
     print(f"\nFigures saved to: {config.FIGURES_DIR}")
     print(f"Tables saved to: {config.TABLES_DIR}")
-    print("\nReady for thesis inclusion!")
     print("="*70 + "\n")
 
 

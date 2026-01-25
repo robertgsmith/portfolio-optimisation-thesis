@@ -11,7 +11,10 @@ import numpy as np
 import sys
 from pathlib import Path
 
-sys.path.append(str(Path(__file__).parent))
+# Get the project root directory (parent of this script's directory)
+project_root = Path(__file__).parent.parent
+sys.path.insert(0, str(project_root))
+
 import config
 from portfolio_models import *
 from backtesting import Backtester
@@ -62,7 +65,7 @@ def check_transaction_costs():
     
     results_df = pd.DataFrame(results)
     results_df.to_csv(config.RESULTS_DIR / 'robustness_transaction_costs.csv', index=False)
-    print(f"\n✓ Saved: robustness_transaction_costs.csv")
+    print(f"\n>> Saved: robustness_transaction_costs.csv")
 
 
 def check_estimation_windows():
@@ -109,7 +112,7 @@ def check_estimation_windows():
     
     results_df = pd.DataFrame(results)
     results_df.to_csv(config.RESULTS_DIR / 'robustness_estimation_windows.csv', index=False)
-    print(f"\n✓ Saved: robustness_estimation_windows.csv")
+    print(f"\n>> Saved: robustness_estimation_windows.csv")
 
 
 def check_subperiods():
@@ -123,11 +126,10 @@ def check_subperiods():
     returns_path = config.get_data_path("log_returns.csv", "processed")
     
     if not returns_path.exists():
-        print("⚠️  Asset returns not found. Run data pipeline first.")
+        print("!!!  Asset returns not found. Run data pipeline first.")
         return
     
-    # Read CSV
-    # try re-reading with explicit parse_dates for the first column
+    # Read CSV with explicit parse_dates for the first column
     returns = pd.read_csv(
         returns_path,
         index_col=0,
@@ -143,15 +145,15 @@ def check_subperiods():
 
         # If coercion worked, coerced is a DatetimeIndex (with tz=UTC)
         if coerced.isnull().any():
-            # show problematic rows and raise to let you inspect the CSV
+            # show problematic rows and raise to check CSV
             bad = returns.index[coerced.isnull()]
             print("Unparseable index entries (first 10):", list(bad[:10]))
             raise ValueError("Some index rows could not be parsed as datetimes. Check CSV index column.")
-        # convert to tz-naive local time (optional)
+        # convert to tz-naive local time
         coerced = coerced.tz_convert(None)
         returns.index = coerced
     else:
-        # If already DatetimeIndex with tz info, remove tz (convert safely)
+        # If already DatetimeIndex with tz info, remove tz
         if returns.index.tz is not None:
             returns.index = returns.index.tz_convert(None)
 
@@ -208,7 +210,7 @@ def check_subperiods():
         )
     
     if not periods:
-        print("⚠️  No valid periods found in data")
+        print("!!!  No valid periods found in data")
         return
     
     print(f"\nTesting {len(periods)} periods...")
@@ -223,7 +225,7 @@ def check_subperiods():
         print(f"  Trading days: {len(period_returns)}")
         
         if len(period_returns) < 300:
-            print(f"  ⚠️  Skipping (insufficient data)")
+            print(f"  !!!  Skipping (insufficient data)")
             continue
         
         try:
@@ -244,9 +246,9 @@ def check_subperiods():
             print(f"  Sharpe range: {sharpe_range:.4f}", end="")
             
             if sharpe_range < 0.01:
-                print(" ⚠️  (minimal variation)")
+                print(" !!!  (minimal variation)")
             else:
-                print(" ✓")
+                print(" >>")
             
             for model_name in models.keys():
                 results.append({
@@ -263,12 +265,12 @@ def check_subperiods():
                 })
             
         except Exception as e:
-            print(f"  ✗ Error: {str(e)}")
+            print(f"  !!! Error: {str(e)}")
     
     if results:
         results_df = pd.DataFrame(results)
         results_df.to_csv(config.RESULTS_DIR / 'robustness_subperiods.csv', index=False)
-        print(f"\n✓ Saved: robustness_subperiods.csv")
+        print(f"\n>> Saved: robustness_subperiods.csv")
         
         # Summary
         print("\n" + "-"*70)
@@ -280,7 +282,7 @@ def check_subperiods():
                 print(f"\n{period}:")
                 print(pdata[['Model', 'Sharpe', 'Return', 'Volatility', 'Turnover']].to_string(index=False))
     else:
-        print("\n⚠️  No results - skipping sub-period analysis")
+        print("\n!!!  No results - skipping sub-period analysis")
 
 
 def main():
