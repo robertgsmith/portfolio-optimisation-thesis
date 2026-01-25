@@ -208,6 +208,15 @@ class MeanVariancePortfolio(BasePortfolio):
         
         if expected_returns is None:
             expected_returns = returns.mean().values * config.TRADING_DAYS_PER_YEAR
+            
+        # Winsorize extreme expected returns (addresses extreme values issue)
+        if getattr(config, 'WINSORIZE_EXPECTED_RETURNS', False):
+            lower_pct = getattr(config, 'WINSORIZE_LOWER_PERCENTILE', 0.05)
+            upper_pct = getattr(config, 'WINSORIZE_UPPER_PERCENTILE', 0.95)
+            lower_bound = np.percentile(expected_returns, lower_pct * 100)
+            upper_bound = np.percentile(expected_returns, upper_pct * 100)
+            expected_returns = np.clip(expected_returns, lower_bound, upper_bound)
+            logger.info(f"Winsorized expected returns: [{lower_bound:.2%}, {upper_bound:.2%}]")
         
         if cov_matrix is None:
             cov_matrix = returns.cov().values * config.TRADING_DAYS_PER_YEAR
@@ -222,6 +231,13 @@ class MeanVariancePortfolio(BasePortfolio):
             weights >= self.min_weight,
             weights <= self.max_weight
         ]
+
+        # Add diversification constraint (prevents concentration)
+        if getattr(config, 'ENABLE_DIVERSIFICATION', False):
+            min_eff = getattr(config, 'MIN_EFFECTIVE_ASSETS', 20)
+            max_herfindahl = 1.0 / min_eff
+            constraints.append(cp.sum_squares(optimisation_variable) <= max_herfindahl)
+            logger.info(f"Applied diversification: min {min_eff} effective assets (Herfindahl <= {max_herfindahl:.4f})")
         
         # Minimum variance portfolio
         problem = cp.Problem(cp.Minimize(portfolio_variance), constraints)
