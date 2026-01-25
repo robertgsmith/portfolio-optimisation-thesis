@@ -205,6 +205,7 @@ class MeanVariancePortfolio(BasePortfolio):
             Weights for each frontier portfolio
         """
         number_of_assets = returns.shape[1]
+        optimisation_variable = cp.Variable(number_of_assets)
         
         if expected_returns is None:
             expected_returns = returns.mean().values * config.TRADING_DAYS_PER_YEAR
