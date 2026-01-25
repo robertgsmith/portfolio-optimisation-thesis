@@ -2,7 +2,7 @@
 Configuration File for Portfolio Optimisation Thesis
 
 This file contains all configuration parameters, constants, and settings
-for the robust portfolio optimization project.
+for the robust portfolio optimisation project.
 
 Authors: Robert George Smith & Joaquin Rodriguez
 Project: Robust Portfolio Optimisation Under Parameter Uncertainty
@@ -132,7 +132,7 @@ BAYESIAN_SHRINKAGE_INTENSITY = None  # None = auto-estimate, or float [0, 1]
 BAYESIAN_PRIOR_WEIGHT = 0.1  # Weight given to market prior
 TAU = 0.05  # Uncertainty in prior
 
-# Robust Optimization (Bertsimas & Sim)
+# Robust Optimisation (Bertsimas & Sim)
 ROBUST_EPSILON = 0.5  # Size of uncertainty set (0 = no uncertainty, 1 = high uncertainty)
 ROBUST_GAMMA = 0.5  # Budget of uncertainty
 ROBUST_TARGET_RETURN = None  # None = use risk-return tradeoff, or float for target return

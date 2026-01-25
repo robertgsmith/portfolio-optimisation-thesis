@@ -7,7 +7,9 @@ data/analysis/*.csv
 # Results (generated files)
 results/figures/*.png
 results/tables/*.csv
+results/weights/*.csv
 results/*.csv
+results/tables/*.tex
 
 # Python
 __pycache__/
@@ -58,3 +60,8 @@ Thumbs.db
 !results/figures/.gitkeep
 !results/tables/.gitkeep
 
+# Other miscellaneous
+__scratchfile.py
+scripts/results/*
+results_baseline/*
+sentiment/*
