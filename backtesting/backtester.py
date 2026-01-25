@@ -390,4 +390,4 @@ class Backtester:
         drawdowns.to_csv(drawdowns_path)
         logger.info(f"Saved drawdowns to {drawdowns_path}")
         
-        print(f"\n✓ All results saved to {output_dir}")
+        print(f"\n>> All results saved to {output_dir}")

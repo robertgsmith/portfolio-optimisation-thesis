@@ -47,7 +47,7 @@ portfolio-optimiser-thesis/
 │   ├── features/                  # Engineered features
 │   └── analysis/                  # Summary statistics, correlations
 │
-├── data_components/               # Data pipeline modules
+├── data_pipeline/                 # Data pipeline modules
 │   ├── data_downloader.py         # Yahoo Finance data extraction
 │   ├── data_processor.py          # Returns and signal computation
 │   ├── feature_engineer.py        # Feature engineering

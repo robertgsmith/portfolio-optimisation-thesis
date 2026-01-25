@@ -103,7 +103,7 @@ class DataDownloader:
                     all_prices[ticker] = data['Close']
                     all_volumes[ticker] = data['Volume']
                     date_coverage[ticker] = data.index[0]
-                    logger.info(f"  ✓ {ticker}: {len(data)} days, from {data.index[0].date()}")
+                    logger.info(f"  >> {ticker}: {len(data)} days, from {data.index[0].date()}")
                 else:
                     failed_tickers.append(ticker)
                     logger.warning(f"  ✗ {ticker}: No data available")

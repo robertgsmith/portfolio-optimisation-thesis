@@ -112,15 +112,15 @@ MIN_EFFECTIVE_ASSETS = 20          # Minimum effective number of assets
 ENABLE_DIVERSIFICATION = True      # Set to False to disable for comparison
 
 # Expected Return Treatment
-WINSORISE_EXPECTED_RETURNS = True  # Cap extreme values
-WINSORISE_LOWER_PERCENTILE = 0.05  # 5th percentile
-WINSORISE_UPPER_PERCENTILE = 0.95  # 95th percentile
+WINSORIZE_EXPECTED_RETURNS = True  # Cap extreme values
+WINSORIZE_LOWER_PERCENTILE = 0.05  # 5th percentile
+WINSORIZE_UPPER_PERCENTILE = 0.95  # 95th percentile
 
 # ============================================================================
 # PORTFOLIO MODEL SPECIFIC PARAMETERS (Add this entire new section)
 # ============================================================================
 
-# Mean-Variance Optimization
+# Mean-Variance Optimisation
 RISK_AVERSION_DEFAULT = 1.0  # Default risk aversion parameter (λ)
 RISK_AVERSION_RANGE = [0.5, 1.0, 2.0, 5.0]  # For sensitivity analysis
 
@@ -138,7 +138,7 @@ ROBUST_GAMMA = 0.5  # Budget of uncertainty
 ROBUST_TARGET_RETURN = None  # None = use risk-return tradeoff, or float for target return
 
 # ============================================================================
-# OPTIMIZATION SOLVER SETTINGS (Add this entire new section)
+# OPTIMISATION SOLVER SETTINGS (Add this entire new section)
 # ============================================================================
 
 # CVXPY solver preferences
@@ -373,7 +373,7 @@ def validate_config():
     # Check transaction costs
     assert 0 <= TRANSACTION_COST <= 0.01, "Transaction cost should be between 0 and 1%"
     
-    print("✓ Configuration validated successfully")
+    print(">> Configuration validated successfully")
 
 # ============================================================================
 # HELPER FUNCTIONS
@@ -448,7 +448,7 @@ def print_config_summary():
     print(f"\nModels Enabled:")
     for model_key, model_config in PORTFOLIO_MODELS.items():
         if model_config['enabled']:
-            print(f"  ✓ {model_config['name']}")
+            print(f"  >> {model_config['name']}")
     print("="*70 + "\n")
 
 
@@ -464,4 +464,4 @@ else:
     try:
         validate_config()
     except AssertionError as e:
-        print(f"⚠️  Configuration Error: {e}")
+        print(f"!!!  Configuration Error: {e}")
