@@ -17,48 +17,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def plot_covid_period():
-    """Plot COVID period performance (2020-2021)."""
-    
-    print("\n" + "="*70)
-    print("COVID PERIOD ANALYSIS (2020-2021)")
-    print("="*70)
-    
-    # Load returns
-    returns = pd.read_csv(
-        config.RESULTS_DIR / "backtest_returns.csv",
-        index_col=0,
-        parse_dates=[0]
-    )
-
-    # Coerce to datetime (parse strings/objects), set UTC, then drop tz
-    returns.index = pd.to_datetime(returns.index, errors="raise", utc=True).tz_convert(None)
-
-    # Filter to COVID period
-    covid_returns = returns.loc['2020-01-01':'2021-12-31']
-    
-    # Cumulative returns
-    cum_returns = (1 + covid_returns).cumprod()
-    
-    # Plot
-    fig, ax = plt.subplots(figsize=(12, 6))
-    
-    for col in cum_returns.columns:
-        ax.plot(cum_returns.index, cum_returns[col], label=col, linewidth=2)
-    
-    ax.set_title('COVID Period: Cumulative Performance (2020-2021)', 
-                 fontsize=14, fontweight='bold')
-    ax.set_xlabel('Date')
-    ax.set_ylabel('Cumulative Return (1 = 100%)')
-    ax.legend()
-    ax.grid(True, alpha=0.3)
-    
-    plt.tight_layout()
-    plt.savefig(config.FIGURES_DIR / 'covid_period_performance.png', dpi=300)
-    print(">> Saved: covid_period_performance.png")
-    plt.close()
-
-
 def plot_all_subperiods():
     """Plot performance across all sub-periods."""
     
@@ -199,7 +157,6 @@ def calculate_subperiod_metrics():
 def main():
     """Run all sub-period analyses."""
     
-    plot_covid_period()
     plot_all_subperiods()
     metrics = calculate_subperiod_metrics()
     

@@ -47,7 +47,10 @@ from .weight_correlation import (
     calculate_weight_correlations,
     analyse_weight_differences
 )
-# from .plot_periods import 
+from .plot_subperiods import (
+    plot_all_subperiods,
+    calculate_subperiod_metrics
+)
 
 # all function imports
 __all__ = [
@@ -76,5 +79,7 @@ __all__ = [
     'plot_turnover_time_series',
     'compare_weight_distributions',
     'calculate_weight_correlations',
-    'analyse_weight_differences'
+    'analyse_weight_differences',
+    'plot_all_subperiods',
+    'calculate_subperiod_metrics'
 ]
