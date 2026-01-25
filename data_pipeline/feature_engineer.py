@@ -5,6 +5,7 @@ Creates features for portfolio optimization models.
 """
 
 # Standard library imports
+import sys
 from pathlib import Path
 import logging
 from typing import List, Dict
@@ -12,9 +13,10 @@ from typing import List, Dict
 # Third-party imports
 import pandas as pd
 
-# Add parent directory to path and import config.py
-import sys
-sys.path.append(str(Path(__file__).parent.parent))
+# Get the project root directory (parent of this script's directory)
+project_root = Path(__file__).parent.parent
+sys.path.insert(0, str(project_root))
+
 import config
 
 # Configure logging from config

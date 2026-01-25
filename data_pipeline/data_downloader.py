@@ -5,6 +5,7 @@ Downloads and consolidates S&P 100 stock data from Yahoo Finance.
 """
 
 # Standard library imports
+import sys
 from pathlib import Path
 import logging
 from typing import List, Dict, Optional, Tuple
@@ -13,9 +14,10 @@ from typing import List, Dict, Optional, Tuple
 import yfinance as yf
 import pandas as pd
 
-# Add parent directory to path and import config.py
-import sys
-sys.path.append(str(Path(__file__).parent.parent))
+# Get the project root directory (parent of this script's directory)
+project_root = Path(__file__).parent.parent
+sys.path.insert(0, str(project_root))
+
 import config
 
 # Configure logging from config
