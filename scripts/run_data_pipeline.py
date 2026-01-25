@@ -1,5 +1,5 @@
 """
-Data Pipeline for Portfolio Optimization Thesis
+Data Pipeline for Portfolio Optimisation Thesis
 
 Executes the complete data preparation.
 """
