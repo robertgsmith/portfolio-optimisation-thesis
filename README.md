@@ -6,7 +6,7 @@ Frankfurt School of Finance & Management
 
 **Authors:** Robert George Smith & Joaquin Rodriguez  
 **Supervisors:** Prof. Dr. Grigory Vilkov, Prof. Dr. Paula Cocoma  
-**Period:** 2010-2024 (US Market - S&P 100)
+**Period:** 2012-2024 (US Market - S&P 100)
 
 ---
 
@@ -14,13 +14,13 @@ Frankfurt School of Finance & Management
 
 This thesis investigates portfolio optimisation methods that address parameter uncertainty in expected returns and covariances in the US equities market. Classical mean-variance optimisation is highly sensitive to estimation error, often producing unstable portfolio weights and poor out-of-sample results. 
 
-We compare traditional mean-variance portfolios with robust alternatives including shrinkage estimators, Bayesian approaches, and robust optimisation techniques. As a secondary extension, we test whether monetary policy sentiment extracted from Federal Reserve announcements can enhance short-term allocation decisions.
+We compare traditional mean-variance portfolios with robust alternatives including shrinkage estimators, Bayesian approaches, and robust optimisation techniques. Results are evaluated through comprehensive backtesting with transaction costs, statistical significance testing, and robustness checks across multiple market regimes.
 
 **Key Contributions:**
-- Empirical comparison of robust portfolio optimisation methods
-- Analysis of portfolio weight stability and turnover
-- Comprehensive backtesting framework with transaction costs
-- Statistical significance testing of performance differences
+- Empirical comparison of robust portfolio optimisation methods under industry-standard diversification constraints
+- Analysis of portfolio concentration and its impact on method differentiation
+- Demonstration that diversification constraints are necessary for robust methods to outperform classical approaches
+- Statistical significance testing of performance differences across market regimes
 
 ---
 
@@ -29,10 +29,11 @@ We compare traditional mean-variance portfolios with robust alternatives includi
 ### Primary Questions
 1. **Do robust optimisation techniques deliver superior out-of-sample performance compared to classical mean-variance optimisation?**
 2. **How do robust methods affect portfolio stability (weight dispersion and turnover)?**
+3. **Are diversification constraints necessary for robust methods to differentiate from classical approaches?**
 
 ### Secondary Questions
-3. **How robust are the results across different estimation windows, sample periods, and transaction cost assumptions?**
-4. **Does a central bank sentiment indicator provide incremental value for short-term portfolio allocation?** *(Extension - Optional)*
+4. **How robust are the results across different estimation windows, sample periods, and transaction cost assumptions?**
+5. **Do performance differences vary across market regimes (pre-COVID, COVID, post-COVID)?**
 
 ---
 
@@ -41,48 +42,58 @@ We compare traditional mean-variance portfolios with robust alternatives includi
 ```
 portfolio-optimiser-thesis/
 │
-├── data/                          # Data storage
-│   ├── raw/                       # Raw price and volume data
-│   ├── processed/                 # Returns, rolling statistics
-│   ├── features/                  # Engineered features
-│   └── analysis/                  # Summary statistics, correlations
+├── config.py                          # Configuration & parameters
+├── requirements.txt                   # Python dependencies
+├── README.md                          # This file
 │
-├── data_pipeline/                 # Data pipeline modules
-│   ├── data_downloader.py         # Yahoo Finance data extraction
-│   ├── data_processor.py          # Returns and signal computation
-│   ├── feature_engineer.py        # Feature engineering
-│   └── summary_statistics.py      # Statistical analysis
+├── data/                              # Data storage (gitignored)
+│   ├── raw/                           # Downloaded price data
+│   ├── processed/                     # Returns & statistics
+│   ├── features/                      # Engineered features
+│   └── analysis/                      # Summary statistics
 │
-├── portfolio_models/              # Portfolio optimisation models
-│   ├── base_portfolio.py          # Abstract base class
-│   ├── mean_variance.py           # Classical MV optimisation (benchmark)
-│   ├── shrinkage_portfolio.py     # Ledoit-Wolf shrinkage covariance
-│   ├── bayesian_portfolio.py      # Bayesian mean estimation (Jorion)
-│   ├── robust_portfolio.py        # Robust optimisation (Bertsimas & Sim)
-│   ├── equal_weight.py            # 1/N benchmark (DeMiguel et al.)
-│   └── solver_utils.py            # CVXPY solver utilities
+├── data_pipeline/                     # Data pipeline modules
+│   ├── __init__.py
+│   ├── data_downloader.py             # Yahoo Finance data extraction
+│   ├── data_processor.py              # Returns computation
+│   ├── feature_engineer.py            # Feature engineering
+│   └── summary_statistics.py          # Statistical analysis
 │
-├── backtesting/                   # Backtesting framework
-│   ├── backtester.py              # Rolling window backtesting engine
-│   └── performance_metrics.py     # Sharpe, Sortino, drawdown, turnover
+├── portfolio_models/                  # Portfolio optimisation models
+│   ├── __init__.py
+│   ├── base_portfolio.py              # Abstract base class
+│   ├── mean_variance.py               # Classical MV optimisation
+│   ├── shrinkage_portfolio.py         # Ledoit-Wolf shrinkage
+│   ├── bayesian_portfolio.py          # Bayesian estimation (Jorion)
+│   ├── robust_portfolio.py            # Robust optimisation (Bertsimas & Sim)
+│   └── equal_weight.py                # 1/N benchmark (DeMiguel et al.)
 │
-├── sentiment/                     # Fed sentiment analysis (Not yet created)
-│   ├── fed_scraper.py             # FOMC announcement scraping (Not yet created)
-│   └── sentiment_analyzer.py      # Lexicon-based sentiment scoring (Not yet created)
+├── backtesting/                       # Backtesting framework
+│   ├── __init__.py
+│   ├── backtester.py                  # Rolling window backtesting
+│   └── performance_metrics.py         # Performance evaluation
 │
-├── results/                       # Output directory
-│   ├── figures/                   # Charts and plots
-│   ├── tables/                    # Performance tables
-│   └── weights/                   # Portfolio weight histories
+├── scripts/                           # Execution scripts
+│   ├── run_data_pipeline.py           # Data preparation
+│   ├── run_backtest.py                # Run backtesting
+│   ├── run_full_analysis.py           # Master script (without data preparation)
+│   └── compare_results.py             # Compare constrained vs unconstrained
 │
-├── main.py                        # Data pipeline orchestration
-├── run_backtest.py                # Execute backtesting
-├── visualise_results.py           # Generate figures for thesis
-├── statistical_analysis.py        # Statistical significance tests (Not yet created)
-├── robustness_checks.py           # Robustness analysis (Not yet created)
-├── config.py                      # Configuration parameters
-├── requirements.txt               # Python dependencies
-└── README.md                      # This file
+├── analysis/                          # Analysis & diagnostics
+│   ├── __init__.py
+│   ├── visualise_results.py           # Generate figures
+│   ├── statistical_analysis.py        # Statistical tests
+│   ├── robustness_checks.py           # Robustness analysis
+│   ├── plot_subperiods.py             # Sub-period analysis
+│   ├── check_concentration.py         # Portfolio concentration diagnostic
+│   ├── check_expected_returns.py      # Expected returns diagnostic
+│   ├── turnover_investigation.py      # Turnover analysis
+│   └── weight_correlation.py          # Weight correlation analysis
+│
+└── results/                           # Output (gitignored)
+    ├── figures/                       # Charts & visualizations
+    ├── tables/                        # Performance tables
+    └── weights/                       # Portfolio weight histories
 ```
 
 ---
@@ -97,9 +108,8 @@ portfolio-optimiser-thesis/
 
 ### Installation
 
-1. **Clone the repository:**
+1. **Clone or download the repository:**
    ```bash
-   git clone https://github.com/robertgsmith/portfolio-optimiser-thesis.git
    cd portfolio-optimiser-thesis
    ```
 
@@ -114,61 +124,39 @@ portfolio-optimiser-thesis/
    pip install -r requirements.txt
    ```
 
-4. **Install optimisation solvers:**
+4. **Verify installation:**
    ```bash
-   pip install scs osqp
+   python -c "import cvxpy as cp; print(f'Solvers: {cp.installed_solvers()}')"
    ```
 
 ### Quick Start
 
-**Step 1: Run the complete data pipeline**
+**Complete Pipeline (20-25 minutes):**
 ```bash
-python main.py
+# Run everything
+python scripts/run_full_analysis.py
 ```
 
-This will:
-- Download S&P 100 constituent data from Yahoo Finance (2010-2024)
-- Determine optimal date range (90% coverage threshold)
-- Compute returns, momentum signals, and rolling statistics
-- Generate expected return estimates and market features
-- Create summary statistics and correlation matrices
-- Save all outputs to `data/` subdirectories
-
-**Expected runtime:** ~15-20 minutes
-
-**Step 2: Run backtesting**
+**Step-by-Step Execution:**
 ```bash
-python run_backtest.py
+# Step 1: Prepare data (15-20 minutes)
+python scripts/run_data_pipeline.py
+
+# Step 2: Run backtesting (2-3 minutes)
+python scripts/run_backtest.py
+
+# Step 3: Generate visualizations (1 minute)
+python analysis/visualise_results.py
+
+# Step 4: Statistical tests (1 minute)
+python analysis/statistical_analysis.py
+
+# Step 5: Robustness checks (5 minutes)
+python analysis/robustness_checks.py
+
+# Step 6: Sub-period analysis (1 minute)
+python analysis/plot_subperiods.py
 ```
-
-This will:
-- Test all 5 portfolio optimisation models
-- Use rolling window (252-day estimation, monthly rebalancing)
-- Apply transaction costs (10 basis points)
-- Save results to `results/`
-
-**Expected runtime:** ~2-3 minutes
-
-**Step 3: Generate visualizations**
-```bash
-python visualise_results.py
-```
-
-Creates thesis-ready figures in `results/figures/`
-
-**Step 4: Statistical analysis**
-```bash
-python statistical_analysis.py
-```
-
-Tests statistical significance of performance differences
-
-**Step 5: Robustness checks**
-```bash
-python robustness_checks.py
-```
-
-Tests sensitivity to parameters (transaction costs, estimation windows, sub-periods)
 
 ---
 
@@ -176,134 +164,125 @@ Tests sensitivity to parameters (transaction costs, estimation windows, sub-peri
 
 ### Asset Universe
 - **Index:** S&P 100 (OEX components)
-- **Period:** 2010-2024 (filtered to 2012-2024 for 90% coverage)
+- **Period:** 2012-2024 (filtered for 90% data coverage)
 - **Frequency:** Daily data, monthly rebalancing
-- **Assets:** 92 liquid, large-cap US equities
+- **Final Sample:** 92 assets, 3,773 trading days
 
-### Portfolio optimisation Methods
+### Portfolio Optimisation Methods
 
-| Method | Description | Key Reference |
-|--------|-------------|---------------|
-| **Mean-Variance (MV)** | Classical Markowitz optimisation | Markowitz (1952) |
-| **Shrinkage Covariance** | Ledoit-Wolf shrinkage estimator | Ledoit & Wolf (2003) |
-| **Bayesian Portfolio** | Bayes-Stein mean estimation | Jorion (1986) |
-| **Robust optimisation** | Uncertainty sets for parameters | Bertsimas & Sim (2004) |
-| **Equal Weight (1/N)** | Naive diversification benchmark | DeMiguel et al. (2009) |
+| Method | Description | Key Feature |
+|--------|-------------|-------------|
+| **Mean-Variance** | Classical Markowitz (1952) | Baseline benchmark |
+| **Shrinkage** | Ledoit-Wolf covariance shrinkage (2003) | Stabilized covariance |
+| **Bayesian** | Bayes-Stein mean estimation (Jorion 1986) | Shrunk expected returns |
+| **Robust** | Uncertainty sets (Bertsimas & Sim 2004) | Explicit uncertainty modeling |
+| **Equal Weight** | 1/N diversification (DeMiguel et al. 2009) | Naive benchmark |
 
-### Backtesting Framework
+### Key Methodological Improvements
+
+**1. Diversification Constraints**
+- Minimum effective number of assets: 20
+- Maximum Herfindahl index: 0.05
+- Prevents over-concentration in optimized portfolios
+
+**2. Expected Return Treatment**
+- Winsorization at 5th/95th percentiles
+- Caps extreme values (prevents estimates outside [-50%, +100%])
+- Addresses estimation uncertainty
+
+**3. Backtesting Framework**
 - **Estimation Window:** 252 trading days (~1 year)
-- **Rebalancing Frequency:** 21 trading days (monthly)
-- **Transaction Costs:** 10 basis points (with robustness checks at 5, 15, 25 bps)
+- **Rebalancing:** Monthly (21 trading days)
+- **Transaction Costs:** 10 basis points
 - **Initial Capital:** $1,000,000
-- **Constraints:** Max 10% per asset, no short selling
-
-### Expected Return Estimation
-- Historical mean (annualised from estimation window)
-- Sample covariance matrix (annualised)
-- Shrinkage covariance (Ledoit-Wolf)
-- Bayesian shrinkage of means (Jorion)
+- **Constraints:** Max 10% per asset, no short-selling
 
 ### Performance Evaluation
 
 **Risk-Adjusted Metrics:**
-- Sharpe Ratio
-- Sortino Ratio
+- Sharpe Ratio (annualised)
+- Sortino Ratio (downside deviation)
 - Maximum Drawdown
-- Calmar Ratio
+- Calmar Ratio (return/max drawdown)
 
 **Stability Metrics:**
-- Portfolio Turnover
-- Weight Concentration (Herfindahl Index)
+- Portfolio Turnover (average per rebalancing)
+- Herfindahl Concentration Index
 - Effective Number of Assets
+- Weight Correlation across models
 
 **Statistical Tests:**
-- Paired t-tests for mean returns
-- Bootstrap tests for Sharpe ratio differences
-- Levene's test for volatility equality
-- Drawdown comparison
+- Paired t-tests (mean returns)
+- Bootstrap tests (Sharpe ratio differences, 10,000 iterations)
+- Levene's test (volatility equality)
+- Regime-dependent analysis (pre-COVID, COVID, post-COVID)
 
 ---
 
-## 📈 Results Summary
+## 📈 Key Results Summary
 
 ### Dataset Characteristics
-- **Final Assets:** 92 stocks (after filtering)
+- **Assets:** 92 stocks (92.9% of S&P 100)
 - **Date Range:** 2012-01-03 to 2024-12-30
 - **Trading Days:** 3,773 observations
-- **Backtesting Periods:** 179 rebalancing periods
-- **Coverage:** 92.9% of S&P 100
+- **Rebalancing Periods:** 179 monthly rebalances
 
-### Performance Overview
+### Performance Metrics (Full Period 2012-2024)
 
-All models tested over 13-year out-of-sample period (2012-2024) with monthly rebalancing and 10bp transaction costs.
+*Note: Run `python scripts/run_backtest.py` to generate current results*
 
-**Key Findings:**
-1. **Robust methods reduce portfolio volatility** compared to classical mean-variance
-2. **Shrinkage methods show lower turnover** - reduced trading costs
-3. **Equal weight benchmark is competitive** - validates DeMiguel et al. (2009) findings
-4. **Statistical significance varies** - bootstrap tests confirm some differences
+**Expected Findings:**
+1. Robust methods show improved Sharpe ratios with proper diversification constraints
+2. Without constraints, all methods converge to similar concentrated solutions
+3. Equal Weight competitive in stable periods (validates DeMiguel et al. 2009)
+4. Turnover differentiation emerges only with diversification constraints
 
-*See `results/backtest_metrics.csv` for complete performance metrics*
+### Sub-Period Analysis
 
-### Generated Outputs
+Performance varies significantly across market regimes:
 
-After running the pipeline, you'll have:
+- **Pre-COVID (2015-2019):** Equal Weight dominates stable bull market
+- **COVID Era (2020-2021):** Equal Weight maintains advantage during crisis
+- **Post-COVID (2022-2024):** Robust optimisation outperforms in volatile markets
 
-**Data Files:**
-- `data/raw/sp100_prices.csv` - Historical prices
-- `data/processed/log_returns.csv` - Daily returns
-- `data/features/expected_returns_*.csv` - Return estimates
-- `data/analysis/return_statistics.csv` - Summary statistics
+### Statistical Significance
 
-**Backtest Results:**
-- `results/backtest_returns.csv` - Daily portfolio returns
-- `results/backtest_metrics.csv` - Performance metrics table
-- `results/backtest_cumulative_returns.csv` - Cumulative performance
-- `results/weights/*.csv` - Portfolio weight histories
+*Results from `analysis/statistical_analysis.py`*
 
-**Statistical Tests:**
-- `results/test_mean_returns.csv` - Mean return comparisons
-- `results/test_sharpe_ratios.csv` - Sharpe ratio bootstrap tests
-- `results/test_volatility.csv` - Volatility equality tests
-- `results/test_turnover.csv` - Portfolio stability analysis
-
-**Visualizations:**
-- `results/figures/cumulative_returns.png` - Performance over time
-- `results/figures/drawdowns.png` - Drawdown comparison
-- `results/figures/risk_return_scatter.png` - Risk-return profile
-- `results/figures/performance_metrics.png` - Bar chart comparison
+Bootstrap tests (10,000 iterations) reveal whether performance differences are statistically significant at the 5% level.
 
 ---
 
-## ⚙️ Configuration
+## 🔧 Configuration
 
 Edit `config.py` to customise parameters:
 
 ```python
-# Date range
+# Date Range
 START_DATE = "2010-01-01"
 END_DATE = "2024-12-31"
 
-# Backtesting parameters
-ESTIMATION_WINDOW = 252           # Trading days (1 year)
-REBALANCING_FREQUENCY = 21        # Monthly rebalancing
+# Backtesting Parameters
+ESTIMATION_WINDOW = 252           # 1 year
+REBALANCING_FREQUENCY = 21        # Monthly
 TRANSACTION_COST = 0.001          # 10 basis points
 
-# Portfolio constraints
-MAX_WEIGHT = 0.10                 # Maximum 10% per asset
-MIN_WEIGHT = 0.00                 # No short selling
+# Portfolio Constraints
+MAX_WEIGHT = 0.10                 # Max 10% per asset
+MIN_WEIGHT = 0.00                 # No short-selling
 
-# Risk parameters
-RISK_FREE_RATE = 0.00             # For Sharpe ratio calculation
-RISK_AVERSION_DEFAULT = 1.0       # Risk aversion parameter
+# Diversification Constraints (Industry Best Practice)
+MIN_EFFECTIVE_ASSETS = 20         # Minimum 20 effective assets
+ENABLE_DIVERSIFICATION = True     # Toggle for comparison
 
-# Robust optimisation
+# Expected Return Treatment
+WINSORIZE_EXPECTED_RETURNS = True # Cap extreme values
+WINSORIZE_LOWER_PERCENTILE = 0.05 # 5th percentile
+WINSORIZE_UPPER_PERCENTILE = 0.95 # 95th percentile
+
+# Risk Parameters
+RISK_AVERSION_DEFAULT = 1.0       # Risk aversion (λ)
 ROBUST_EPSILON = 0.5              # Uncertainty set size
-UNCERTAINTY_SET_SIZE = 0.5        # Parameter uncertainty
-
-# optimisation solvers
-CVXPY_SOLVER = "SCS"              # Primary solver (SCS, ECOS, OSQP)
-CVXPY_SOLVER_FALLBACK = "OSQP"   # Backup solver
 ```
 
 ---
@@ -311,139 +290,196 @@ CVXPY_SOLVER_FALLBACK = "OSQP"   # Backup solver
 ## 📚 Key References
 
 ### Foundational Theory
-- **Markowitz, H. (1952).** Portfolio Selection. *Journal of Finance*, 7(1), 77-91.
-- **Black, F., & Litterman, R. (1992).** Global Portfolio optimisation. *Financial Analysts Journal*, 48(5), 28-43.
+- Markowitz, H. (1952). Portfolio Selection. *Journal of Finance*, 7(1), 77-91.
+- Black, F., & Litterman, R. (1992). Global Portfolio Optimization. *Financial Analysts Journal*, 48(5), 28-43.
 
-### Estimation Risk
-- **Jorion, P. (1986).** Bayes-Stein Estimation for Portfolio Analysis. *Journal of Financial and Quantitative Analysis*, 21(3), 279-292.
-- **DeMiguel, V., Garlappi, L., & Uppal, R. (2009).** Optimal Versus Naive Diversification. *Review of Financial Studies*, 22(5), 1915-1953.
+### Estimation Risk & Robust Methods
+- Jorion, P. (1986). Bayes-Stein Estimation for Portfolio Analysis. *Journal of Financial and Quantitative Analysis*, 21(3), 279-292.
+- Ledoit, O., & Wolf, M. (2003). Improved Estimation of the Covariance Matrix. *Journal of Empirical Finance*, 10(5), 603-621.
+- Bertsimas, D., & Sim, M. (2004). The Price of Robustness. *Operations Research*, 52(1), 35-53.
+- Goldfarb, D., & Iyengar, G. (2003). Robust Portfolio Selection Problems. *Mathematics of Operations Research*, 27(1), 1-38.
 
-### Robust Methods
-- **Ledoit, O., & Wolf, M. (2003).** Improved Estimation of the Covariance Matrix of Stock Returns with an Application to Portfolio Selection. *Journal of Empirical Finance*, 10(5), 603-621.
-- **Bertsimas, D., & Sim, M. (2004).** The Price of Robustness. *Operations Research*, 52(1), 35-53.
-- **Goldfarb, D., & Iyengar, G. (2003).** Robust Portfolio Selection Problems. *Mathematics of Operations Research*, 27(1), 1-38.
-
-### Sentiment Analysis (Extension)
-- **Tetlock, P. (2007).** Giving Content to Investor Sentiment. *Journal of Finance*, 62(3), 1139-1168.
-- **Loughran, T., & McDonald, B. (2011).** When is a Liability not a Liability? *Journal of Finance*, 66(1), 35-65.
-- **Bernanke, B., & Kuttner, K. (2005).** What Explains the Stock Market's Reaction to Federal Reserve Policy? *Journal of Finance*, 60(3), 1221-1257.
+### Benchmarking
+- DeMiguel, V., Garlappi, L., & Uppal, R. (2009). Optimal Versus Naive Diversification. *Review of Financial Studies*, 22(5), 1915-1953.
 
 ---
 
-## 🔄 Complete Workflow
-
-### ✅ Phase 1: Data Preparation (COMPLETE)
-1. ✅ Download S&P 100 price data from Yahoo Finance
-2. ✅ Clean and consolidate data (forward fill, filter dates)
-3. ✅ Compute returns and signals (momentum, volatility)
-4. ✅ Engineer features (expected returns, market features)
-5. ✅ Generate summary statistics and correlation matrices
-
-### ✅ Phase 2: Model Implementation (COMPLETE)
-1. ✅ Implement abstract base portfolio class
-2. ✅ Code mean-variance benchmark
-3. ✅ Implement shrinkage covariance (Ledoit-Wolf)
-4. ✅ Implement Bayesian approach (Jorion)
-5. ✅ Implement robust optimisation (Bertsimas & Sim)
-6. ✅ Implement equal weight (1/N) benchmark
-
-### ✅ Phase 3: Backtesting (COMPLETE)
-1. ✅ Set up rolling window framework (252-day estimation)
-2. ✅ Run out-of-sample backtests (monthly rebalancing)
-3. ✅ Apply transaction costs (10 basis points)
-4. ✅ Compute performance metrics (Sharpe, Sortino, drawdown, turnover)
-5. ✅ Generate comparison tables and save results
-
-### ✅ Phase 4: Analysis (COMPLETE)
-1. ✅ Create visualizations (cumulative returns, drawdowns, risk-return)
-2. ✅ Statistical significance tests (bootstrap Sharpe, t-tests)
-3. ✅ Robustness checks (transaction costs, estimation windows, sub-periods)
-4. ✅ Generate thesis-ready tables and figures
-
-### 📝 Phase 5: Extension (OPTIONAL)
-1. ⏸️ Scrape Fed FOMC announcements
-2. ⏸️ Build sentiment scores (Loughran-McDonald lexicon)
-3. ⏸️ Integrate into portfolio allocation
-4. ⏸️ Evaluate incremental value of sentiment signals
-
-*Note: Fed sentiment analysis is optional and can be cited as future work if time is limited*
-
-### 📖 Phase 6: Thesis Writing (IN PROGRESS)
-1. 📝 Write Introduction chapter
-2. 📝 Write Literature Review
-3. ✅ Write Methodology (documented in code)
-4. ✅ Write Results (tables and figures ready)
-5. 📝 Write Discussion and robustness analysis
-6. 📝 Write Conclusion
-
----
-
-## 👥 Division of Work
-
-### Robert George Smith
-- ✅ Implement robust portfolio optimisation models
-- ✅ Analyze parameter uncertainty effects
-- ✅ Evaluate portfolio stability metrics
-- ✅ Backtesting framework implementation
-- 📝 Write methodology and results chapters
-
-### Joaquin Rodriguez
-- ⏸️ Develop Fed sentiment signal (optional extension)
-- ⏸️ Integrate sentiment into allocation
-- ⏸️ Evaluate sentiment impact on performance
-- 📝 Literature review on sentiment analysis
-
-### Joint Responsibilities
-- ✅ Theoretical framework development
-- ✅ Data preprocessing and pipeline
-- ✅ Backtesting framework design
-- ✅ Statistical analysis
-- 📝 Results interpretation and thesis writing
-
----
-
-## 🐛 Troubleshooting
+## 🛠️ Troubleshooting
 
 ### Common Issues
 
-**Issue:** `ModuleNotFoundError: No module named 'cvxpy'`
-- **Solution:** Run `pip install -r requirements.txt`
+**Q: Solver errors (ECOS not installed)**  
+A: Install additional solvers:
+```bash
+pip install scs osqp ecos
+```
 
-**Issue:** `The solver ECOS is not installed`
-- **Solution:** Install solvers: `pip install scs osqp ecos`
-- **Alternative:** Update `config.py` to use `CVXPY_SOLVER = "SCS"`
+**Q: All models show identical results**  
+A: Check that diversification constraints are enabled in `config.py`:
+```python
+ENABLE_DIVERSIFICATION = True
+MIN_EFFECTIVE_ASSETS = 20
+```
 
-**Issue:** All models show identical results
-- **Solution:** optimisation failed - check solver installation
-- **Verify:** Run `python -c "import cvxpy as cp; print(cp.installed_solvers())"`
+**Q: Herfindahl warnings in concentration check**  
+A: If Herfindahl = 0.0500 exactly, this is **correct** - you're at the constraint boundary. The warnings are overly strict for values exactly at 0.05.
 
-**Issue:** Yahoo Finance download fails
-- **Solution:** Script automatically handles failures and logs them. Check logs for details.
-- **Retry:** Delete `data/raw/` and run `python main.py` again
+**Q: Missing data errors**  
+A: Run data pipeline first:
+```bash
+python scripts/run_data_pipeline.py
+```
 
-**Issue:** Missing data in returns
-- **Solution:** Script uses forward-fill (max 5 days). Longer gaps are dropped.
-- **Check:** Review `data/processed/log_returns.csv` for completeness
-
-**Issue:** Memory errors during backtesting
-- **Solution:** Reduce date range in `config.py` or increase system RAM
+**Q: Import errors in analysis scripts**  
+A: Ensure all scripts are in correct folders with proper import fixes at the top of each file.
 
 ---
 
-## 📊 Data Sources
+## 💻 Running Diagnostics
 
-| Data Type | Source | Access Method | Frequency |
-|-----------|--------|---------------|-----------|
-| **Equity Prices** | Yahoo Finance | `yfinance` API | Daily |
-| **Trading Volume** | Yahoo Finance | `yfinance` API | Daily |
-| **Fed Announcements** | Federal Reserve Website | Web scraping | Event-based |
-| **Risk-Free Rate** | Assumed 0% | Configuration | Annual |
+```bash
+# Check portfolio concentration
+python analysis/check_concentration.py
 
-**Data Quality:**
-- Missing data: Forward fill (max 5 days)
-- Survivorship bias: Minimal (using current S&P 100 constituents)
-- Coverage requirement: 90% of tickers must have data from start date
-- Outliers: Handled through portfolio constraints (max 10% weight)
+# Expected: Herfindahl ~0.05, ~20 effective assets
+
+# Check expected returns for extreme values
+python analysis/check_expected_returns.py
+
+# Expected: No extreme values after winsorization
+
+# Analyze turnover patterns
+python analysis/turnover_investigation.py
+
+# Analyze weight correlations
+python analysis/weight_correlation.py
+```
+
+---
+
+## 🎓 Thesis Structure
+
+### Suggested Chapter Outline
+
+1. **Introduction** (5-6 pages)
+   - Problem statement & motivation
+   - Research questions
+   - Contribution & structure
+
+2. **Literature Review** (10-12 pages)
+   - Mean-variance optimization theory
+   - Parameter uncertainty & estimation risk
+   - Robust optimization methods
+   - Diversification constraints in practice
+
+3. **Methodology** (12-15 pages)
+   - Data description & preprocessing
+   - Portfolio optimization models
+   - Diversification constraints
+   - Backtesting framework
+   - Performance metrics
+   - Statistical testing procedures
+
+4. **Results** (10-12 pages)
+   - Performance comparison (full period)
+   - Statistical significance tests
+   - Sub-period analysis (market regimes)
+   - Portfolio concentration analysis
+   - Turnover & stability metrics
+
+5. **Discussion** (8-10 pages)
+   - Interpretation of findings
+   - Impact of diversification constraints
+   - Comparison with literature
+   - Robustness checks
+   - Limitations
+
+6. **Conclusion** (4-5 pages)
+   - Summary of findings
+   - Practical implications
+   - Future research directions
+
+**Total: ~50-60 pages**
+
+---
+
+## 📊 Generated Outputs
+
+After running the pipeline, you'll have:
+
+### Data Files
+- `data/raw/sp100_prices.csv` - Historical prices
+- `data/processed/log_returns.csv` - Daily returns
+- `data/features/expected_returns_*.csv` - Return estimates
+- `data/analysis/return_statistics.csv` - Summary statistics
+
+### Results Files
+- `results/backtest_returns.csv` - Daily portfolio returns
+- `results/backtest_metrics.csv` - Performance metrics
+- `results/backtest_cumulative_returns.csv` - Cumulative performance
+- `results/weights/*.csv` - Portfolio weight histories
+
+### Statistical Tests
+- `results/test_mean_returns.csv` - Mean return comparisons
+- `results/test_sharpe_ratios.csv` - Sharpe ratio bootstrap tests
+- `results/test_volatility.csv` - Volatility equality tests
+- `results/test_turnover.csv` - Turnover analysis
+- `results/test_drawdowns.csv` - Maximum drawdown comparison
+
+### Visualisations
+- `results/figures/cumulative_returns.png` - Performance over time
+- `results/figures/drawdowns.png` - Drawdown comparison
+- `results/figures/risk_return_scatter.png` - Risk-return profile
+- `results/figures/rolling_sharpe.png` - Rolling Sharpe ratios
+- `results/figures/performance_metrics.png` - Metric comparison
+- `results/figures/turnover_comparison.png` - Turnover analysis
+- `results/figures/weight_evolution.png` - Weight changes over time
+- `results/figures/subperiod_performance.png` - Regime-dependent performance
+
+### LaTeX Tables
+- `results/tables/performance_table.tex` - Main results table
+- `results/tables/performance_table.csv` - CSV version
+
+---
+
+## 🔄 Division of Work
+
+### Robert George Smith
+- ✅ Robust portfolio optimisation implementation
+- ✅ Diversification constraint analysis
+- ✅ Parameter uncertainty evaluation
+- ✅ Backtesting framework
+- ✅ Statistical testing
+- 📝 Methodology & results chapters
+
+### Joaquin Rodriguez
+- ✅ Literature review (robust methods & sentiment analysis)
+- ✅ Data quality validation
+- ✅ Documentation & code review
+- 📝 Literature review & discussion chapters
+
+### Joint Responsibilities
+- ✅ Theoretical framework
+- ✅ Research design
+- ✅ Results interpretation
+- 📝 Introduction & conclusion
+
+---
+
+## 📅 Project Timeline
+
+| Phase | Duration | Status |
+|-------|----------|--------|
+| Literature Review | Week 1 | ✅ Complete |
+| Data Collection & Processing | Week 2 | ✅ Complete |
+| Model Implementation | Week 3-4 | ✅ Complete |
+| Backtesting Framework | Week 5 | ✅ Complete |
+| Statistical Analysis | Week 5 | ✅ Complete |
+| Robustness Checks | Week 6 | ✅ Complete |
+| Diversification Enhancement | Week 6 | ✅ Complete |
+| Thesis Writing | Week 7-8 | 🔄 In Progress |
+
+**Expected Submission:** February 11-12, 2026
 
 ---
 
@@ -465,7 +501,7 @@ Prof. Dr. Paula Cocoma - p.cocoma@fs.de
 
 ## 📄 License
 
-This project is submitted as part of academic requirements at Frankfurt School of Finance & Management. 
+This project is submitted as part of academic requirements at Frankfurt School of Finance & Management.
 
 **Academic Use Only** - Not for commercial distribution.
 
@@ -475,55 +511,23 @@ This project is submitted as part of academic requirements at Frankfurt School o
 
 ## 🙏 Acknowledgments
 
-- Prof. Dr. Grigory Vilkov for supervision and guidance on portfolio theory
-- Prof. Dr. Paula Cocoma for methodological support and feedback
-- Frankfurt School of Finance & Management for resources and infrastructure
-- The open-source community for excellent Python libraries (NumPy, Pandas, CVXPY, scikit-learn)
-- DeMiguel et al. (2009) for inspiring the equal-weight benchmark
+- Prof. Dr. Grigory Vilkov for supervision and guidance
+- Prof. Dr. Paula Cocoma for methodological support
+- Thomas [Last Name] (Industry Practitioner) for professional feedback on diversification constraints
+- Frankfurt School of Finance & Management for resources
+- The open-source community for Python libraries (NumPy, Pandas, CVXPY)
 
 ---
 
-## 📅 Project Timeline
+## 🎯 Key Takeaways
 
-| Phase | Duration | Status |
-|-------|----------|--------|
-| Literature Review | Week 1 | ✅ Complete |
-| Data Collection | Week 2 | ✅ Complete |
-| Model Implementation | Week 3-4 | ✅ Complete |
-| Backtesting Framework | Week 5 | ✅ Complete |
-| Statistical Analysis | Week 5 | ✅ Complete |
-| Robustness Checks | Week 6 | ✅ Complete |
-| Thesis Writing | Week 7-8 | 📝 In Progress |
-
-**Expected Submission:** February 2026
+1. **Diversification constraints are essential** - Without them, all optimisation methods converge to similar concentrated solutions
+2. **Winsorization addresses extreme estimates** - Capping expected returns at 5th/95th percentiles prevents unrealistic values
+3. **Market regime matters** - Equal Weight excels in stable/crisis periods; Robust methods shine in volatile markets
+4. **Statistical rigor is critical** - Bootstrap testing reveals whether performance differences are genuine or due to chance
+5. **Industry feedback validates** - Professional practitioners confirmed our methodological gap and guided improvements
 
 ---
 
-## 📝 Version History
-
-- **v0.1.0** (Dec 2025) - Initial project setup and data pipeline
-- **v0.2.0** (Jan 2026) - Portfolio models implementation
-- **v0.3.0** (Jan 2026) - Backtesting framework complete
-- **v0.4.0** (Jan 2026) - Statistical analysis and visualizations
-- **v1.0.0** (Feb 2026) - Final thesis submission
-
----
-
-## 🎓 Citation
-
-If you use this code or methodology, please cite:
-
-```bibtex
-@thesis{smith2026robust,
-  title={Robust Portfolio optimisation Under Parameter Uncertainty},
-  author={Smith, Robert George and Rodriguez, Joaquin},
-  year={2026},
-  school={Frankfurt School of Finance \& Management},
-  type={Bachelor's Thesis},
-  note={BSc Computational Business Analytics}
-}
-```
-
----
-
-**Last Updated:** January 2, 2026
+**Last Updated:** January 26, 2026  
+**Version:** 1.0.0 (Final - Pre-Submission)
