@@ -31,6 +31,8 @@ from portfolio_models import (
     BayesianPortfolio,
     RobustPortfolio,
     EqualWeightPortfolio
+    # # Sentiment Risk Portfolio (not used in final thesis results)
+    # SentimentRiskPortfolio
 )
 from backtesting import Backtester
 
@@ -50,7 +52,7 @@ def main():
     logger.info(f"Data shape: {returns.shape}")
     logger.info(f"Date range: {returns.index[0].date()} to {returns.index[-1].date()}")
     
-    # Initialize models
+    # Initialise models
     logger.info("\nInitialising portfolio models...")
     
     models = {
@@ -68,12 +70,17 @@ def main():
             risk_aversion=config.RISK_AVERSION_DEFAULT
         ),
         'Equal Weight': EqualWeightPortfolio()
+        # # Sentiment Risk Portfolio (not used in final thesis results)
+        # 'Sentiment Risk': SentimentRiskPortfolio(
+        # base_risk_aversion=config.RISK_AVERSION_DEFAULT,
+        # sentiment_sensitivity=1.5  
+        # )
     }
     
     for name in models.keys():
         logger.info(f"  >> {name}")
     
-    # Initialize backtester
+    # Initialise backtester
     logger.info("\nInitialising backtester...")
     backtester = Backtester(
         returns=returns,

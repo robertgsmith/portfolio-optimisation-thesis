@@ -64,4 +64,4 @@ Thumbs.db
 __scratchfile.py
 scripts/results/*
 results_baseline/*
-sentiment/*
+sentiment/*.txt

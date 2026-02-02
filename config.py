@@ -108,7 +108,7 @@ COVARIANCE_UNCERTAINTY = 0.1  # 10% uncertainty in covariance estimates
 # ============================================================================
 
 # Minimum Effective Number of Assets
-MIN_EFFECTIVE_ASSETS = 20          # Minimum effective number of assets
+MIN_EFFECTIVE_ASSETS = 40          # Minimum effective number of assets
 ENABLE_DIVERSIFICATION = True      # Set to False to disable for comparison
 
 # Expected Return Treatment
@@ -228,20 +228,13 @@ PERFORMANCE_METRICS = [
 ]
 
 # ============================================================================
-# SENTIMENT ANALYSIS (EXTENSION)
+# SENTIMENT ANALYSIS (Extension)
 # ============================================================================
 
-# Federal Reserve Data
-FED_ANNOUNCEMENTS_URL = "https://www.federalreserve.gov/newsevents/pressreleases.htm"
-FOMC_STATEMENTS_URL = "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
-
-# Sentiment Analysis
-SENTIMENT_LOOKBACK = 5  # Days to look back for Fed announcements
-SENTIMENT_WEIGHT = 0.1  # Weight given to sentiment signal (10%)
-
-# Lexicon-based Sentiment (Loughran-McDonald)
-POSITIVE_WORDS_FILE = "data/sentiment/LM_positive.txt"
-NEGATIVE_WORDS_FILE = "data/sentiment/LM_negative.txt"
+# Sentiment portfolio parameters
+SENTIMENT_WEIGHT = 0.1              # Weight for return adjustment method
+SENTIMENT_SENSITIVITY = 0.5         # Sensitivity for risk management method
+SENTIMENT_ENABLE = True             # Toggle sentiment extension
 
 # ============================================================================
 # DIRECTORIES

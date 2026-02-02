@@ -91,7 +91,7 @@ portfolio-optimiser-thesis/
 │   └── weight_correlation.py          # Weight correlation analysis
 │
 └── results/                           # Output (gitignored)
-    ├── figures/                       # Charts & visualizations
+    ├── figures/                       # Charts & visualisations
     ├── tables/                        # Performance tables
     └── weights/                       # Portfolio weight histories
 ```
@@ -145,7 +145,7 @@ python scripts/run_data_pipeline.py
 # Step 2: Run backtesting (2-3 minutes)
 python scripts/run_backtest.py
 
-# Step 3: Generate visualizations (1 minute)
+# Step 3: Generate visualisations (1 minute)
 python analysis/visualise_results.py
 
 # Step 4: Statistical tests (1 minute)
@@ -173,7 +173,7 @@ python analysis/plot_subperiods.py
 | Method | Description | Key Feature |
 |--------|-------------|-------------|
 | **Mean-Variance** | Classical Markowitz (1952) | Baseline benchmark |
-| **Shrinkage** | Ledoit-Wolf covariance shrinkage (2003) | Stabilized covariance |
+| **Shrinkage** | Ledoit-Wolf covariance shrinkage (2003) | Stabilised covariance |
 | **Bayesian** | Bayes-Stein mean estimation (Jorion 1986) | Shrunk expected returns |
 | **Robust** | Uncertainty sets (Bertsimas & Sim 2004) | Explicit uncertainty modeling |
 | **Equal Weight** | 1/N diversification (DeMiguel et al. 2009) | Naive benchmark |
@@ -181,9 +181,9 @@ python analysis/plot_subperiods.py
 ### Key Methodological Improvements
 
 **1. Diversification Constraints**
-- Minimum effective number of assets: 20
+- Minimum effective number of assets: 40
 - Maximum Herfindahl index: 0.05
-- Prevents over-concentration in optimized portfolios
+- Prevents over-concentration in optimised portfolios
 
 **2. Expected Return Treatment**
 - Winsorization at 5th/95th percentiles
@@ -272,7 +272,7 @@ MAX_WEIGHT = 0.10                 # Max 10% per asset
 MIN_WEIGHT = 0.00                 # No short-selling
 
 # Diversification Constraints (Industry Best Practice)
-MIN_EFFECTIVE_ASSETS = 20         # Minimum 20 effective assets
+MIN_EFFECTIVE_ASSETS = 40         # Minimum 40 effective assets
 ENABLE_DIVERSIFICATION = True     # Toggle for comparison
 
 # Expected Return Treatment
@@ -318,7 +318,7 @@ pip install scs osqp ecos
 A: Check that diversification constraints are enabled in `config.py`:
 ```python
 ENABLE_DIVERSIFICATION = True
-MIN_EFFECTIVE_ASSETS = 20
+MIN_EFFECTIVE_ASSETS = 40
 ```
 
 **Q: Herfindahl warnings in concentration check**  
@@ -341,17 +341,17 @@ A: Ensure all scripts are in correct folders with proper import fixes at the top
 # Check portfolio concentration
 python analysis/check_concentration.py
 
-# Expected: Herfindahl ~0.05, ~20 effective assets
+# Expected: Herfindahl ~0.025, ~40 effective assets
 
 # Check expected returns for extreme values
 python analysis/check_expected_returns.py
 
 # Expected: No extreme values after winsorization
 
-# Analyze turnover patterns
+# Analyse turnover patterns
 python analysis/turnover_investigation.py
 
-# Analyze weight correlations
+# Analyse weight correlations
 python analysis/weight_correlation.py
 ```
 
@@ -367,14 +367,14 @@ python analysis/weight_correlation.py
    - Contribution & structure
 
 2. **Literature Review** (10-12 pages)
-   - Mean-variance optimization theory
+   - Mean-variance optimisation theory
    - Parameter uncertainty & estimation risk
-   - Robust optimization methods
+   - Robust optimisation methods
    - Diversification constraints in practice
 
 3. **Methodology** (12-15 pages)
    - Data description & preprocessing
-   - Portfolio optimization models
+   - Portfolio optimisation models
    - Diversification constraints
    - Backtesting framework
    - Performance metrics
@@ -526,6 +526,11 @@ This project is submitted as part of academic requirements at Frankfurt School o
 3. **Market regime matters** - Equal Weight excels in stable/crisis periods; Robust methods shine in volatile markets
 4. **Statistical rigor is critical** - Bootstrap testing reveals whether performance differences are genuine or due to chance
 5. **Industry feedback validates** - Professional practitioners confirmed our methodological gap and guided improvements
+
+---
+
+## 🧱 Limitations
+An initially planned extension to incorporate Federal Reserve policy sentiment was not pursued in the final analysis. Preliminary tests using 10-year Treasury yield changes as a monetary policy proxy showed no statistically significant improvement in risk-adjusted returns (p = 0.768), consistent with semi-strong form market efficiency. Future research could explore alternative sentiment measures, such as textual analysis of FOMC statements or high-frequency event studies around policy announcements
 
 ---
 

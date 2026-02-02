@@ -132,7 +132,7 @@ class Backtester:
         logger.info(f"Backtest period: {self.returns.index[start_index]} to {self.returns.index[end_index-1]}")
         logger.info(f"Number of rebalancing periods: {len(rebalancing_dates)}")
         
-        # Initialize results for each model
+        # Initialise results for each model
         for model_name in self.models.keys():
             self.weights_history[model_name] = []
             self.portfolio_returns[model_name] = []
@@ -166,12 +166,27 @@ class Backtester:
                     # Compute expected returns and covariance for this window
                     expected_returns = estimation_returns.mean().values * config.TRADING_DAYS_PER_YEAR
                     cov_matrix = estimation_returns.cov().values * config.TRADING_DAYS_PER_YEAR
-                    
-                    # Optimise portfolio
+
+                    # AFTER: (Add current_date parameter if model supports it)
+                    # Check if model has optimise method that accepts current_date
+                    import inspect
+                    sig = inspect.signature(model.optimise)
+
+                    # # Sentiment Risk Portfolio (not used in final thesis results)
+                    # if 'current_date' in sig.parameters:
+                    #     # Sentiment portfolio - pass current date
+                    #     weights = model.optimise(
+                    #         returns=estimation_returns,
+                    #         expected_returns=None,
+                    #         cov_matrix=None,
+                    #         current_date=estimation_returns.index[-1]  # Last date in training window
+                    #     )
+                    # else:
+                    # Regular portfolio - don't pass date
                     weights = model.optimise(
                         returns=estimation_returns,
-                        expected_returns=expected_returns,
-                        cov_matrix=cov_matrix
+                        expected_returns=None,
+                        cov_matrix=None
                     )
                     
                     # Store weights
