@@ -10,7 +10,7 @@ Frankfurt School of Finance & Management
 
 ---
 
-## 📋 Abstract
+## Abstract
 
 This thesis investigates portfolio optimisation methods that address parameter uncertainty in expected returns and covariances in the US equities market. Classical mean-variance optimisation is highly sensitive to estimation error, often producing unstable portfolio weights and poor out-of-sample results. 
 
@@ -24,7 +24,7 @@ We compare traditional mean-variance portfolios with robust alternatives includi
 
 ---
 
-## 🎯 Research Questions
+## Research Questions
 
 ### Primary Questions
 1. **Do robust optimisation techniques deliver superior out-of-sample performance compared to classical mean-variance optimisation?**
@@ -37,7 +37,7 @@ We compare traditional mean-variance portfolios with robust alternatives includi
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 portfolio-optimiser-thesis/
@@ -98,7 +98,7 @@ portfolio-optimiser-thesis/
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -160,7 +160,7 @@ python analysis/plot_subperiods.py
 
 ---
 
-## 📊 Methodology Overview
+## Methodology Overview
 
 ### Asset Universe
 - **Index:** S&P 100 (OEX components)
@@ -219,7 +219,7 @@ python analysis/plot_subperiods.py
 
 ---
 
-## 📈 Key Results Summary
+## Key Results Summary
 
 ### Dataset Characteristics
 - **Assets:** 92 stocks (92.9% of S&P 100)
@@ -253,7 +253,7 @@ Bootstrap tests (10,000 iterations) reveal whether performance differences are s
 
 ---
 
-## 🔧 Configuration
+## Configuration
 
 Edit `config.py` to customise parameters:
 
@@ -287,7 +287,7 @@ ROBUST_EPSILON = 0.5              # Uncertainty set size
 
 ---
 
-## 📚 Key References
+## Key References
 
 ### Foundational Theory
 - Markowitz, H. (1952). Portfolio Selection. *Journal of Finance*, 7(1), 77-91.
@@ -304,7 +304,7 @@ ROBUST_EPSILON = 0.5              # Uncertainty set size
 
 ---
 
-## 🛠️ Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
@@ -335,7 +335,7 @@ A: Ensure all scripts are in correct folders with proper import fixes at the top
 
 ---
 
-## 💻 Running Diagnostics
+## Running Diagnostics
 
 ```bash
 # Check portfolio concentration
@@ -357,7 +357,7 @@ python analysis/weight_correlation.py
 
 ---
 
-## 🎓 Thesis Structure
+## Thesis Structure
 
 ### Suggested Chapter Outline
 
@@ -403,7 +403,7 @@ python analysis/weight_correlation.py
 
 ---
 
-## 📊 Generated Outputs
+## Generated Outputs
 
 After running the pipeline, you'll have:
 
@@ -442,48 +442,48 @@ After running the pipeline, you'll have:
 
 ---
 
-## 🔄 Division of Work
+## Division of Work
 
 ### Robert George Smith
-- ✅ Robust portfolio optimisation implementation
-- ✅ Diversification constraint analysis
-- ✅ Parameter uncertainty evaluation
-- ✅ Backtesting framework
-- ✅ Statistical testing
-- 📝 Methodology & results chapters
+- Robust portfolio optimisation implementation
+- Diversification constraint analysis
+- Parameter uncertainty evaluation
+- Backtesting framework
+- Statistical testing
+- Methodology & results chapters
 
 ### Joaquin Rodriguez
-- ✅ Literature review (robust methods & sentiment analysis)
-- ✅ Data quality validation
-- ✅ Documentation & code review
-- 📝 Literature review & discussion chapters
+- Literature review (robust methods & sentiment analysis)
+- Data quality validation
+- Documentation & code review
+- Literature review & discussion chapters
 
 ### Joint Responsibilities
-- ✅ Theoretical framework
-- ✅ Research design
-- ✅ Results interpretation
-- 📝 Introduction & conclusion
+- Theoretical framework
+- Research design
+- Results interpretation
+- Introduction & conclusion
 
 ---
 
-## 📅 Project Timeline
+## Project Timeline
 
 | Phase | Duration | Status |
 |-------|----------|--------|
-| Literature Review | Week 1 | ✅ Complete |
-| Data Collection & Processing | Week 2 | ✅ Complete |
-| Model Implementation | Week 3-4 | ✅ Complete |
-| Backtesting Framework | Week 5 | ✅ Complete |
-| Statistical Analysis | Week 5 | ✅ Complete |
-| Robustness Checks | Week 6 | ✅ Complete |
-| Diversification Enhancement | Week 6 | ✅ Complete |
-| Thesis Writing | Week 7-8 | 🔄 In Progress |
+| Literature Review | Week 1 | Complete |
+| Data Collection & Processing | Week 2 | Complete |
+| Model Implementation | Week 3-4 | Complete |
+| Backtesting Framework | Week 5 | Complete |
+| Statistical Analysis | Week 5 | Complete |
+| Robustness Checks | Week 6 | Complete |
+| Diversification Enhancement | Week 6 | Complete |
+| Thesis Writing | Week 7-8 | In Progress |
 
 **Expected Submission:** February 11-12, 2026
 
 ---
 
-## 📧 Contact
+## Contact
 
 **Robert George Smith**  
 Email: robert.smith@fs-students.de  
@@ -499,7 +499,7 @@ Prof. Dr. Paula Cocoma - p.cocoma@fs.de
 
 ---
 
-## 📄 License
+## License
 
 This project is submitted as part of academic requirements at Frankfurt School of Finance & Management.
 
@@ -509,7 +509,7 @@ This project is submitted as part of academic requirements at Frankfurt School o
 
 ---
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - Prof. Dr. Grigory Vilkov for supervision and guidance
 - Prof. Dr. Paula Cocoma for methodological support
@@ -519,7 +519,7 @@ This project is submitted as part of academic requirements at Frankfurt School o
 
 ---
 
-## 🎯 Key Takeaways
+## Key Takeaways
 
 1. **Diversification constraints are essential** - Without them, all optimisation methods converge to similar concentrated solutions
 2. **Winsorization addresses extreme estimates** - Capping expected returns at 5th/95th percentiles prevents unrealistic values
@@ -529,7 +529,7 @@ This project is submitted as part of academic requirements at Frankfurt School o
 
 ---
 
-## 🧱 Limitations
+## Limitations
 An initially planned extension to incorporate Federal Reserve policy sentiment was not pursued in the final analysis. Preliminary tests using 10-year Treasury yield changes as a monetary policy proxy showed no statistically significant improvement in risk-adjusted returns (p = 0.768), consistent with semi-strong form market efficiency. Future research could explore alternative sentiment measures, such as textual analysis of FOMC statements or high-frequency event studies around policy announcements
 
 ---
