@@ -1,7 +1,7 @@
 """
 Data Processor Module
 
-Processes raw price data for portfolio optimization.
+Processes raw price data for portfolio optimisation.
 """
 
 # Standard library imports
@@ -29,10 +29,10 @@ logger = logging.getLogger(__name__)
 
 
 class DataProcessor:
-    """Process raw price data for portfolio optimization."""
+    """Process raw price data for portfolio optimisation."""
     
     def __init__(self, data_dir: Path = config.DATA_DIR):
-        """Initialize processor with data directory."""
+        """Initialise processor with data directory."""
         self.data_dir = data_dir
         self.processed_dir = config.PROCESSED_DATA_DIR
     

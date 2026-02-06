@@ -1,7 +1,7 @@
 """
 Feature Engineer Module
 
-Creates features for portfolio optimization models.
+Creates features for portfolio optimisation models.
 """
 
 # Standard library imports
@@ -28,10 +28,10 @@ logger = logging.getLogger(__name__)
 
 
 class FeatureEngineer:
-    """Create features for portfolio optimization models."""
+    """Create features for portfolio optimisation models."""
     
     def __init__(self, data_dir: Path = config.DATA_DIR):
-        """Initialize feature engineer."""
+        """Initialise feature engineer."""
         self.data_dir = data_dir
         self.features_dir = config.FEATURES_DIR
         self.features_dir.mkdir(exist_ok=True)

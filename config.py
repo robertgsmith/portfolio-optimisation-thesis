@@ -104,7 +104,7 @@ UNCERTAINTY_SET_SIZE = 0.5  # Epsilon for robust optimisation (Bertsimas & Sim)
 COVARIANCE_UNCERTAINTY = 0.1  # 10% uncertainty in covariance estimates
 
 # ============================================================================
-# DIVERSIFICATION CONSTRAINTS (Industry Best Practice)
+# DIVERSIFICATION CONSTRAINTS
 # ============================================================================
 
 # Minimum Effective Number of Assets
@@ -117,7 +117,7 @@ WINSORIZE_LOWER_PERCENTILE = 0.05  # 5th percentile
 WINSORIZE_UPPER_PERCENTILE = 0.95  # 95th percentile
 
 # ============================================================================
-# PORTFOLIO MODEL SPECIFIC PARAMETERS (Add this entire new section)
+# PORTFOLIO MODEL SPECIFIC PARAMETERS
 # ============================================================================
 
 # Mean-Variance Optimisation
@@ -138,7 +138,7 @@ ROBUST_GAMMA = 0.5  # Budget of uncertainty
 ROBUST_TARGET_RETURN = None  # None = use risk-return tradeoff, or float for target return
 
 # ============================================================================
-# OPTIMISATION SOLVER SETTINGS (Add this entire new section)
+# OPTIMISATION SOLVER SETTINGS
 # ============================================================================
 
 # CVXPY solver preferences

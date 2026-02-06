@@ -162,11 +162,12 @@ def check_subperiods():
     print(f"  Assets: {len(returns.columns)}")
     print(f"  Date range: {returns.index[0].date()} to {returns.index[-1].date()}")
     
-    # Select top 30 most liquid assets
-    print("\nSelecting top 30 most liquid assets for sub-period analysis...")
+    # Select top 40 most liquid assets
+    print("\nSelecting top 40 most liquid assets for sub-period analysis...")
     liquidity = returns.abs().mean().sort_values(ascending=False)
-    top_assets = liquidity.head(30).index
+    top_assets = liquidity.head(40).index
     returns_subset = returns[top_assets]
+    # returns_subset = returns
     
     print(f"Selected assets: {', '.join(list(top_assets[:5]))} ...")
     

@@ -32,7 +32,7 @@ class SummaryStatistics:
     """Compute and save summary statistics."""
     
     def __init__(self, data_dir: Path = config.DATA_DIR):
-        """Initialize summary statistics generator."""
+        """Initialise summary statistics generator."""
         self.data_dir = data_dir
         self.analysis_dir = config.ANALYSIS_DIR
         self.analysis_dir.mkdir(exist_ok=True)
