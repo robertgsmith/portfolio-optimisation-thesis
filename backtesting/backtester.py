@@ -163,12 +163,10 @@ class Backtester:
             # Optimise and hold for each model
             for model_name, model in self.models.items():
                 try:
-                    # Compute expected returns and covariance for this window
+                    # Compute expected returns and covariance for this window (for Sentiment Risk Portfolio)
                     expected_returns = estimation_returns.mean().values * config.TRADING_DAYS_PER_YEAR
                     cov_matrix = estimation_returns.cov().values * config.TRADING_DAYS_PER_YEAR
 
-                    # AFTER: (Add current_date parameter if model supports it)
-                    # Check if model has optimise method that accepts current_date
                     import inspect
                     sig = inspect.signature(model.optimise)
 
@@ -217,7 +215,7 @@ class Backtester:
                         self.portfolio_values[model_name].append(new_value)
                 
                 except Exception as e:
-                    logger.error(f"Error optimizing {model_name} at {rebalancing_date}: {str(e)}")
+                    logger.error(f"Error optimising {model_name} at {rebalancing_date}: {str(e)}")
                     # Use previous weights or equal weights as fallback
                     if instance > 0:
                         weights = self.weights_history[model_name][-1]['weights']

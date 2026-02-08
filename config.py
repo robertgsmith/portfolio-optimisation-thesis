@@ -129,12 +129,12 @@ SHRINKAGE_TARGET = 'auto'  # Options: 'auto', 'constant_correlation', 'constant_
 
 # Bayesian Portfolio (Jorion)
 BAYESIAN_SHRINKAGE_INTENSITY = None  # None = auto-estimate, or float [0, 1]
-BAYESIAN_PRIOR_WEIGHT = 0.1  # Weight given to market prior
-TAU = 0.05  # Uncertainty in prior
+# BAYESIAN_PRIOR_WEIGHT = 0.1  # Weight given to market prior # Not used - reserved for Black-Litterman extension
+# TAU = 0.05  # Uncertainty in prior # Not used - reserved for Black-Litterman extension
 
 # Robust Optimisation (Bertsimas & Sim)
 ROBUST_EPSILON = 0.5  # Size of uncertainty set (0 = no uncertainty, 1 = high uncertainty)
-ROBUST_GAMMA = 0.5  # Budget of uncertainty
+# ROBUST_GAMMA = 0.5  # Budget of uncertainty # Not used in current implementation
 ROBUST_TARGET_RETURN = None  # None = use risk-return tradeoff, or float for target return
 
 # ============================================================================
@@ -144,7 +144,7 @@ ROBUST_TARGET_RETURN = None  # None = use risk-return tradeoff, or float for tar
 # CVXPY solver preferences
 CVXPY_SOLVER = "SCS"  # Primary solver (Options: ECOS, SCS, OSQP, CVXOPT)
 CVXPY_SOLVER_FALLBACK = "OSQP"  # Fallback if primary fails
-CVXPY_VERBOSE = False  # Set to True for debugging optimization issues
+CVXPY_VERBOSE = False  # Set to True for debugging optimisation issues
 CVXPY_MAX_ITER = 10000  # Maximum iterations for solver
 CVXPY_ABSTOL = 1e-7  # Absolute tolerance
 CVXPY_RELTOL = 1e-6  # Relative tolerance
@@ -286,8 +286,9 @@ PORTFOLIO_MODELS = {
         'name': 'Bayesian (Jorion)',
         'enabled': True,
         'parameters': {
-            'prior_weight': 0.1,  # Weight given to market prior
-            'tau': 0.05  # Uncertainty in prior
+            'shrinkage_intensity': None  # Auto-estimated via Jorion formula
+            # 'prior_weight': 0.1,  # Weight given to market prior # Reserved for Black-Litterman extension
+            # 'tau': 0.05  # Uncertainty in prior # Reserved for Black-Litterman extension
         }
     },
     'robust': {
@@ -295,7 +296,7 @@ PORTFOLIO_MODELS = {
         'enabled': True,
         'parameters': {
             'epsilon': UNCERTAINTY_SET_SIZE,
-            'gamma': 0.5  # Budget of uncertainty
+            # 'gamma': 0.5  # Budget of uncertainty # Not used in current implementation
         }
     },
     'equal_weight': {
