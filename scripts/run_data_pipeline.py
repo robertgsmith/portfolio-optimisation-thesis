@@ -1,8 +1,4 @@
-"""
-Data Pipeline for Portfolio Optimisation Thesis
-
-Executes the complete data preparation.
-"""
+# Run data pipeline (download and prepare data)
 
 import logging
 import sys

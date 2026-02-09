@@ -1,10 +1,5 @@
-"""
-Create Monetary Policy Factor
-
-Download and process interest rate data as Fed policy proxy.
-
-Authors: Robert George Smith & Joaquin Rodriguez
-"""
+# Create monetary policy factor (download and process interest rate data as Fed policy proxy
+# Not used for final thesis results
 
 import sys
 from pathlib import Path

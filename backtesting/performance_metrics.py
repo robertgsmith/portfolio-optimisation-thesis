@@ -1,10 +1,4 @@
-"""
-Performance Metrics
-
-Functions to calculate portfolio performance metrics.
-
-Authors: Robert George Smith & Joaquin Rodriguez
-"""
+# Create functions to calculate portfolio performance metrics
 
 import numpy as np
 import pandas as pd

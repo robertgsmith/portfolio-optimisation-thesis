@@ -1,11 +1,4 @@
-"""
-Bayesian Portfolio Optimisation
-
-Portfolio optimisation with Bayes-Stein estimator for expected returns.
-
-Authors: Robert George Smith & Joaquin Rodriguez
-Reference: Jorion (1986). Bayes-Stein Estimation for Portfolio Analysis.
-"""
+# Bayesian portfolio optimisation (Reference: Jorion (1986); Bayes-Stein estimator for expected returns)
 
 import numpy as np
 import pandas as pd
@@ -65,8 +58,7 @@ class BayesianPortfolio(MeanVariancePortfolio):
         self.shrinkage_intensity = shrinkage_intensity
         self.model_name = "Bayesian (Jorion)"
         self.estimated_shrinkage_ = None
-
-    ###
+    
     def estimate_bayesian_returns(
         self,
         returns: pd.DataFrame,
@@ -110,85 +102,6 @@ class BayesianPortfolio(MeanVariancePortfolio):
         logger.info(f"Bayes-Stein shrinkage intensity: {shrinkage:.4f}")
         
         return bayesian_returns, shrinkage
-    
-    ###
-    # def estimate_bayesian_returns(
-    #     self,
-    #     returns: pd.DataFrame,
-    #     cov_matrix: Optional[np.ndarray] = None
-    # ) -> tuple:
-    #     """
-    #     Estimate expected returns using Bayes-Stein estimator.
-        
-    #     Parameters
-    #     ----------
-    #     returns : pd.DataFrame
-    #         Historical returns
-    #     cov_matrix : np.ndarray, optional
-    #         Covariance matrix (if None, uses sample)
-        
-    #     Returns
-    #     -------
-    #     bayesian_returns : np.ndarray
-    #         Bayes-Stein expected returns (annualised)
-    #     shrinkage : float
-    #         Shrinkage intensity used
-    #     """
-    #     n_observations, n_assets = returns.shape
-        
-    #     # Sample mean (annualised)
-    #     sample_mean = returns.mean().values * config.TRADING_DAYS_PER_YEAR
-        
-    #     # Grand mean (equal-weighted market return) - this is a SCALAR
-    #     grand_mean = sample_mean.mean()
-        
-    #     # Covariance matrix (annualised)
-    #     if cov_matrix is None:
-    #         cov_matrix = returns.cov().values * config.TRADING_DAYS_PER_YEAR
-        
-    #     # Estimate shrinkage intensity using Jorion's formula
-    #     if self.shrinkage_intensity is None:
-    #         try:
-    #             # Deviation vector from grand mean
-    #             deviation = sample_mean - grand_mean
-                
-    #             # Compute shrinkage using Jorion (1986) formula
-    #             # w = (N + 2) / [(N + 2) + T * deviation^T * Σ^-1 * deviation]
-                
-    #             # Inverse covariance (with regularisation for numerical stability)
-    #             try:
-    #                 inv_cov = np.linalg.inv(cov_matrix)
-    #             except np.linalg.LinAlgError:
-    #                 # Add small ridge if not invertible
-    #                 inv_cov = np.linalg.inv(cov_matrix + 1e-8 * np.eye(n_assets))
-                
-    #             # Numerator: N + 2
-    #             numerator = n_assets + 2
-                
-    #             # Denominator: (N + 2) + T * deviation^T * Σ^-1 * deviation
-    #             quadratic_form = deviation @ inv_cov @ deviation
-    #             denominator = numerator + n_observations * quadratic_form
-                
-    #             # Shrinkage intensity
-    #             shrinkage = numerator / denominator
-    #             shrinkage = np.clip(shrinkage, 0, 1)  # Ensure [0, 1]
-                
-    #         except Exception as e:
-    #             logger.warning(f"Shrinkage calculation failed: {e}. Using default 0.2")
-    #             shrinkage = 0.2
-    #     else:
-    #         shrinkage = self.shrinkage_intensity
-        
-    #     # Bayes-Stein estimator
-    #     # μ_BS = (1 - w) * μ_sample + w * μ_market
-    #     bayesian_returns = (1 - shrinkage) * sample_mean + shrinkage * grand_mean
-        
-    #     logger.info(f"Bayes-Stein shrinkage intensity: {shrinkage:.4f}")
-    #     logger.info(f"Grand mean: {grand_mean:.4f}")
-    #     logger.info(f"Sample mean range: [{sample_mean.min():.4f}, {sample_mean.max():.4f}]")
-    #     logger.info(f"Bayesian mean range: [{bayesian_returns.min():.4f}, {bayesian_returns.max():.4f}]")
-        
-    #     return bayesian_returns, shrinkage
         
     def optimise(
         self,

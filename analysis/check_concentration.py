@@ -1,10 +1,4 @@
-"""
-Quick Check: Portfolio Concentration Analysis
-
-Check if your portfolios are too concentrated.
-
-Authors: Robert George Smith & Joaquin Rodriguez
-"""
+# Check if portfolios are too concentrated.
 
 import pandas as pd
 import numpy as np

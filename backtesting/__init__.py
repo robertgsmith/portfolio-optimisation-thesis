@@ -1,10 +1,4 @@
-"""
-Backtesting Framework
-
-Rolling window backtesting for portfolio optimization models.
-
-Authors: Robert George Smith & Joaquin Rodriguez
-"""
+# Rolling window backtesting framework for portfolio optimisation models
 
 from .backtester import Backtester
 from .performance_metrics import (

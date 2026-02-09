@@ -1,12 +1,5 @@
-"""
-Sentiment Analysis - Evaluate Impact on Portfolio Performance
+# Sentiment analysis evaluate impact on portfolio performance
 
-Authors: Robert George Smith & Joaquin Rodriguez
-"""
-
-# ============================================================================
-# Import Fix
-# ============================================================================
 import sys
 from pathlib import Path
 project_root = Path(__file__).parent.parent

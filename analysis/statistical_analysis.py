@@ -1,10 +1,4 @@
-"""
-Statistical Analysis of Portfolio Performance
-
-Tests statistical significance of differences between models.
-
-Authors: Robert George Smith & Joaquin Rodriguez
-"""
+# Statistical significance analysis of portfolio models
 
 import pandas as pd
 import numpy as np

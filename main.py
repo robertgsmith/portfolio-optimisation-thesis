@@ -1,10 +1,4 @@
-"""
-Main Launcher
-
-Convenience script to run the full pipeline.
-
-Authors: Robert George Smith & Joaquin Rodriguez
-"""
+# Main launcher to run the full pipeline
 
 import subprocess
 import sys

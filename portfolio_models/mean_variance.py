@@ -1,11 +1,4 @@
-"""
-Mean-Variance Portfolio Optimisation
-
-Classical Markowitz (1952) mean-variance optimisation.
-
-Authors: Robert George Smith & Joaquin Rodriguez
-Reference: Markowitz, H. (1952). Portfolio Selection. Journal of Finance.
-"""
+# Mean-variance portfolio optimisation (Reference: Markowitz, H. (1952); classical Markovitz mean-variance optimisation)
 
 import numpy as np
 import pandas as pd

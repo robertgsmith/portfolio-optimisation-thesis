@@ -1,8 +1,4 @@
-"""
-Data Downloader Module
-
-Downloads and consolidates S&P 100 stock data from Yahoo Finance.
-"""
+# Download data and consolidate
 
 # Standard library imports
 import sys

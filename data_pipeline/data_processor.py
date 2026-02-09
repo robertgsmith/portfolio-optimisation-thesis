@@ -1,8 +1,4 @@
-"""
-Data Processor Module
-
-Processes raw price data for portfolio optimisation.
-"""
+# Process raw price data
 
 # Standard library imports
 import sys

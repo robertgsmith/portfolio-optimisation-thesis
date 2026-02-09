@@ -1,10 +1,4 @@
-"""
-Portfolio Weight Correlation Analysis
-
-Check if different models produce similar portfolios.
-
-Authors: Robert George Smith & Joaquin Rodriguez
-"""
+# Portfolio weight correlation analysis between portfolios
 
 import pandas as pd
 import numpy as np

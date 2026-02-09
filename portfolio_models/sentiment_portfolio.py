@@ -1,10 +1,5 @@
-"""
-Sentiment-Enhanced Portfolio with Risk Management (not used in final thesis results)
-
-Adjusts portfolio risk appetite based on Federal Reserve policy tone.
-
-Authors: Robert George Smith & Joaquin Rodriguez
-"""
+# Sentiment-enhanced portfolio with risk management (based on Federal Reserve policy tone and interest rate)
+# Not used in final thesis results
 
 import numpy as np
 import pandas as pd

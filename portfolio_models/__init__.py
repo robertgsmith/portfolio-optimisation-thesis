@@ -1,9 +1,4 @@
-"""
-Portfolio Optimisation Models
-
-This package contains implementations of various portfolio optimisation
-methods for robust portfolio construction under parameter uncertainty.
-"""
+# Portfolio optimisation models
 
 from .base_portfolio import BasePortfolio
 from .mean_variance import MeanVariancePortfolio

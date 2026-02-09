@@ -1,10 +1,4 @@
-"""
-Run Full Analysis Pipeline
-
-Simple master script to execute complete analysis.
-
-Authors: Robert George Smith & Joaquin Rodriguez
-"""
+# Run full analysis pipeline (without data pipeline)
 
 import subprocess
 import sys

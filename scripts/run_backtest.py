@@ -1,10 +1,4 @@
-"""
-Run Backtest
-
-Execute complete backtest of all portfolio models.
-
-Authors: Robert George Smith & Joaquin Rodriguez
-"""
+# Run backtest of all portfolio models
 
 import sys
 from pathlib import Path

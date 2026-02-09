@@ -1,10 +1,4 @@
-"""
-Analysis Package
-
-Post-backtest analysis modules for thesis.
-
-Authors: Robert George Smith & Joaquin Rodriguez
-"""
+# Analysis package for post-backtest analysis modules for thesis.
 
 # main scripts
 from .visualise_results import (

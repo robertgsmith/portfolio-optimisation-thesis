@@ -1,11 +1,4 @@
-"""
-Shrinkage Covariance Portfolio
-
-Mean-variance optimisation with Ledoit-Wolf shrinkage covariance estimator.
-
-Authors: Robert George Smith & Joaquin Rodriguez
-Reference: Ledoit & Wolf (2003). Improved Estimation of the Covariance Matrix.
-"""
+# Shrinkage covariance portfolio (Reference: Ledoit & Wolf (2003); Mean-variance with Ledoit-Wolf shrinkage covariance estimator)
 
 import numpy as np
 import pandas as pd

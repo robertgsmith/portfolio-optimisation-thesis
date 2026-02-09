@@ -1,8 +1,4 @@
-"""
-Feature Engineer Module
-
-Creates features for portfolio optimisation models.
-"""
+# Create features for portfolio optimisation models
 
 # Standard library imports
 import sys

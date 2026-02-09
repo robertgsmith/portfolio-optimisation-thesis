@@ -1,8 +1,4 @@
-"""
-Compare Results: With vs Without Diversification Constraints
-
-Authors: Robert George Smith & Joaquin Rodriguez
-"""
+# Compare results with vs without diversification constraints (requires copying results/ to results_baseline/)
 
 import pandas as pd
 import numpy as np

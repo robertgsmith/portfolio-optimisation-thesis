@@ -1,10 +1,4 @@
-"""
-Analyse Expected Return Estimates
-
-Check if historical means produce extreme values.
-
-Authors: Robert George Smith & Joaquin Rodriguez
-"""
+# Check if historical means produce extreme values for expected return
 
 import pandas as pd
 import numpy as np

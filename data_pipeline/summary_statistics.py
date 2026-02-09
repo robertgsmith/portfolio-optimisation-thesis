@@ -1,8 +1,4 @@
-"""
-Summary Statistics Module
-
-Computes and saves summary statistics.
-"""
+# Computes and saves summary statistics.
 
 # Standard library imports
 import sys

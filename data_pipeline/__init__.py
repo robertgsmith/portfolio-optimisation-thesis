@@ -1,10 +1,4 @@
-"""
-Data Pipeline
-
-Downloading and preparing data for analysis and backtesting
-
-Authors: Robert George Smith & Joaquin Rodriguez
-"""
+# Data pipeline (download and prepare data for analysis and backtesting
 
 from .data_downloader import DataDownloader
 from .data_processor import DataProcessor

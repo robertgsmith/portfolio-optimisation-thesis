@@ -1,9 +1,4 @@
-"""
-Base Portfolio Class
-
-Abstract base class for all portfolio optimisation models.
-Authors: Robert George Smith & Joaquin Rodriguez
-"""
+# Base portfolio class (abstract base class for all portfolio optimisation models)
 
 from abc import ABC, abstractmethod
 import numpy as np

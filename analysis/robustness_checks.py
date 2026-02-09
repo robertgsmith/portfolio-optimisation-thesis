@@ -1,10 +1,4 @@
-"""
-Robustness Checks
-
-Test sensitivity to parameters and assumptions.
-
-Authors: Robert George Smith & Joaquin Rodriguez
-"""
+# Robustness checks testing sensitivity to parameters and assumptions
 
 import pandas as pd
 import numpy as np

@@ -1,10 +1,4 @@
-"""
-Enhanced Turnover Analysis
-
-Investigate why models show identical/similar turnover.
-
-Authors: Robert George Smith & Joaquin Rodriguez
-"""
+# Turnover analysis to investigate why models show identical/similar turnover
 
 import pandas as pd
 import numpy as np

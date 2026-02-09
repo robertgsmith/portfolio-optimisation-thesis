@@ -1,10 +1,4 @@
-"""
-Visualise Backtest Results
-
-Create comprehensive visualisations for thesis.
-
-Authors: Robert George Smith & Joaquin Rodriguez
-"""
+# Visualise backtest results
 
 import pandas as pd
 import numpy as np

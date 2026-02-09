@@ -1,12 +1,4 @@
-"""
-Configuration File for Portfolio Optimisation Thesis
-
-This file contains all configuration parameters, constants, and settings
-for the robust portfolio optimisation project.
-
-Authors: Robert George Smith & Joaquin Rodriguez
-Project: Robust Portfolio Optimisation Under Parameter Uncertainty
-"""
+# Configuration file with parameters, constants, and settings for portfolio-optimiser-thesis 
 
 from pathlib import Path
 from typing import List

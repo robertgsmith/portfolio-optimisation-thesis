@@ -1,10 +1,4 @@
-"""
-Plot Sub-Period Performance
-
-Visualise performance during different market regimes.
-
-Authors: Robert George Smith & Joaquin Rodriguez
-"""
+# Plot sub-period performance
 
 import sys
 from pathlib import Path

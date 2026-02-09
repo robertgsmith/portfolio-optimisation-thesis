@@ -1,11 +1,4 @@
-"""
-Robust Portfolio Optimisation
-
-Portfolio optimisation with uncertainty sets for parameter uncertainty.
-
-Authors: Robert George Smith & Joaquin Rodriguez
-Reference: Bertsimas & Sim (2004). The Price of Robustness.
-"""
+# Robust portfolio optimisation (Reference: Bertsimas & Sim (2004); uncertainty sets for parameter uncertainty)
 
 import numpy as np
 import pandas as pd

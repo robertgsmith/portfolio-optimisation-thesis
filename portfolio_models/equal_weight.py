@@ -1,11 +1,4 @@
-"""
-Equal Weight Portfolio
-
-Simple 1/N equal weighting strategy (naive diversification).
-
-Authors: Robert George Smith & Joaquin Rodriguez
-Reference: DeMiguel et al. (2009). Optimal Versus Naive Diversification.
-"""
+# Equal weight portfolio (Reference: DeMiguel et al. (2009); simple 1/N equal weighting strategy (naive diversification))
 
 import numpy as np
 import pandas as pd

@@ -1,10 +1,4 @@
-"""
-Backtester
-
-Rolling window backtesting engine for portfolio optimisation models.
-
-Authors: Robert George Smith & Joaquin Rodriguez
-"""
+# Rolling window backtester
 
 import numpy as np
 import pandas as pd
