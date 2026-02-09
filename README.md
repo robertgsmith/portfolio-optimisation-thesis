@@ -197,37 +197,6 @@ Bootstrap tests (10,000 iterations) reveal whether performance differences are s
 
 ---
 
-## Troubleshooting
-
-### Common Issues
-
-**Q: Solver errors (ECOS not installed)**  
-A: Install additional solvers:
-```bash
-pip install scs osqp ecos
-```
-
-**Q: All models show identical results**  
-A: Check that diversification constraints are enabled in `config.py`:
-```python
-ENABLE_DIVERSIFICATION = True
-MIN_EFFECTIVE_ASSETS = 40
-```
-
-**Q: Herfindahl warnings in concentration check**  
-A: If Herfindahl = 0.0500 exactly, this is **correct** - you're at the constraint boundary. The warnings are overly strict for values exactly at 0.05.
-
-**Q: Missing data errors**  
-A: Run data pipeline first:
-```bash
-python scripts/run_data_pipeline.py
-```
-
-**Q: Import errors in analysis scripts**  
-A: Ensure all scripts are in correct folders with proper import fixes at the top of each file.
-
----
-
 ## Division of Work
 
 ### Robert George Smith
@@ -258,7 +227,7 @@ Email: robert.smith@fs-students.de
 GitHub: [@robertgsmith](https://github.com/robertgsmith)
 
 **Joaquin Rodriguez**  
-Email: joaquin.rodriguez@fs-students.de
+Email: joaquin.rodriguez@fs-students.de  
 GitHub: [@pbzhxwfsd6-bit](https://github.com/pbzhxwfsd6-bit)
 
 **Supervisors:**  
@@ -302,5 +271,5 @@ An initially planned extension to incorporate Federal Reserve policy sentiment w
 
 ---
 
-**Last Updated:** February 09, 2026
+**Last Updated:** February 09, 2026  
 **Version:** 1.0.0 (Final - Pre-Submission)

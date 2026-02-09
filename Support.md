@@ -2,6 +2,7 @@
 This Document (not in README.md) contains:
 - Getting Started
 - Quick Start
+- Troubleshooting
 - Configuration Overview
 - Generated Outputs
 
@@ -64,6 +65,37 @@ python analysis/robustness_checks.py
 # Step 6: Sub-period analysis (1 minute)
 python analysis/plot_subperiods.py
 ```
+
+---
+
+## Troubleshooting
+
+### Common Issues
+
+**Q: Solver errors (ECOS not installed)**  
+A: Install additional solvers:
+```bash
+pip install scs osqp ecos
+```
+
+**Q: All models show identical results**  
+A: Check that diversification constraints are enabled in `config.py`:
+```python
+ENABLE_DIVERSIFICATION = True
+MIN_EFFECTIVE_ASSETS = 40
+```
+
+**Q: Herfindahl warnings in concentration check**  
+A: If Herfindahl = 0.0500 exactly, this is **correct** - you're at the constraint boundary. The warnings are overly strict for values exactly at 0.05.
+
+**Q: Missing data errors**  
+A: Run data pipeline first:
+```bash
+python scripts/run_data_pipeline.py
+```
+
+**Q: Import errors in analysis scripts**  
+A: Ensure all scripts are in correct folders with proper import fixes at the top of each file.
 
 ---
 
