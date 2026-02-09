@@ -6,7 +6,7 @@ Frankfurt School of Finance & Management
 
 **Authors:** Robert George Smith & Joaquin Rodriguez  
 **Supervisors:** Prof. Dr. Grigory Vilkov, Prof. Dr. Paula Cocoma  
-**Period:** 2012-2024 (US Market - S&P 100)
+**Period:** 2010-2024 (US Market - S&P 100)
 
 ---
 
