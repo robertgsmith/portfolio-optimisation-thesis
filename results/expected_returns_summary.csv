@@ -1,0 +1,8 @@
+Metric,Value
+Mean Expected Return,0.13216063257601182
+Median Expected Return,0.1265032636798965
+Min Expected Return,-1.5741085439050007
+Max Expected Return,1.9976326629485481
+Cross-Sectional Std (Mean),0.21253368173395804
+Extreme Highs (>100%),1213.0
+Extreme Lows (<-50%),3415.0
