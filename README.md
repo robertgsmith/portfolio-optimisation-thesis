@@ -1,4 +1,4 @@
-# Robust Portfolio Optimisation Under Parameter Uncertainty
+# Robust Portfolio Optimisation Under Parameter Uncertainty in the US Equity Market
 
 **Bachelor Thesis Project**  
 BSc Computational Business Analytics  
@@ -98,75 +98,14 @@ portfolio-optimiser-thesis/
 
 ---
 
-## Getting Started
+## Methodology Overview & Key Results Summary
 
-### Prerequisites
-
-- Python 3.9 or higher
-- pip package manager
-- ~2GB free disk space for data
-
-### Installation
-
-1. **Clone or download the repository:**
-   ```bash
-   cd portfolio-optimiser-thesis
-   ```
-
-2. **Create virtual environment (recommended):**
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
-
-3. **Install dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. **Verify installation:**
-   ```bash
-   python -c "import cvxpy as cp; print(f'Solvers: {cp.installed_solvers()}')"
-   ```
-
-### Quick Start
-
-**Complete Pipeline (20-25 minutes):**
-```bash
-# Run everything
-python scripts/run_full_analysis.py
-```
-
-**Step-by-Step Execution:**
-```bash
-# Step 1: Prepare data (15-20 minutes)
-python scripts/run_data_pipeline.py
-
-# Step 2: Run backtesting (2-3 minutes)
-python scripts/run_backtest.py
-
-# Step 3: Generate visualisations (1 minute)
-python analysis/visualise_results.py
-
-# Step 4: Statistical tests (1 minute)
-python analysis/statistical_analysis.py
-
-# Step 5: Robustness checks (5 minutes)
-python analysis/robustness_checks.py
-
-# Step 6: Sub-period analysis (1 minute)
-python analysis/plot_subperiods.py
-```
-
----
-
-## Methodology Overview
-
-### Asset Universe
+### Asset Universe & Dataset
 - **Index:** S&P 100 (OEX components)
-- **Period:** 2012-2024 (filtered for 90% data coverage)
+- **Period:** 2010-01-01 to 2024-12-31 (filtered for 90% data coverage)
 - **Frequency:** Daily data, monthly rebalancing
-- **Final Sample:** 92 assets, 3,773 trading days
+- **Final Sample:** 92 assets (92.9% of S&P 100), 3,773 trading days
+- **Rebalancing Periods:** 179 monthly rebalances
 
 ### Portfolio Optimisation Methods
 
@@ -217,19 +156,7 @@ python analysis/plot_subperiods.py
 - Levene's test (volatility equality)
 - Regime-dependent analysis (pre-COVID, COVID, post-COVID)
 
----
-
-## Key Results Summary
-
-### Dataset Characteristics
-- **Assets:** 92 stocks (92.9% of S&P 100)
-- **Date Range:** 2012-01-03 to 2024-12-30
-- **Trading Days:** 3,773 observations
-- **Rebalancing Periods:** 179 monthly rebalances
-
-### Performance Metrics (Full Period 2012-2024)
-
-*Note: Run `python scripts/run_backtest.py` to generate current results*
+### Performance Metrics
 
 **Expected Findings:**
 1. Robust methods show improved Sharpe ratios with proper diversification constraints
@@ -250,40 +177,6 @@ Performance varies significantly across market regimes:
 *Results from `analysis/statistical_analysis.py`*
 
 Bootstrap tests (10,000 iterations) reveal whether performance differences are statistically significant at the 5% level.
-
----
-
-## Configuration
-
-Edit `config.py` to customise parameters:
-
-```python
-# Date Range
-START_DATE = "2010-01-01"
-END_DATE = "2024-12-31"
-
-# Backtesting Parameters
-ESTIMATION_WINDOW = 252           # 1 year
-REBALANCING_FREQUENCY = 21        # Monthly
-TRANSACTION_COST = 0.001          # 10 basis points
-
-# Portfolio Constraints
-MAX_WEIGHT = 0.10                 # Max 10% per asset
-MIN_WEIGHT = 0.00                 # No short-selling
-
-# Diversification Constraints (Industry Best Practice)
-MIN_EFFECTIVE_ASSETS = 40         # Minimum 40 effective assets
-ENABLE_DIVERSIFICATION = True     # Toggle for comparison
-
-# Expected Return Treatment
-WINSORIZE_EXPECTED_RETURNS = True # Cap extreme values
-WINSORIZE_LOWER_PERCENTILE = 0.05 # 5th percentile
-WINSORIZE_UPPER_PERCENTILE = 0.95 # 95th percentile
-
-# Risk Parameters
-RISK_AVERSION_DEFAULT = 1.0       # Risk aversion (λ)
-ROBUST_EPSILON = 0.5              # Uncertainty set size
-```
 
 ---
 
@@ -335,113 +228,6 @@ A: Ensure all scripts are in correct folders with proper import fixes at the top
 
 ---
 
-## Running Diagnostics
-
-```bash
-# Check portfolio concentration
-python analysis/check_concentration.py
-
-# Expected: Herfindahl ~0.025, ~40 effective assets
-
-# Check expected returns for extreme values
-python analysis/check_expected_returns.py
-
-# Expected: No extreme values after winsorization
-
-# Analyse turnover patterns
-python analysis/turnover_investigation.py
-
-# Analyse weight correlations
-python analysis/weight_correlation.py
-```
-
----
-
-## Thesis Structure
-
-### Suggested Chapter Outline
-
-1. **Introduction** (5-6 pages)
-   - Problem statement & motivation
-   - Research questions
-   - Contribution & structure
-
-2. **Literature Review** (10-12 pages)
-   - Mean-variance optimisation theory
-   - Parameter uncertainty & estimation risk
-   - Robust optimisation methods
-   - Diversification constraints in practice
-
-3. **Methodology** (12-15 pages)
-   - Data description & preprocessing
-   - Portfolio optimisation models
-   - Diversification constraints
-   - Backtesting framework
-   - Performance metrics
-   - Statistical testing procedures
-
-4. **Results** (10-12 pages)
-   - Performance comparison (full period)
-   - Statistical significance tests
-   - Sub-period analysis (market regimes)
-   - Portfolio concentration analysis
-   - Turnover & stability metrics
-
-5. **Discussion** (8-10 pages)
-   - Interpretation of findings
-   - Impact of diversification constraints
-   - Comparison with literature
-   - Robustness checks
-   - Limitations
-
-6. **Conclusion** (4-5 pages)
-   - Summary of findings
-   - Practical implications
-   - Future research directions
-
-**Total: ~50-60 pages**
-
----
-
-## Generated Outputs
-
-After running the pipeline, you'll have:
-
-### Data Files
-- `data/raw/sp100_prices.csv` - Historical prices
-- `data/processed/log_returns.csv` - Daily returns
-- `data/features/expected_returns_*.csv` - Return estimates
-- `data/analysis/return_statistics.csv` - Summary statistics
-
-### Results Files
-- `results/backtest_returns.csv` - Daily portfolio returns
-- `results/backtest_metrics.csv` - Performance metrics
-- `results/backtest_cumulative_returns.csv` - Cumulative performance
-- `results/weights/*.csv` - Portfolio weight histories
-
-### Statistical Tests
-- `results/test_mean_returns.csv` - Mean return comparisons
-- `results/test_sharpe_ratios.csv` - Sharpe ratio bootstrap tests
-- `results/test_volatility.csv` - Volatility equality tests
-- `results/test_turnover.csv` - Turnover analysis
-- `results/test_drawdowns.csv` - Maximum drawdown comparison
-
-### Visualisations
-- `results/figures/cumulative_returns.png` - Performance over time
-- `results/figures/drawdowns.png` - Drawdown comparison
-- `results/figures/risk_return_scatter.png` - Risk-return profile
-- `results/figures/rolling_sharpe.png` - Rolling Sharpe ratios
-- `results/figures/performance_metrics.png` - Metric comparison
-- `results/figures/turnover_comparison.png` - Turnover analysis
-- `results/figures/weight_evolution.png` - Weight changes over time
-- `results/figures/subperiod_performance.png` - Regime-dependent performance
-
-### LaTeX Tables
-- `results/tables/performance_table.tex` - Main results table
-- `results/tables/performance_table.csv` - CSV version
-
----
-
 ## Division of Work
 
 ### Robert George Smith
@@ -455,7 +241,6 @@ After running the pipeline, you'll have:
 ### Joaquin Rodriguez
 - Literature review (robust methods & sentiment analysis)
 - Data quality validation
-- Documentation & code review
 - Literature review & discussion chapters
 
 ### Joint Responsibilities
@@ -463,23 +248,6 @@ After running the pipeline, you'll have:
 - Research design
 - Results interpretation
 - Introduction & conclusion
-
----
-
-## Project Timeline
-
-| Phase | Duration | Status |
-|-------|----------|--------|
-| Literature Review | Week 1 | Complete |
-| Data Collection & Processing | Week 2 | Complete |
-| Model Implementation | Week 3-4 | Complete |
-| Backtesting Framework | Week 5 | Complete |
-| Statistical Analysis | Week 5 | Complete |
-| Robustness Checks | Week 6 | Complete |
-| Diversification Enhancement | Week 6 | Complete |
-| Thesis Writing | Week 7-8 | In Progress |
-
-**Expected Submission:** February 11-12, 2026
 
 ---
 
@@ -513,7 +281,7 @@ This project is submitted as part of academic requirements at Frankfurt School o
 
 - Prof. Dr. Grigory Vilkov for supervision and guidance
 - Prof. Dr. Paula Cocoma for methodological support
-- Thomas [Last Name] (Industry Practitioner) for professional feedback on diversification constraints
+- Thomas Osowski (Industry Practitioner) for professional feedback on diversification constraints
 - Frankfurt School of Finance & Management for resources
 - The open-source community for Python libraries (NumPy, Pandas, CVXPY)
 
@@ -534,5 +302,5 @@ An initially planned extension to incorporate Federal Reserve policy sentiment w
 
 ---
 
-**Last Updated:** January 26, 2026  
+**Last Updated:** February 09, 2026
 **Version:** 1.0.0 (Final - Pre-Submission)
