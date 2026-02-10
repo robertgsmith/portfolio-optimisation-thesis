@@ -17,64 +17,184 @@ import config
 plt.style.use('seaborn-v0_8-darkgrid')
 sns.set_palette("husl")
 
+# Consistent color scheme for all plots
+COLORS = {
+    'Mean-Variance': '#1f77b4',    # Blue
+    'Shrinkage': '#ff7f0e',        # Orange
+    'Bayesian': '#2ca02c',         # Green
+    'Robust': '#d62728',           # Red
+    'Equal Weight': '#7f7f7f'      # Gray (benchmark)
+}
+
+# Optimisation methods (for creating comparison panels)
+OPT_METHODS = ['Mean-Variance', 'Shrinkage', 'Bayesian', 'Robust']
+
 # Create figures directory
 config.FIGURES_DIR.mkdir(parents=True, exist_ok=True)
 
 
+# def plot_cumulative_returns():
+#     """Plot cumulative returns for all models."""
+    
+#     returns = pd.read_csv(config.RESULTS_DIR / "backtest_returns.csv", 
+#                          index_col=0, parse_dates=True)
+    
+#     cum_returns = (1 + returns).cumprod() - 1
+    
+#     fig, ax = plt.subplots(figsize=(12, 6))
+    
+#     for col in cum_returns.columns:
+#         ax.plot(cum_returns.index, cum_returns[col], label=col, linewidth=2)
+    
+#     ax.set_title('Cumulative Returns Comparison', fontsize=14, fontweight='bold')
+#     ax.set_xlabel('Date', fontsize=12)
+#     ax.set_ylabel('Cumulative Return', fontsize=12)
+#     ax.legend(loc='best', frameon=True, shadow=True)
+#     ax.grid(True, alpha=0.3)
+#     ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda y, _: '{:.0%}'.format(y)))
+    
+#     plt.tight_layout()
+#     plt.savefig(config.FIGURES_DIR / 'cumulative_returns.png', dpi=300, bbox_inches='tight')
+#     print(">> Saved: cumulative_returns.png")
+#     plt.close()
+
 def plot_cumulative_returns():
-    """Plot cumulative returns for all models."""
+    """Plot cumulative returns - 2x2 comparison vs Equal Weight."""
     
     returns = pd.read_csv(config.RESULTS_DIR / "backtest_returns.csv", 
                          index_col=0, parse_dates=True)
     
     cum_returns = (1 + returns).cumprod() - 1
     
-    fig, ax = plt.subplots(figsize=(12, 6))
+    # Create 2x2 subplot
+    fig, axes = plt.subplots(2, 2, figsize=(16, 10))
+    axes = axes.flatten()
     
-    for col in cum_returns.columns:
-        ax.plot(cum_returns.index, cum_returns[col], label=col, linewidth=2)
+    for idx, method in enumerate(OPT_METHODS):
+        ax = axes[idx]
+        
+        # Plot optimisation method
+        ax.plot(cum_returns.index, cum_returns[method], 
+               label=method, linewidth=2.5, color=COLORS[method])
+        
+        # Plot Equal Weight benchmark
+        ax.plot(cum_returns.index, cum_returns['Equal Weight'], 
+               label='Equal Weight', linewidth=2.5, color=COLORS['Equal Weight'],
+               linestyle='--', alpha=0.7)
+        
+        ax.set_title(f'{method} vs Equal Weight', fontsize=12, fontweight='bold')
+        ax.set_xlabel('Date', fontsize=10)
+        ax.set_ylabel('Cumulative Return', fontsize=10)
+        ax.legend(loc='best', frameon=True, shadow=True)
+        ax.grid(True, alpha=0.3)
+        ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda y, _: '{:.0%}'.format(y)))
     
-    ax.set_title('Cumulative Returns Comparison', fontsize=14, fontweight='bold')
-    ax.set_xlabel('Date', fontsize=12)
-    ax.set_ylabel('Cumulative Return', fontsize=12)
-    ax.legend(loc='best', frameon=True, shadow=True)
-    ax.grid(True, alpha=0.3)
-    ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda y, _: '{:.0%}'.format(y)))
-    
+    plt.suptitle('Cumulative Returns Comparison', fontsize=16, fontweight='bold', y=0.995)
     plt.tight_layout()
-    plt.savefig(config.FIGURES_DIR / 'cumulative_returns.png', dpi=300, bbox_inches='tight')
-    print(">> Saved: cumulative_returns.png")
+    plt.savefig(config.FIGURES_DIR / 'cumulative_returns_comparison.png', dpi=300, bbox_inches='tight')
+    print(">> Saved: cumulative_returns_comparison.png")
     plt.close()
 
+###
+
+
+# def plot_drawdowns():
+#     """Plot drawdowns for all models."""
+    
+#     drawdowns = pd.read_csv(config.RESULTS_DIR / "backtest_drawdowns.csv",
+#                            index_col=0, parse_dates=True)
+    
+#     fig, ax = plt.subplots(figsize=(12, 6))
+    
+#     for col in drawdowns.columns:
+#         ax.plot(drawdowns.index, drawdowns[col] * 100, label=col, linewidth=2)
+    
+#     ax.fill_between(drawdowns.index, 0, drawdowns.min(axis=1) * 100, 
+#                      alpha=0.3, color='red')
+    
+#     ax.set_title('Drawdown Comparison', fontsize=14, fontweight='bold')
+#     ax.set_xlabel('Date', fontsize=12)
+#     ax.set_ylabel('Drawdown (%)', fontsize=12)
+#     ax.legend(loc='best', frameon=True, shadow=True)
+#     ax.grid(True, alpha=0.3)
+    
+#     plt.tight_layout()
+#     plt.savefig(config.FIGURES_DIR / 'drawdowns.png', dpi=300, bbox_inches='tight')
+#     print(">> Saved: drawdowns.png")
+#     plt.close()
 
 def plot_drawdowns():
-    """Plot drawdowns for all models."""
+    """Plot drawdowns - 2x2 comparison vs Equal Weight."""
     
     drawdowns = pd.read_csv(config.RESULTS_DIR / "backtest_drawdowns.csv",
                            index_col=0, parse_dates=True)
     
-    fig, ax = plt.subplots(figsize=(12, 6))
+    # Create 2x2 subplot
+    fig, axes = plt.subplots(2, 2, figsize=(16, 10))
+    axes = axes.flatten()
     
-    for col in drawdowns.columns:
-        ax.plot(drawdowns.index, drawdowns[col] * 100, label=col, linewidth=2)
+    for idx, method in enumerate(OPT_METHODS):
+        ax = axes[idx]
+        
+        # Plot optimisation method
+        ax.plot(drawdowns.index, drawdowns[method] * 100, 
+               label=method, linewidth=2.5, color=COLORS[method])
+        
+        # Plot Equal Weight benchmark
+        ax.plot(drawdowns.index, drawdowns['Equal Weight'] * 100, 
+               label='Equal Weight', linewidth=2.5, color=COLORS['Equal Weight'],
+               linestyle='--', alpha=0.7)
+        
+        # Fill negative area
+        ax.fill_between(drawdowns.index, 0, 
+                        drawdowns[[method, 'Equal Weight']].min(axis=1) * 100,
+                        alpha=0.2, color='red')
+        
+        ax.set_title(f'{method} vs Equal Weight', fontsize=12, fontweight='bold')
+        ax.set_xlabel('Date', fontsize=10)
+        ax.set_ylabel('Drawdown (%)', fontsize=10)
+        ax.legend(loc='best', frameon=True, shadow=True)
+        ax.grid(True, alpha=0.3)
     
-    ax.fill_between(drawdowns.index, 0, drawdowns.min(axis=1) * 100, 
-                     alpha=0.3, color='red')
-    
-    ax.set_title('Drawdown Comparison', fontsize=14, fontweight='bold')
-    ax.set_xlabel('Date', fontsize=12)
-    ax.set_ylabel('Drawdown (%)', fontsize=12)
-    ax.legend(loc='best', frameon=True, shadow=True)
-    ax.grid(True, alpha=0.3)
-    
+    plt.suptitle('Drawdown Comparison', fontsize=16, fontweight='bold', y=0.995)
     plt.tight_layout()
-    plt.savefig(config.FIGURES_DIR / 'drawdowns.png', dpi=300, bbox_inches='tight')
-    print(">> Saved: drawdowns.png")
+    plt.savefig(config.FIGURES_DIR / 'drawdowns_comparison.png', dpi=300, bbox_inches='tight')
+    print(">> Saved: drawdowns_comparison.png")
     plt.close()
 
+###
+
+
+# def plot_rolling_sharpe():
+#     """Plot rolling Sharpe ratios."""
+    
+#     returns = pd.read_csv(config.RESULTS_DIR / "backtest_returns.csv",
+#                          index_col=0, parse_dates=True)
+    
+#     # Calculate rolling Sharpe (252-day window)
+#     rolling_sharpe = returns.rolling(window=252).apply(
+#         lambda x: x.mean() / x.std() * np.sqrt(252) if x.std() > 0 else 0
+#     )
+    
+#     fig, ax = plt.subplots(figsize=(12, 6))
+    
+#     for col in rolling_sharpe.columns:
+#         ax.plot(rolling_sharpe.index, rolling_sharpe[col], label=col, linewidth=2)
+    
+#     ax.axhline(y=0, color='black', linestyle='--', alpha=0.5)
+#     ax.set_title('Rolling Sharpe Ratio (252-day)', fontsize=14, fontweight='bold')
+#     ax.set_xlabel('Date', fontsize=12)
+#     ax.set_ylabel('Sharpe Ratio', fontsize=12)
+#     ax.legend(loc='best', frameon=True, shadow=True)
+#     ax.grid(True, alpha=0.3)
+    
+#     plt.tight_layout()
+#     plt.savefig(config.FIGURES_DIR / 'rolling_sharpe.png', dpi=300, bbox_inches='tight')
+#     print(">> Saved: rolling_sharpe.png")
+#     plt.close()
 
 def plot_rolling_sharpe():
-    """Plot rolling Sharpe ratios."""
+    """Plot rolling Sharpe ratios - 2x2 comparison vs Equal Weight."""
     
     returns = pd.read_csv(config.RESULTS_DIR / "backtest_returns.csv",
                          index_col=0, parse_dates=True)
@@ -84,22 +204,36 @@ def plot_rolling_sharpe():
         lambda x: x.mean() / x.std() * np.sqrt(252) if x.std() > 0 else 0
     )
     
-    fig, ax = plt.subplots(figsize=(12, 6))
+    # Create 2x2 subplot
+    fig, axes = plt.subplots(2, 2, figsize=(16, 10))
+    axes = axes.flatten()
     
-    for col in rolling_sharpe.columns:
-        ax.plot(rolling_sharpe.index, rolling_sharpe[col], label=col, linewidth=2)
+    for idx, method in enumerate(OPT_METHODS):
+        ax = axes[idx]
+        
+        # Plot optimisation method
+        ax.plot(rolling_sharpe.index, rolling_sharpe[method], 
+               label=method, linewidth=2.5, color=COLORS[method])
+        
+        # Plot Equal Weight benchmark
+        ax.plot(rolling_sharpe.index, rolling_sharpe['Equal Weight'], 
+               label='Equal Weight', linewidth=2.5, color=COLORS['Equal Weight'],
+               linestyle='--', alpha=0.7)
+        
+        ax.axhline(y=0, color='black', linestyle='--', alpha=0.5)
+        ax.set_title(f'{method} vs Equal Weight', fontsize=12, fontweight='bold')
+        ax.set_xlabel('Date', fontsize=10)
+        ax.set_ylabel('Sharpe Ratio', fontsize=10)
+        ax.legend(loc='best', frameon=True, shadow=True)
+        ax.grid(True, alpha=0.3)
     
-    ax.axhline(y=0, color='black', linestyle='--', alpha=0.5)
-    ax.set_title('Rolling Sharpe Ratio (252-day)', fontsize=14, fontweight='bold')
-    ax.set_xlabel('Date', fontsize=12)
-    ax.set_ylabel('Sharpe Ratio', fontsize=12)
-    ax.legend(loc='best', frameon=True, shadow=True)
-    ax.grid(True, alpha=0.3)
-    
+    plt.suptitle('Rolling Sharpe Ratio (252-day)', fontsize=16, fontweight='bold', y=0.995)
     plt.tight_layout()
-    plt.savefig(config.FIGURES_DIR / 'rolling_sharpe.png', dpi=300, bbox_inches='tight')
-    print(">> Saved: rolling_sharpe.png")
+    plt.savefig(config.FIGURES_DIR / 'rolling_sharpe_comparison.png', dpi=300, bbox_inches='tight')
+    print(">> Saved: rolling_sharpe_comparison.png")
     plt.close()
+
+###
 
 
 def plot_performance_metrics():
