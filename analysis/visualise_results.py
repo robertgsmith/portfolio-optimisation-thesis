@@ -33,31 +33,6 @@ OPT_METHODS = ['Mean-Variance', 'Shrinkage', 'Bayesian', 'Robust']
 config.FIGURES_DIR.mkdir(parents=True, exist_ok=True)
 
 
-# def plot_cumulative_returns():
-#     """Plot cumulative returns for all models."""
-    
-#     returns = pd.read_csv(config.RESULTS_DIR / "backtest_returns.csv", 
-#                          index_col=0, parse_dates=True)
-    
-#     cum_returns = (1 + returns).cumprod() - 1
-    
-#     fig, ax = plt.subplots(figsize=(12, 6))
-    
-#     for col in cum_returns.columns:
-#         ax.plot(cum_returns.index, cum_returns[col], label=col, linewidth=2)
-    
-#     ax.set_title('Cumulative Returns Comparison', fontsize=14, fontweight='bold')
-#     ax.set_xlabel('Date', fontsize=12)
-#     ax.set_ylabel('Cumulative Return', fontsize=12)
-#     ax.legend(loc='best', frameon=True, shadow=True)
-#     ax.grid(True, alpha=0.3)
-#     ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda y, _: '{:.0%}'.format(y)))
-    
-#     plt.tight_layout()
-#     plt.savefig(config.FIGURES_DIR / 'cumulative_returns.png', dpi=300, bbox_inches='tight')
-#     print(">> Saved: cumulative_returns.png")
-#     plt.close()
-
 def plot_cumulative_returns():
     """Plot cumulative returns - 2x2 comparison vs Equal Weight."""
     
@@ -95,33 +70,6 @@ def plot_cumulative_returns():
     print(">> Saved: cumulative_returns_comparison.png")
     plt.close()
 
-###
-
-
-# def plot_drawdowns():
-#     """Plot drawdowns for all models."""
-    
-#     drawdowns = pd.read_csv(config.RESULTS_DIR / "backtest_drawdowns.csv",
-#                            index_col=0, parse_dates=True)
-    
-#     fig, ax = plt.subplots(figsize=(12, 6))
-    
-#     for col in drawdowns.columns:
-#         ax.plot(drawdowns.index, drawdowns[col] * 100, label=col, linewidth=2)
-    
-#     ax.fill_between(drawdowns.index, 0, drawdowns.min(axis=1) * 100, 
-#                      alpha=0.3, color='red')
-    
-#     ax.set_title('Drawdown Comparison', fontsize=14, fontweight='bold')
-#     ax.set_xlabel('Date', fontsize=12)
-#     ax.set_ylabel('Drawdown (%)', fontsize=12)
-#     ax.legend(loc='best', frameon=True, shadow=True)
-#     ax.grid(True, alpha=0.3)
-    
-#     plt.tight_layout()
-#     plt.savefig(config.FIGURES_DIR / 'drawdowns.png', dpi=300, bbox_inches='tight')
-#     print(">> Saved: drawdowns.png")
-#     plt.close()
 
 def plot_drawdowns():
     """Plot drawdowns - 2x2 comparison vs Equal Weight."""
@@ -162,36 +110,6 @@ def plot_drawdowns():
     print(">> Saved: drawdowns_comparison.png")
     plt.close()
 
-###
-
-
-# def plot_rolling_sharpe():
-#     """Plot rolling Sharpe ratios."""
-    
-#     returns = pd.read_csv(config.RESULTS_DIR / "backtest_returns.csv",
-#                          index_col=0, parse_dates=True)
-    
-#     # Calculate rolling Sharpe (252-day window)
-#     rolling_sharpe = returns.rolling(window=252).apply(
-#         lambda x: x.mean() / x.std() * np.sqrt(252) if x.std() > 0 else 0
-#     )
-    
-#     fig, ax = plt.subplots(figsize=(12, 6))
-    
-#     for col in rolling_sharpe.columns:
-#         ax.plot(rolling_sharpe.index, rolling_sharpe[col], label=col, linewidth=2)
-    
-#     ax.axhline(y=0, color='black', linestyle='--', alpha=0.5)
-#     ax.set_title('Rolling Sharpe Ratio (252-day)', fontsize=14, fontweight='bold')
-#     ax.set_xlabel('Date', fontsize=12)
-#     ax.set_ylabel('Sharpe Ratio', fontsize=12)
-#     ax.legend(loc='best', frameon=True, shadow=True)
-#     ax.grid(True, alpha=0.3)
-    
-#     plt.tight_layout()
-#     plt.savefig(config.FIGURES_DIR / 'rolling_sharpe.png', dpi=300, bbox_inches='tight')
-#     print(">> Saved: rolling_sharpe.png")
-#     plt.close()
 
 def plot_rolling_sharpe():
     """Plot rolling Sharpe ratios - 2x2 comparison vs Equal Weight."""
@@ -232,8 +150,6 @@ def plot_rolling_sharpe():
     plt.savefig(config.FIGURES_DIR / 'rolling_sharpe_comparison.png', dpi=300, bbox_inches='tight')
     print(">> Saved: rolling_sharpe_comparison.png")
     plt.close()
-
-###
 
 
 def plot_performance_metrics():

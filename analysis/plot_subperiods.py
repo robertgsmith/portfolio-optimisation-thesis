@@ -22,66 +22,6 @@ COLORS = {
 OPT_METHODS = ['Mean-Variance', 'Shrinkage', 'Bayesian', 'Robust']
 
 
-# def plot_all_subperiods():
-#     """Plot performance across all sub-periods."""
-    
-#     print("\n" + "="*70)
-#     print("ALL SUB-PERIODS ANALYSIS")
-#     print("="*70)
-    
-#     # Load returns
-#     returns = pd.read_csv(
-#         config.RESULTS_DIR / "backtest_returns.csv",
-#         index_col=0,
-#         parse_dates=[0]
-#     )
-
-#     # Coerce to datetime (parse strings/objects), set UTC, then drop tz
-#     returns.index = pd.to_datetime(returns.index, errors="raise", utc=True).tz_convert(None)
-    
-#     # Define periods
-#     periods = {
-#         'Pre-COVID (2015-2019)': ('2015-01-01', '2019-12-31'),
-#         'COVID Era (2020-2021)': ('2020-01-01', '2021-12-31'),
-#         'Post-COVID (2022-2024)': ('2022-01-01', '2024-12-31')
-#     }
-    
-#     # Create subplots
-#     fig, axes = plt.subplots(len(periods), 1, figsize=(14, 12))
-    
-#     for idx, (period_name, (start, end)) in enumerate(periods.items()):
-#         try:
-#             period_returns = returns.loc[start:end]
-            
-#             if len(period_returns) == 0:
-#                 print(f"!!!  No data for {period_name}")
-#                 continue
-            
-#             # Cumulative returns
-#             cum_returns = (1 + period_returns).cumprod()
-            
-#             # Plot
-#             ax = axes[idx] if len(periods) > 1 else axes
-            
-#             for col in cum_returns.columns:
-#                 ax.plot(cum_returns.index, cum_returns[col], label=col, linewidth=2)
-            
-#             ax.set_title(f'{period_name}', fontsize=12, fontweight='bold')
-#             ax.set_xlabel('Date')
-#             ax.set_ylabel('Cumulative Return')
-#             ax.legend(loc='best')
-#             ax.grid(True, alpha=0.3)
-            
-#             print(f">> {period_name}: {len(period_returns)} days")
-            
-#         except Exception as e:
-#             print(f"!!!  Error plotting {period_name}: {e}")
-    
-#     plt.tight_layout()
-#     plt.savefig(config.FIGURES_DIR / 'subperiod_performance.png', dpi=300)
-#     print("\n>> Saved: subperiod_performance.png")
-#     plt.close()
-
 def plot_all_subperiods():
     """Plot sub-period performance - 3x4 grid (3 periods × 4 comparisons)."""
     
@@ -163,8 +103,6 @@ def plot_all_subperiods():
     plt.savefig(config.FIGURES_DIR / 'subperiod_performance_comparison.png', dpi=300, bbox_inches='tight')
     print("\n>> Saved: subperiod_performance_comparison.png")
     plt.close()
-
-###
 
 
 def calculate_subperiod_metrics():
