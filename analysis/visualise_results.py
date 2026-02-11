@@ -209,7 +209,7 @@ def plot_risk_return_scatter():
 
 
 def plot_weight_evolution():
-    """Plot weight evolution over time for one model."""
+    """Plot weight evolution over time - 5x1 grid showing top 10 assets (2 per panel)."""
     
     # Use Mean-Variance as example
     weights = pd.read_csv(config.RESULTS_DIR / "weights" / "weights_mean-variance.csv",
@@ -217,20 +217,62 @@ def plot_weight_evolution():
     
     # Get top 10 assets by average weight
     avg_weights = weights.mean().sort_values(ascending=False).head(10)
-    top_assets = avg_weights.index
+    top_assets = avg_weights.index.tolist()
     
-    fig, ax = plt.subplots(figsize=(12, 6))
+    # Create 5x1 subplot (5 panels, 2 assets each)
+    fig, axes = plt.subplots(5, 1, figsize=(14, 18))
     
-    weights[top_assets].plot(ax=ax, linewidth=1.5)
+    # Define 10 distinct colors (one per asset)
+    colors = [
+        '#1f77b4',  # Blue
+        '#ff7f0e',  # Orange
+        '#2ca02c',  # Green
+        '#d62728',  # Red
+        '#9467bd',  # Purple
+        '#8c564b',  # Brown
+        '#e377c2',  # Pink
+        '#7f7f7f',  # Gray
+        '#bcbd22',  # Olive
+        '#17becf'   # Cyan
+    ]
     
-    ax.set_title('Portfolio Weight Evolution - Mean-Variance (Top 10 Assets)', 
-                fontsize=14, fontweight='bold')
-    ax.set_xlabel('Date', fontsize=12)
-    ax.set_ylabel('Weight', fontsize=12)
-    ax.legend(loc='center left', bbox_to_anchor=(1, 0.5), frameon=True)
-    ax.grid(True, alpha=0.3)
-    ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda y, _: '{:.0%}'.format(y)))
+    # Plot 2 assets per panel
+    for idx in range(5):
+        ax = axes[idx]
+        
+        # Get the 2 assets for this panel
+        asset1 = top_assets[idx * 2]
+        asset2 = top_assets[idx * 2 + 1]
+        
+        # Get colors for these specific assets (based on their overall rank)
+        color1 = colors[idx * 2]
+        color2 = colors[idx * 2 + 1]
+        
+        # Plot first asset
+        ax.plot(weights.index, weights[asset1], 
+               label=f'{asset1} (Rank {idx*2+1})', 
+               linewidth=2.5, color=color1)
+        
+        # Plot second asset
+        ax.plot(weights.index, weights[asset2], 
+               label=f'{asset2} (Rank {idx*2+2})', 
+               linewidth=2.5, color=color2)
+        
+        # Add 10% constraint line
+        ax.axhline(y=0.10, color='black', linestyle='--', linewidth=1.5, 
+                  alpha=0.4, label='10% Max Weight')
+        
+        ax.set_title(f'Panel {idx+1}: Ranks {idx*2+1} & {idx*2+2} by Average Weight', 
+                    fontsize=12, fontweight='bold')
+        ax.set_xlabel('Date' if idx == 4 else '', fontsize=10)  # Only label on bottom
+        ax.set_ylabel('Portfolio Weight', fontsize=10)
+        ax.legend(loc='best', frameon=True, fontsize=9, shadow=True)
+        ax.grid(True, alpha=0.3)
+        ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda y, _: '{:.0%}'.format(y)))
+        ax.set_ylim(0, 0.11)  # Set y-axis from 0 to 11% for consistency
     
+    plt.suptitle('Portfolio Weight Evolution - Mean-Variance (Top 10 Assets)', 
+                fontsize=16, fontweight='bold', y=0.995)
     plt.tight_layout()
     plt.savefig(config.FIGURES_DIR / 'weight_evolution.png', dpi=300, bbox_inches='tight')
     print(">> Saved: weight_evolution.png")
